@@ -1,6 +1,7 @@
 package model;
 
 public class ItineraryItem {
+	
 	private int itemId;
     private int dayNumber;
     private String activity;

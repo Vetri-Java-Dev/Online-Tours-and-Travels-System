@@ -1,6 +1,7 @@
 package model;
 import java.util.*;
 public class Itinerary {
+	
 	private int itineraryId;
 	private int packageId;
 	private int userId;
