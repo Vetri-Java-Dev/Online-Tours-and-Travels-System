@@ -14,26 +14,24 @@ public class RegisterTest {
 
         System.out.println("===== USER REGISTRATION =====");
 
-        System.out.print("Enter Name: ");
+        System.out.print("Enter Name : ");
         String name = sc.nextLine();
 
-        System.out.print("Enter Email: ");
+        System.out.print("Enter Email : ");
         String email = sc.nextLine();
 
-        System.out.print("Enter Password: ");
+        System.out.print("Enter Password : ");
         String password = sc.nextLine();
 
-        System.out.print("Enter Phone: ");
-        String phone = sc.nextLine();
+        System.out.print("Enter Phone : ");
+        String phone = sc.nextLine().trim();
 
-        System.out.print("Enter Role (ADMIN/CUSTOMER): ");
-        String role = sc.nextLine();
+        System.out.print("Enter Role (ADMIN/CUSTOMER) : ");
+        String role = sc.nextLine().toUpperCase().trim();
 
         User user = new User(0, name, email, password, phone, role);
 
         userService.registerUser(user);
-
-        System.out.println("Registration Completed!");
 
         sc.close();
     }
