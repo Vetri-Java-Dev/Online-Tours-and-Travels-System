@@ -10,6 +10,8 @@ public class Booking {
     private int customerId;
     private int packageId;
 
+    public Booking() {}
+    
     public Booking(int bookingId, String bookingDate, int travelers, double totalAmount,
                    String status, int customerId, int packageId) {
         this.bookingId = bookingId;
@@ -52,4 +54,30 @@ public class Booking {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	public void setBookingId(int bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	public void setBookingDate(String bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	public void setTravelers(int travelers) {
+		this.travelers = travelers;
+	}
+
+	public void setTotalAmount(double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public void setPackageId(int packageId) {
+		this.packageId = packageId;
+	}
+    
+    
 }

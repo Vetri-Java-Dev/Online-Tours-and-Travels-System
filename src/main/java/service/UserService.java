@@ -1,5 +1,7 @@
 package service;
 
+import java.util.Scanner;
+
 import dao.UserDAO;
 import model.User;
 import util.InputValidationUtil;
@@ -38,6 +40,61 @@ public class UserService {
         }
 
         return userDAO.login(email, password);
+    }
+    
+    public void customerMenu(){
+
+        Scanner sc = new Scanner(System.in);
+        TourPackageService service = new TourPackageService();
+
+        while(true){
+
+            System.out.println("CUSTOMER MENU");
+            System.out.println("1 View Packages");
+            System.out.println("2 Exit");
+
+            int choice = sc.nextInt();
+
+            switch(choice){
+
+                case 1:
+                    service.displayPackages();
+                    break;
+
+                case 2:
+                    return;
+            }
+        }
+    }
+    
+    public void adminMenu() {
+
+        Scanner sc = new Scanner(System.in);
+        TourPackageService service = new TourPackageService();
+
+        while(true){
+
+            System.out.println("ADMIN MENU");
+            System.out.println("1 Add Package");
+            System.out.println("2 View Packages");
+            System.out.println("3 Exit");
+
+            int choice = sc.nextInt();
+
+            switch(choice){
+
+                case 1:
+                    // add package
+                    break;
+
+                case 2:
+                    service.displayPackages();
+                    break;
+
+                case 3:
+                    return;
+            }
+        }
     }
 
 }

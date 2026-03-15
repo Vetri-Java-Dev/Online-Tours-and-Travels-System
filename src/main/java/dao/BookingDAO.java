@@ -9,31 +9,41 @@ import java.sql.ResultSet;
 
 public class BookingDAO {
 
-    public void createBooking(Booking booking) {
+	public void createBooking(Booking booking) {
 
-        try {
+	    try {
 
-            Connection con = DBConnection.getConnection();
+	        Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId) VALUES(?,?,?,?,?,?)";
+	       
+	        String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId) VALUES(?,?,?,?,?,?)";
 
-            PreparedStatement ps = con.prepareStatement(query);
+	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            ps.setString(1, booking.getBookingDate());
-            ps.setInt(2, booking.getTravelers());
-            ps.setDouble(3, booking.getTotalAmount());
-            ps.setString(4, booking.getStatus());
-            ps.setInt(5, booking.getCustomerId());
-            ps.setInt(6, booking.getPackageId());
+	        ps.setString(1, booking.getBookingDate());
+	        ps.setInt(2, booking.getTravelers());
+	        ps.setDouble(3, booking.getTotalAmount());
+	        ps.setString(4, booking.getStatus());
+	        ps.setInt(5, booking.getCustomerId());
+	        ps.setInt(6, booking.getPackageId());
 
-            ps.executeUpdate();
+	        int rowsAffected = ps.executeUpdate();
 
-            System.out.println("Booking created successfully!");
+	        if (rowsAffected > 0) {
+	        	
+	            ResultSet rs = ps.getGeneratedKeys();
+	            if (rs.next()) {
+	                int bookingId = rs.getInt(1);
+	                booking.setBookingId(bookingId);
+	                System.out.println("Booking created successfully! Booking ID: " + bookingId);
+	            }
+	        }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
 
     public Booking viewBooking(int bookingId) {
@@ -89,7 +99,8 @@ public class BookingDAO {
 
             System.out.println("Booking cancelled successfully!");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

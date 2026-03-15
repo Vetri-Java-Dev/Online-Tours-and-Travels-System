@@ -32,7 +32,8 @@ public class UserDAO {
 
             System.out.println("User registered successfully!");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

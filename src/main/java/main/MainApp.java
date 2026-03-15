@@ -1,48 +1,70 @@
 package main;
 
 import java.util.Scanner;
-import service.TourPackageService;
+import controller.LoginController;
+import model.User;
+import service.UserService;
 
 public class MainApp {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        TourPackageService service = new TourPackageService();
+        UserService userService = new UserService();
+        LoginController loginController = new LoginController();
 
         while (true) {
 
-            System.out.println("1 Add Tour Package");
-            System.out.println("2 View Tour Packages");
+            System.out.println("\n===== TOUR SYSTEM =====");
+            System.out.println("1 Register");
+            System.out.println("2 Login");
             System.out.println("3 Exit");
-
+            System.out.print("Enter choice: ");
             int choice = sc.nextInt();
+            sc.nextLine(); 
 
             switch (choice) {
 
-                case 1:
+                case 1: 
+                    System.out.println("===== REGISTER =====");
 
-                    System.out.println("Enter Package Id");
-                    int id = sc.nextInt();
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
 
-                    System.out.println("Enter Destination");
-                    String destination = sc.next();
+                    System.out.print("Enter Email: ");
+                    String email = sc.nextLine();
 
-                    System.out.println("Enter Price");
-                    int price = sc.nextInt();
+                    System.out.print("Enter Password (At least 1 uppercase, 1 lowercase, 1 digit, 8+ chars): ");
+                    String password = sc.nextLine();
 
-                    System.out.println("Enter Duration");
-                    int duration = sc.nextInt();
+                    System.out.print("Enter Phone (10 digits starting with 6-9): ");
+                    String phone = sc.nextLine();
 
-                    service.createPackage(id, destination, price, duration);
+                    System.out.print("Enter Role (ADMIN / CUSTOMER): ");
+                    String role = sc.nextLine().toUpperCase();
+
+                    User user = new User();
+                    
+                    user.setName(name);
+                    user.setEmail(email);
+                    user.setPassword(password);
+                    user.setPhone(phone);
+                    user.setRole(role);
+
+                    userService.registerUser(user);
                     break;
 
-                case 2:
-                    service.displayPackages();
+                case 2: 
+                    loginController.login();
                     break;
 
                 case 3:
+                    System.out.println("Exiting the system...");
+                    sc.close();
                     System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice, try again!");
             }
         }
     }
