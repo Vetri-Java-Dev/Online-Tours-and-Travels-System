@@ -2,6 +2,7 @@ package service;
 
 import dao.UserDAO;
 import model.User;
+import util.InputValidationUtil;
 
 public class UserService {
 
@@ -9,29 +10,30 @@ public class UserService {
 
     public void registerUser(User user) {
 
-        if(user.getEmail() == null || user.getEmail().isEmpty()) {
-            System.out.println("Email cannot be empty");
+        if(!InputValidationUtil.isValidEmail(user.getEmail())) {
+            System.out.println("Invalid Email");
             return;
         }
 
-        if(user.getPassword() == null || user.getPassword().length() < 4) {
+        if(!InputValidationUtil.isValidPassword(user.getPassword())) {
             System.out.println("Password must be at least 4 characters");
             return;
         }
-
+        
+        System.out.println("Registration Completed!");
         userDAO.registerUser(user);
     }
 
 
     public User login(String email, String password) {
 
-        if(email == null || email.isEmpty()) {
-            System.out.println("Email cannot be empty");
+        if(!InputValidationUtil.isValidEmail(email)) {
+            System.out.println("Invalid Email");
             return null;
         }
 
-        if(password == null || password.isEmpty()) {
-            System.out.println("Password cannot be empty");
+        if(!InputValidationUtil.isValidPassword(password)) {
+            System.out.println("Invalid Password");
             return null;
         }
 
