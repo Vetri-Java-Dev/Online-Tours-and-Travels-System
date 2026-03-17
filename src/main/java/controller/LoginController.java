@@ -13,6 +13,29 @@ public class LoginController {
     public void login() {
 
         System.out.println("===== LOGIN =====");
+        System.out.println("1 Login");
+        System.out.println("2 Forgot Password");
+        System.out.print("Enter choice: ");
+
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        switch(choice) {
+
+            case 1:
+                normalLogin();
+                break;
+
+            case 2:
+                forgotPassword();
+                break;
+
+            default:
+                System.out.println("Invalid choice");
+        }
+    }
+
+    public void normalLogin() {
 
         System.out.print("Enter Email: ");
         String email = sc.next();
@@ -36,7 +59,6 @@ public class LoginController {
 
                 CustomerController customer = new CustomerController(user.getUserId());
                 customer.customerMenu();
-
             }
 
         } 
@@ -45,7 +67,6 @@ public class LoginController {
         }
     }
 
-    // NEW METHOD
     public void forgotPassword() {
 
         System.out.println("===== FORGOT PASSWORD =====");
@@ -53,23 +74,29 @@ public class LoginController {
         System.out.print("Enter your registered email: ");
         String email = sc.next();
 
-        // check if email exists
         User user = userService.getUserByEmail(email);
 
         if(user == null) {
-            System.out.println("Email not registered!");
+            System.out.println("Email not registered! Reset password failed.");
             return;
         }
 
-        // generate OTP
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
 
-        // send OTP
+        long otpGeneratedTime = System.currentTimeMillis();
+        
         EmailUtil.sendOTP(email, otp);
 
         System.out.print("Enter OTP sent to email: ");
         String enteredOtp = sc.next();
 
+        long currentTime = System.currentTimeMillis();
+
+        if(currentTime-otpGeneratedTime>70000) {
+            System.out.println("OTP expired !!");
+            return;
+        }
+        
         if(enteredOtp.equals(otp)) {
 
             System.out.print("Enter new password: ");
@@ -79,8 +106,8 @@ public class LoginController {
 
             System.out.println("Password reset successful!");
 
-        } else {
-
+        }
+        else {
             System.out.println("Invalid OTP");
         }
     }

@@ -8,8 +8,8 @@ public class EmailUtil {
 
     public static void sendOTP(String toEmail, String otp) {
 
-        String fromEmail = "yourgmail@gmail.com";
-        String password = "your_app_password";
+        String fromEmail = "onlinetats@gmail.com";
+        String password = "jlxp bnlc pqek pxcj";
 
         Properties props = new Properties();
 

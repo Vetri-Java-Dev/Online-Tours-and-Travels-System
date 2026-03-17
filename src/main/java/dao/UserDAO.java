@@ -136,7 +136,8 @@ public class UserDAO {
                 );
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -153,13 +154,15 @@ public class UserDAO {
 
             PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setString(1, newPassword);
+            String hashedPassword = PasswordUtil.hashPassword(newPassword);
+
+            ps.setString(1, hashedPassword);
             ps.setString(2, email);
 
             int rows = ps.executeUpdate();
 
             if(rows > 0) {
-                System.out.println("Password reset successful!");
+                System.out.println("Password Updated Successfully!");
             } else {
                 System.out.println("Email not found!");
             }
@@ -168,4 +171,7 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+    
+    
+    
 }
