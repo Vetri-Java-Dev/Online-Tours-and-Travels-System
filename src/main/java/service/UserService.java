@@ -4,7 +4,9 @@ import java.util.Scanner;
 
 import dao.UserDAO;
 import model.User;
+import service.TourPackageService;
 import util.InputValidationUtil;
+import util.PasswordUtil;
 
 public class UserService {
 
@@ -21,9 +23,14 @@ public class UserService {
             System.out.println("Password must be at least 4 characters");
             return;
         }
-        
-        System.out.println("Registration Completed!");
+
+        // hash password before storing
+        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+        user.setPassword(hashedPassword);
+
         userDAO.registerUser(user);
+
+        System.out.println("Registration Completed!");
     }
 
 
@@ -39,9 +46,13 @@ public class UserService {
             return null;
         }
 
-        return userDAO.login(email, password);
+        String hashedPassword = PasswordUtil.hashPassword(password);
+
+        return userDAO.login(email, hashedPassword);
     }
-    
+
+
+    // CUSTOMER MENU
     public void customerMenu(){
 
         Scanner sc = new Scanner(System.in);
@@ -66,7 +77,9 @@ public class UserService {
             }
         }
     }
-    
+
+
+    // ADMIN MENU
     public void adminMenu() {
 
         Scanner sc = new Scanner(System.in);
@@ -84,7 +97,7 @@ public class UserService {
             switch(choice){
 
                 case 1:
-                    // add package
+                    // add package logic
                     break;
 
                 case 2:
@@ -97,4 +110,43 @@ public class UserService {
         }
     }
 
+
+    // GET USER BY ID (PROFILE FEATURE)
+    public User getUserById(int userId) {
+
+        if(userId <= 0) {
+            System.out.println("Invalid User ID");
+            return null;
+        }
+
+        return userDAO.getUserById(userId);
+    }
+
+
+    // NEW METHOD (FOR FORGOT PASSWORD)
+    public User getUserByEmail(String email) {
+
+        if(!InputValidationUtil.isValidEmail(email)) {
+            System.out.println("Invalid Email");
+            return null;
+        }
+
+        return userDAO.getUserByEmail(email);
+    }
+
+
+    // NEW METHOD (RESET PASSWORD)
+    public void updatePassword(String email, String newPassword) {
+
+        if(!InputValidationUtil.isValidPassword(newPassword)) {
+            System.out.println("Password must be at least 4 characters");
+            return;
+        }
+
+        String hashedPassword = PasswordUtil.hashPassword(newPassword);
+
+        userDAO.updatePassword(email, hashedPassword);
+
+        System.out.println("Password Updated Successfully!");
+    }
 }
