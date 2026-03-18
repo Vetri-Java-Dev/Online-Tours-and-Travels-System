@@ -78,4 +78,100 @@ public class UserDAO {
 
         return user;
     }
+    
+    public User getUserById(int userId) {
+
+        User user = null;
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT name,email,phone FROM users WHERE userId=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+
+                user = new User();
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhone(rs.getString("phone"));
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+    
+    public User getUserByEmail(String email) {
+
+        User user = null;
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT * FROM users WHERE email=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, email);
+
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+
+                user = new User(
+                        rs.getInt("userId"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("role")
+                );
+            }
+
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+    
+    public void updatePassword(String email, String newPassword) {
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE users SET password=? WHERE email=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            String hashedPassword = PasswordUtil.hashPassword(newPassword);
+
+            ps.setString(1, hashedPassword);
+            ps.setString(2, email);
+
+            int rows = ps.executeUpdate();
+
+            if(rows > 0) {
+                System.out.println("Password Updated Successfully!");
+            } else {
+                System.out.println("Email not found!");
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
 }

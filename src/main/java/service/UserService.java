@@ -1,7 +1,5 @@
 package service;
 
-import java.util.Scanner;
-
 import dao.UserDAO;
 import model.User;
 import util.InputValidationUtil;
@@ -18,14 +16,13 @@ public class UserService {
         }
 
         if(!InputValidationUtil.isValidPassword(user.getPassword())) {
-            System.out.println("Password must be at least 4 characters");
+            System.out.println("Password must be valid");
             return;
         }
-        
-        System.out.println("Registration Completed!");
-        userDAO.registerUser(user);
-    }
 
+        userDAO.registerUser(user);
+        System.out.println("Registration Completed!");
+    }
 
     public User login(String email, String password) {
 
@@ -41,60 +38,33 @@ public class UserService {
 
         return userDAO.login(email, password);
     }
-    
-    public void customerMenu(){
 
-        Scanner sc = new Scanner(System.in);
-        TourPackageService service = new TourPackageService();
+    public User getUserById(int userId) {
 
-        while(true){
-
-            System.out.println("CUSTOMER MENU");
-            System.out.println("1 View Packages");
-            System.out.println("2 Exit");
-
-            int choice = sc.nextInt();
-
-            switch(choice){
-
-                case 1:
-                    service.displayPackages();
-                    break;
-
-                case 2:
-                    return;
-            }
+        if(userId <= 0) {
+            System.out.println("Invalid User ID");
+            return null;
         }
+
+        return userDAO.getUserById(userId);
     }
     
-    public void adminMenu() {
+    public User getUserByEmail(String email) {
 
-        Scanner sc = new Scanner(System.in);
-        TourPackageService service = new TourPackageService();
-
-        while(true){
-
-            System.out.println("ADMIN MENU");
-            System.out.println("1 Add Package");
-            System.out.println("2 View Packages");
-            System.out.println("3 Exit");
-
-            int choice = sc.nextInt();
-
-            switch(choice){
-
-                case 1:
-                    // add package
-                    break;
-
-                case 2:
-                    service.displayPackages();
-                    break;
-
-                case 3:
-                    return;
-            }
+        if(email == null || email.trim().isEmpty()) {
+            return null;
         }
+
+        return userDAO.getUserByEmail(email);
     }
 
+    public void updatePassword(String email, String newPassword) {
+
+        if(newPassword == null || newPassword.length() < 4) {
+            System.out.println("Weak password!");
+            return;
+        }
+
+        userDAO.updatePassword(email, newPassword);
+    }
 }

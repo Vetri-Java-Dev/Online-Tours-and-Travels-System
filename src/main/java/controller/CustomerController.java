@@ -3,8 +3,10 @@ package controller;
 import java.util.Scanner;
 
 import model.Booking;
+import model.User;
 import service.BookingService;
 import service.TourPackageService;
+import service.UserService;
 
 public class CustomerController {
 
@@ -12,6 +14,7 @@ public class CustomerController {
     
     private TourPackageService tourService = new TourPackageService();
     private BookingService bookingService = new BookingService();
+    private UserService userService = new UserService();
     
     private int customerId;
 
@@ -23,41 +26,45 @@ public class CustomerController {
 
     public void customerMenu() {
 
-        while (true) {
+        while(true) {
+
             System.out.println("\n===== CUSTOMER MENU =====");
             System.out.println("1 View Tour Packages");
             System.out.println("2 Create Booking");
             System.out.println("3 View Booking");
             System.out.println("4 Cancel Booking");
-            System.out.println("5 Exit");
+            System.out.println("5 View Profile");
+            System.out.println("6 Exit");
 
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
-            sc.nextLine();
 
-            switch (choice) {
-                case 1:
-                    tourService.displayPackages();
-                    break;
-
-                case 2:
-                    createBooking(); 
-                    break;
-
-                case 3:
-                    viewBooking();
-                    break;
-
-                case 4:
-                    cancelBooking();
-                    break;
+            switch(choice) {
 
                 case 5:
-                    return;
+                    viewProfile();
+                    break;
 
-                default:
-                    System.out.println("Invalid Choice");
+                case 6:
+                    return;
             }
+        }
+    }
+
+    public void viewProfile() {
+
+        System.out.println("===== CUSTOMER PROFILE =====");
+
+        User user = userService.getUserById(customerId);
+
+        if(user != null) {
+
+            System.out.println("Name : " + user.getName());
+            System.out.println("Email : " + user.getEmail());
+            System.out.println("Phone : " + user.getPhone());
+
+        } else {
+            System.out.println("Profile not found");
         }
     }
     
