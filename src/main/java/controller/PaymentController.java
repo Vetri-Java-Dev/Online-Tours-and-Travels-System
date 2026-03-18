@@ -1,25 +1,21 @@
-
 package controller;
 
-import dao.PaymentDAO;
 import model.Payment;
+import service.PaymentService;
 
 public class PaymentController {
 
-    private PaymentDAO paymentDAO = new PaymentDAO();
+    private PaymentService paymentService = new PaymentService();
 
     public void processPayment(Payment payment) {
-
-        payment.setStatus("SUCCESS");
-
-        paymentDAO.processPayment(payment);
+        paymentService.processPayment(payment);
     }
 
     public void viewPayment(int paymentId) {
 
-        Payment payment = paymentDAO.viewPayment(paymentId);
+        Payment payment = paymentService.viewPayment(paymentId);
 
-        if(payment != null) {
+        if (payment != null) {
 
             System.out.println("Payment ID: " + payment.getPaymentId());
             System.out.println("Amount: " + payment.getAmount());
@@ -28,13 +24,11 @@ public class PaymentController {
             System.out.println("Status: " + payment.getStatus());
 
         } else {
-
             System.out.println("Payment not found");
         }
     }
 
     public void viewPaymentHistory(int bookingId) {
-
-        paymentDAO.viewPaymentHistory(bookingId);
+        paymentService.viewPaymentHistory(bookingId);
     }
 }
