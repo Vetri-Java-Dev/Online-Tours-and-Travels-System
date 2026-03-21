@@ -47,13 +47,12 @@ public class PaymentDAO {
     }
 
 
-
     public Payment viewPayment(int paymentId) {
 
         Payment payment = null;
 
         try {
-
+        	
             Connection con = DBConnection.getConnection();
 
             String query = "SELECT * FROM payment WHERE paymentId=?";
@@ -65,7 +64,6 @@ public class PaymentDAO {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()) {
-
                 payment = new Payment(
                         rs.getInt("paymentId"),
                         rs.getDouble("amount"),
@@ -95,13 +93,17 @@ public class PaymentDAO {
             String query = "SELECT * FROM payment WHERE bookingId=?";
 
             PreparedStatement ps = con.prepareStatement(query);
-
             ps.setInt(1, bookingId);
 
             ResultSet rs = ps.executeQuery();
 
+            boolean found = false;
+
             while(rs.next()) {
 
+                found = true;
+
+                System.out.println("\n===== PAYMENT DETAILS =====");
                 System.out.println("Payment ID: " + rs.getInt("paymentId"));
                 System.out.println("Amount: " + rs.getDouble("amount"));
                 System.out.println("Payment Date: " + rs.getString("paymentDate"));
@@ -110,8 +112,11 @@ public class PaymentDAO {
                 System.out.println("---------------------------");
             }
 
-        }
-        catch (Exception e) {
+            if(!found) {
+                System.out.println("No payment records found for this booking.");
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

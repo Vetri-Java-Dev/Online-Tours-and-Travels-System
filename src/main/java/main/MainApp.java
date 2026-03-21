@@ -2,9 +2,12 @@ package main;
 
 import java.util.Scanner;
 
+import com.mysql.cj.protocol.a.InputStreamValueEncoder;
+
 import controller.LoginController;
 import model.User;
 import service.UserService;
+import util.InputValidationUtil;
 
 public class MainApp {
 
@@ -13,6 +16,7 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
         LoginController loginController = new LoginController();
+        
 
         while(true) {
 
@@ -36,7 +40,7 @@ public class MainApp {
 
                     System.out.print("Enter Email: ");
                     String email = sc.nextLine();
-
+                    
                     System.out.print("Enter Password: ");
                     String password = sc.nextLine();
 

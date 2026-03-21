@@ -6,7 +6,6 @@ public class CreditCardPayment extends Payment {
     private String cardNumber;
     private String cardHolderName;
 
-    // Constructor when retrieving from database
     public CreditCardPayment(int paymentId, double amount, String paymentDate, String status, int bookingId,
                              String cardNumber, String cardHolderName) {
 
@@ -16,7 +15,6 @@ public class CreditCardPayment extends Payment {
         this.cardHolderName = cardHolderName;
     }
 
-    // Constructor when creating new payment
     public CreditCardPayment(double amount, String paymentDate, String status, int bookingId,
                              String cardNumber, String cardHolderName) {
 

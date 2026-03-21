@@ -10,39 +10,57 @@ public class UserService {
 
     public void registerUser(User user) {
 
+        System.out.println("\n========================================");
+        System.out.println("           USER REGISTRATION            ");
+        System.out.println("========================================");
+
         if(!InputValidationUtil.isValidEmail(user.getEmail())) {
-            System.out.println("Invalid Email");
+            System.out.println("Invalid email format.");
             return;
         }
 
         if(!InputValidationUtil.isValidPassword(user.getPassword())) {
-            System.out.println("Password must be valid");
+            System.out.println("Password must be strong (min 8 chars, uppercase, lowercase, digit, special char).");
             return;
         }
 
         userDAO.registerUser(user);
-        System.out.println("Registration Completed!");
+
+        System.out.println("----------------------------------------");
+        System.out.println("Registration completed successfully.");
+        System.out.println("User Email : " + user.getEmail());
+        System.out.println("----------------------------------------");
     }
 
     public User login(String email, String password) {
 
+        System.out.println("\n========================================");
+        System.out.println("              USER LOGIN                ");
+        System.out.println("========================================");
+
         if(!InputValidationUtil.isValidEmail(email)) {
-            System.out.println("Invalid Email");
+            System.out.println("Invalid email format.");
             return null;
         }
 
         if(!InputValidationUtil.isValidPassword(password)) {
-            System.out.println("Invalid Password");
+            System.out.println("Invalid password format.");
             return null;
         }
 
-        return userDAO.login(email, password);
+        User user = userDAO.login(email, password);
+
+        if(user == null) {
+            System.out.println("Invalid email or password.");
+        }
+
+        return user;
     }
 
     public User getUserById(int userId) {
 
         if(userId <= 0) {
-            System.out.println("Invalid User ID");
+            System.out.println("Invalid User ID.");
             return null;
         }
 
@@ -52,6 +70,7 @@ public class UserService {
     public User getUserByEmail(String email) {
 
         if(email == null || email.trim().isEmpty()) {
+            System.out.println("Email cannot be empty.");
             return null;
         }
 
@@ -60,8 +79,12 @@ public class UserService {
 
     public void updatePassword(String email, String newPassword) {
 
+        System.out.println("\n========================================");
+        System.out.println("           UPDATE PASSWORD              ");
+        System.out.println("========================================");
+
         if(newPassword == null || newPassword.length() < 4) {
-            System.out.println("Weak password!");
+            System.out.println("Weak password. Minimum 4 characters required.");
             return;
         }
 

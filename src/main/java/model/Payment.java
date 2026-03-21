@@ -9,6 +9,8 @@ public class Payment {
     private int bookingId;
     private String paymentMethod; 
 
+    public Payment() {}
+    
     public Payment(int paymentId, double amount, String paymentDate, String status, int bookingId, String paymentMethod) {
         this.paymentId = paymentId;
         this.amount = amount;
@@ -26,35 +28,51 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public int getPaymentId() {
-        return paymentId;
-    }
+	public int getPaymentId() {
+		return paymentId;
+	}
 
-    public void setPaymentId(int paymentId) {
-        this.paymentId = paymentId;
-    }
+	public void setPaymentId(int paymentId) {
+		this.paymentId = paymentId;
+	}
 
-    public double getAmount() {
-        return amount;
-    }
+	public double getAmount() {
+		return amount;
+	}
 
-    public String getPaymentDate() {
-        return paymentDate;
-    }
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getPaymentDate() {
+		return paymentDate;
+	}
 
-    public int getBookingId() {
-        return bookingId;
-    }
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
 
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public int getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingId(int bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 }

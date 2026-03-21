@@ -12,10 +12,13 @@ public class LoginController {
 
     public void login() {
 
-        System.out.println("===== LOGIN =====");
-        System.out.println("1 Login");
-        System.out.println("2 Forgot Password");
-        System.out.print("Enter choice: ");
+        System.out.println("\n========================================");
+        System.out.println("              LOGIN PORTAL              ");
+        System.out.println("========================================");
+        System.out.println("1. Login");
+        System.out.println("2. Forgot Password");
+        System.out.println("========================================");
+        System.out.print("Enter your choice: ");
 
         int choice = sc.nextInt();
         sc.nextLine();
@@ -31,45 +34,51 @@ public class LoginController {
                 break;
 
             default:
-                System.out.println("Invalid choice");
+                System.out.println("\nInvalid choice. Please try again.");
         }
     }
 
     public void normalLogin() {
 
-        System.out.print("Enter Email: ");
+        System.out.println("\n------------- USER LOGIN --------------");
+
+        System.out.print("Email    : ");
         String email = sc.next();
 
-        System.out.print("Enter Password: ");
+        System.out.print("Password : ");
         String password = sc.next();
 
         User user = userService.login(email, password);
 
         if(user != null) {
 
-            System.out.println("Login Successful");
+            System.out.println("\nLogin Successful");
 
             if(user.getRole().equalsIgnoreCase("ADMIN")) {
 
+                System.out.println("Redirecting to Admin Dashboard...");
                 AdminController admin = new AdminController();
                 admin.adminMenu();
 
             } 
             else if(user.getRole().equalsIgnoreCase("CUSTOMER")) {
 
+                System.out.println("Redirecting to Customer Dashboard...");
                 CustomerController customer = new CustomerController(user.getUserId());
                 customer.customerMenu();
             }
 
         } 
         else {
-            System.out.println("Invalid Email or Password");
+            System.out.println("\nInvalid Email or Password");
         }
     }
 
     public void forgotPassword() {
 
-        System.out.println("===== FORGOT PASSWORD =====");
+        System.out.println("\n========================================");
+        System.out.println("            FORGOT PASSWORD            ");
+        System.out.println("========================================");
 
         System.out.print("Enter your registered email: ");
         String email = sc.next();
@@ -77,38 +86,42 @@ public class LoginController {
         User user = userService.getUserByEmail(email);
 
         if(user == null) {
-            System.out.println("Email not registered! Reset password failed.");
+            System.out.println("\nEmail not registered! Reset failed.");
             return;
         }
 
+        // Generate OTP
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
 
         long otpGeneratedTime = System.currentTimeMillis();
-        
+
+        System.out.println("\nSending OTP to your email...");
         EmailUtil.sendOTP(email, otp);
 
-        System.out.print("Enter OTP sent to email: ");
+        System.out.println("OTP sent successfully");
+        System.out.println("Note: OTP valid for 70 seconds");
+
+        System.out.print("\nEnter OTP: ");
         String enteredOtp = sc.next();
 
         long currentTime = System.currentTimeMillis();
 
-        if(currentTime-otpGeneratedTime>70000) {
-            System.out.println("OTP expired !!");
+        if(currentTime - otpGeneratedTime > 70000) {
+            System.out.println("\nOTP expired. Please try again.");
             return;
         }
-        
+
         if(enteredOtp.equals(otp)) {
 
-            System.out.print("Enter new password: ");
+            System.out.print("\nEnter new password: ");
             String newPassword = sc.next();
 
             userService.updatePassword(email, newPassword);
 
-            System.out.println("Password reset successful!");
+            System.out.println("\nPassword reset successful");
 
-        }
-        else {
-            System.out.println("Invalid OTP");
+        } else {
+            System.out.println("\nInvalid OTP");
         }
     }
 }

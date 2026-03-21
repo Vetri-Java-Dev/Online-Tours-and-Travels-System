@@ -13,12 +13,16 @@ public class AdminController {
 
         while(true) {
 
-            System.out.println("\n===== ADMIN MENU =====");
-            System.out.println("1 Add Tour Package");
-            System.out.println("2 View Tour Packages");
-            System.out.println("3 Exit");
+        	System.out.println("\n========================================");
+        	System.out.println("            ADMIN DASHBOARD             ");
+        	System.out.println("========================================");
+        	System.out.println("1. Add Tour Package");
+        	System.out.println("2. View Tour Packages");
+        	System.out.println("3. Exit");
+        	System.out.println("========================================");
+        	System.out.print("Enter your choice: ");
 
-            int choice = sc.nextInt();
+        	int choice = sc.nextInt();
 
             switch(choice) {
 
