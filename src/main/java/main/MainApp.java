@@ -5,6 +5,12 @@ import java.util.Scanner;
 import controller.LoginController;
 import model.User;
 import service.UserService;
+import service.TourPackageService;
+import model.TourPackage;
+import main.PriceComparator;
+import main.DurationComparator;
+import java.util.List;
+import java.util.Collections;
 
 public class MainApp {
 
@@ -13,13 +19,15 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
         LoginController loginController = new LoginController();
+        TourPackageService tourService = new TourPackageService();
 
         while(true) {
 
             System.out.println("\n===== TOUR SYSTEM =====");
             System.out.println("1 Register");
             System.out.println("2 Login");
-            System.out.println("3 Exit");
+            System.out.println("3 Search Packages"); 
+            System.out.println("4 Exit");
             System.out.print("Enter choice: ");
 
             int choice = sc.nextInt();
@@ -62,10 +70,47 @@ public class MainApp {
                     break;
 
                 case 3:
+
+                    System.out.println("===== SEARCH PACKAGE =====");
+                    System.out.print("Enter destination: ");
+                    String dest = sc.nextLine();
+
+                    List<TourPackage> list = tourService.searchByDestination(dest);
+
+                    if(list.isEmpty()) {
+                        System.out.println("No packages found!");
+                        break;
+                    }
+
+                    // Ask sorting option
+                    System.out.println("1 Sort by Price");
+                    System.out.println("2 Sort by Duration");
+                    int sortChoice = sc.nextInt();
+                    sc.nextLine();
+
+                    if(sortChoice == 1) {
+                        Collections.sort(list, new PriceComparator());
+                    } else {
+                        Collections.sort(list, new DurationComparator());
+                    }
+
+                    // Display result
+                    for(TourPackage tp : list) {
+                        System.out.println(
+                            tp.getPackageId() + " " +
+                            tp.getDestination() + " " +
+                            tp.getPrice() + " " +
+                            tp.getDuration()
+                        );
+                    }
+
+                    break;
+                    
+                case 4:
                     System.out.println("Exiting the system...");
                     sc.close();
                     System.exit(0);
-
+                    
                 default:
                     System.out.println("Invalid choice, try again!");
             }

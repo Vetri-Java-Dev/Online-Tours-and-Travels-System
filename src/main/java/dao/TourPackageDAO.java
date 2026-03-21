@@ -97,6 +97,35 @@ public class TourPackageDAO {
             e.printStackTrace();
         }
     }
+    public List<TourPackage> searchByDestination(String destination) {
 
+        List<TourPackage> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM tour_package WHERE destination LIKE ?";
+
+        try {
+            Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, "%" + destination + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                TourPackage tp = new TourPackage(
+                    rs.getInt("packageId"),
+                    rs.getString("destination"),
+                    rs.getInt("price"),
+                    rs.getInt("duration")
+                );
+                list.add(tp);
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
 }
