@@ -4,13 +4,13 @@ public class TourPackage {
 
     private int packageId;
     private String destination;
-    private int price;
+    private double price;
     private int duration;
 
     public TourPackage() {
     }
 
-    public TourPackage(int packageId, String destination, int price, int duration) {
+    public TourPackage(int packageId, String destination, double price, int duration) {
         this.packageId = packageId;
         this.destination = destination;
         this.price = price;
@@ -33,12 +33,12 @@ public class TourPackage {
         this.destination = destination;
     }
 
-    public int getPrice() {
-        return price;
-    }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPrice(double d) {
+        this.price = d;
+    }
+    public double getPrice() {
+    	return price;
     }
 
     public int getDuration() {

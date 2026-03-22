@@ -1,7 +1,7 @@
 package service;
 import java.util.*;
-import model.TourPackage;
 import dao.TourPackageDAO;
+import model.TourPackage;
 
 public class TourPackageService {
 
@@ -20,5 +20,8 @@ public class TourPackageService {
     }
     public List<TourPackage> searchByDestination(String destination) {
         return dao.searchByDestination(destination);
+    }
+    public List<TourPackage> getAllPackages() {
+        return dao.getAllPackages();
     }
 }

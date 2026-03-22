@@ -1,5 +1,6 @@
 package dao;
 
+
 import model.TourPackage;
 import util.DBConnection;
 
@@ -26,7 +27,7 @@ public class TourPackageDAO {
 
             ps.setInt(1, tourPackage.getPackageId());
             ps.setString(2, tourPackage.getDestination());
-            ps.setInt(3, tourPackage.getPrice());
+            ps.setDouble(3, tourPackage.getPrice());
             ps.setInt(4, tourPackage.getDuration());
 
             ps.executeUpdate();
@@ -102,7 +103,7 @@ public class TourPackageDAO {
 
         List<TourPackage> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM tour_package WHERE destination LIKE ?";
+        String sql = "SELECT * FROM tour_package WHERE LOWER(destination) LIKE LOWER(?)";
 
         try {
             Connection con = DBConnection.getConnection();
@@ -116,9 +117,38 @@ public class TourPackageDAO {
                 TourPackage tp = new TourPackage(
                     rs.getInt("packageId"),
                     rs.getString("destination"),
-                    rs.getInt("price"),
+                    rs.getDouble("price"),
                     rs.getInt("duration")
                 );
+                list.add(tp);
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    public List<TourPackage> getAllPackages() {
+
+        List<TourPackage> list = new ArrayList<>();
+
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM tour_package";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                TourPackage tp = new TourPackage();
+
+                tp.setPackageId(rs.getInt("packageId"));
+                tp.setDestination(rs.getString("destination"));
+                tp.setPrice(rs.getDouble("price"));
+                tp.setDuration(rs.getInt("duration"));
+
                 list.add(tp);
             }
 
