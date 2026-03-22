@@ -50,7 +50,7 @@ public class LoginController {
 
         User user = userService.login(email, password);
 
-        if(user != null) {
+        if(user!=null) {
 
             System.out.println("\nLogin Successful");
 
@@ -75,11 +75,10 @@ public class LoginController {
     }
 
     public void forgotPassword() {
-
+    	
         System.out.println("\n========================================");
         System.out.println("            FORGOT PASSWORD            ");
         System.out.println("========================================");
-
         System.out.print("Enter your registered email: ");
         String email = sc.next();
 
@@ -90,37 +89,34 @@ public class LoginController {
             return;
         }
 
-        // Generate OTP
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
-
         long otpGeneratedTime = System.currentTimeMillis();
 
         System.out.println("\nSending OTP to your email...");
-        EmailUtil.sendOTP(email, otp);
+
+        EmailUtil.sendOTPEmail(email, user.getName(), otp); // ← only change, was sendOTP()
 
         System.out.println("OTP sent successfully");
-        System.out.println("Note: OTP valid for 70 seconds");
-
+        System.out.println("Note: OTP valid for 5 minutes.");
         System.out.print("\nEnter OTP: ");
         String enteredOtp = sc.next();
 
         long currentTime = System.currentTimeMillis();
 
-        if(currentTime - otpGeneratedTime > 70000) {
+        if(currentTime - otpGeneratedTime > 5*60*1000) {
             System.out.println("\nOTP expired. Please try again.");
             return;
         }
 
         if(enteredOtp.equals(otp)) {
-
+        	
             System.out.print("\nEnter new password: ");
             String newPassword = sc.next();
-
+            
             userService.updatePassword(email, newPassword);
-
-            System.out.println("\nPassword reset successful");
-
-        } else {
+            System.out.println("\nPassword reset successful!");
+        }
+        else {
             System.out.println("\nInvalid OTP");
         }
     }

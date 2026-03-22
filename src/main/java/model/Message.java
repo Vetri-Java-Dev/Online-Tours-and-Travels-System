@@ -13,7 +13,7 @@ public class Message {
         this.senderId = senderId;
         this.receiverId = receiverId;
     }
-
+    
     public int getMessageId() {
         return messageId;
     }

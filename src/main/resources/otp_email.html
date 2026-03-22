@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <style>
+    @keyframes countdown {
+      from { width: 100%; background-color: #38a169; }
+      to   { width: 0%;   background-color: #e53e3e; }
+    }
+    @keyframes colorshift {
+      0%   { color: #38a169; }
+      60%  { color: #f5a623; }
+      100% { color: #e53e3e; }
+    }
+    .timer-bar {
+      height: 8px;
+      border-radius: 4px;
+      animation: countdown 300s linear forwards;
+    }
+    .timer-text {
+      animation: colorshift 300s linear forwards;
+      font-weight: bold;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body style='margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,sans-serif;'>
+
+  <table width='100%' cellpadding='0' cellspacing='0'>
+  <tr><td align='center' style='padding:40px 0;'>
+
+    <table width='500' cellpadding='0' cellspacing='0'
+           style='background:#ffffff;border-radius:12px;
+                  box-shadow:0 2px 10px rgba(0,0,0,0.1);'>
+
+      <!-- header -->
+      <tr><td align='center'
+              style='padding:28px 0 16px 0;
+                     border-bottom:1px solid #eeeeee;'>
+        <span style='font-size:20px;font-weight:bold;color:#0077b6;'>
+          &#9992; Tour &amp; Travel System
+        </span>
+      </td></tr>
+
+      <!-- banner -->
+      <tr><td align='center'
+              style='background-color:#fff8f0;padding:24px 0 16px 0;'>
+        <div style='font-size:48px;'>&#128274;</div>
+        <p style='font-size:18px;font-weight:bold;
+                  color:#c05000;margin:8px 0 0 0;'>
+          Password Reset Request
+        </p>
+      </td></tr>
+
+      <!-- greeting -->
+      <tr><td style='padding:24px 48px 8px 48px;'>
+        <p style='font-size:15px;color:#222222;
+                  font-weight:bold;margin:0 0 12px 0;'>
+          Hi {{userName}},
+        </p>
+        <p style='font-size:14px;color:#555555;line-height:1.8;margin:0;'>
+          Use the OTP below to reset your password.
+          This OTP is valid for <b>5 minutes</b> only.
+        </p>
+      </td></tr>
+
+      <!-- OTP box -->
+      <tr><td align='center' style='padding:16px 48px 16px 48px;'>
+        <div style='background:#fff3e0;border-radius:12px;
+                    border:2px dashed #f5a623;
+                    padding:20px 40px;display:inline-block;'>
+          <p style='font-size:13px;color:#888888;
+                    margin:0 0 8px 0;letter-spacing:2px;'>
+            YOUR OTP
+          </p>
+          <p style='font-size:36px;font-weight:bold;
+                    color:#c05000;letter-spacing:10px;margin:0;'>
+            {{otp}}
+          </p>
+        </div>
+      </td></tr>
+
+      <!-- timer -->
+      <tr><td style='padding:8px 48px 24px 48px;'>
+        <table width='100%' cellpadding='0' cellspacing='0'
+               style='margin-bottom:6px;'>
+          <tr>
+            <td style='font-size:13px;color:#555555;'>
+              &#128336; OTP expires in:
+            </td>
+            <td align='right'>
+              <span class='timer-text'>5:00 minutes</span>
+            </td>
+          </tr>
+        </table>
+
+        <!-- progress bar track -->
+        <div style='background:#eeeeee;border-radius:4px;
+                    width:100%;overflow:hidden;'>
+          <div class='timer-bar'></div>
+        </div>
+
+        <p style='font-size:12px;color:#aaaaaa;
+                  margin:6px 0 0 0;text-align:center;'>
+          Bar turns red as time runs out
+        </p>
+      </td></tr>
+
+      <!-- warning -->
+      <tr><td style='padding:0 48px 24px 48px;'>
+        <p style='font-size:13px;color:#e53e3e;line-height:1.8;margin:0;'>
+          &#9888; Do not share this OTP with anyone.
+          If you did not request this, please ignore this email.
+        </p>
+      </td></tr>
+
+      <!-- sign off -->
+      <tr><td style='padding:8px 48px 28px 48px;
+                     border-top:1px solid #eeeeee;'>
+        <p style='font-size:14px;color:#555555;margin:16px 0 4px 0;'>Our Best,</p>
+        <p style='font-size:14px;color:#222222;font-weight:bold;margin:0;'>
+          Team TATS
+        </p>
+      </td></tr>
+
+      <!-- footer -->
+      <tr><td align='center'
+              style='background:#f9f9f9;padding:16px;
+                     border-top:1px solid #eeeeee;
+                     border-radius:0 0 12px 12px;'>
+        <p style='font-size:12px;color:#aaaaaa;margin:0;'>
+          &#169; 2026 Tour &amp; Travel System
+          &nbsp;|&nbsp; onlinetats@gmail.com
+        </p>
+        <p style='font-size:11px;color:#cccccc;margin:6px 0 0 0;'>
+          This OTP expires 5 minutes from when this email was sent.
+        </p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+  </table>
+
+</body>
+</html>

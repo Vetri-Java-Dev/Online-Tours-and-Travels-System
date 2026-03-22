@@ -86,7 +86,6 @@ public class MainApp {
                         break;
                     }
 
-                    // Ask sorting option
                     System.out.println("1 Sort by Price");
                     System.out.println("2 Sort by Duration");
                     int sortChoice = sc.nextInt();
@@ -98,7 +97,6 @@ public class MainApp {
                         Collections.sort(list, new DurationComparator());
                     }
 
-                    // Display result
                     for(TourPackage tp : list) {
                         System.out.println(
                             tp.getPackageId() + " " +

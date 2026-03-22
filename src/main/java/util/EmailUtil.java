@@ -20,7 +20,8 @@ public class EmailUtil {
     private static final String PASSWORD = "jlxpbnlcpqekpxcj";
 
     private static String loadTemplate(String fileName, String userName) {
-        try {
+        
+    		try {
             InputStream is = EmailUtil.class
                     .getClassLoader()
                     .getResourceAsStream(fileName); // loads from src/main/resources/
@@ -40,7 +41,8 @@ public class EmailUtil {
 
             return html;
 
-        } catch (Exception e) {
+        }
+    		catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -140,23 +142,28 @@ public class EmailUtil {
 			}
 	}
     
-    public static void sendOTP(String toEmail, String otp) {
-        
-    		try {
-        	
+    public static void sendOTPEmail(String toEmail, String userName, String otp) {
+        try {
+            String html = loadTemplate("otp_email.html", userName);
+
+            if (html == null) return;
+
+            html = html.replace("{{otp}}", otp);
+
             MimeMessage message = new MimeMessage(createSession());
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Your OTP for Password Reset");
-            message.setText("Your OTP is: " + otp);
+            message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("OTP sent to " + toEmail);
+            System.out.println("OTP email sent to " + toEmail);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("OTP EMAIL FAILED: " + e.getMessage());
             e.printStackTrace();
         }
     }
+    
+    
 }
