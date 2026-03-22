@@ -159,10 +159,78 @@ public class EmailUtil {
             Transport.send(message);
             System.out.println("OTP email sent to " + toEmail);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("OTP EMAIL FAILED: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    public static void sendAdminBookingAlertEmail(String adminEmail,
+            String customerName,
+            int customerId,
+            int bookingId,
+            int packageId,
+            int travelers,
+            double totalAmount,
+            String bookingDate) {
+    	
+			try {
+				String html = loadTemplate("admin_booking_alert.html", "Admin");
+				
+				if (html == null) return;
+				
+				html = html.replace("{{customerName}}", customerName);
+				html = html.replace("{{customerId}}",   String.valueOf(customerId));
+				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
+				html = html.replace("{{packageId}}",    String.valueOf(packageId));
+				html = html.replace("{{travelers}}",    String.valueOf(travelers));
+				html = html.replace("{{totalAmount}}",  String.valueOf(totalAmount));
+				html = html.replace("{{bookingDate}}",  bookingDate);
+				
+				MimeMessage message = new MimeMessage(createSession());
+				message.setFrom(new InternetAddress(FROM_EMAIL));
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
+				message.setSubject("New Booking Alert - ID #" + bookingId);
+				message.setContent(html, "text/html; charset=utf-8");
+				
+				Transport.send(message);
+				System.out.println("Admin booking alert sent.");
+			
+			}
+			catch (Exception e) {
+				System.out.println("ADMIN ALERT EMAIL FAILED: " + e.getMessage());
+				e.printStackTrace();
+			}
+    }
+    
+    public static void sendAdminCancellationAlertEmail(String adminEmail,
+            String customerName,
+            int customerId,
+            int bookingId) {
+    	
+    			try {
+    				String html = loadTemplate("admin_cancellation_alert.html", "Admin");
+
+				if (html == null) return;
+				
+				html = html.replace("{{customerName}}", customerName);
+				html = html.replace("{{customerId}}",   String.valueOf(customerId));
+				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
+				
+				MimeMessage message = new MimeMessage(createSession());
+				message.setFrom(new InternetAddress(FROM_EMAIL));
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
+				message.setSubject("Booking Cancelled - ID #" + bookingId);
+				message.setContent(html, "text/html; charset=utf-8");
+				
+				Transport.send(message);
+				System.out.println("Admin cancellation alert sent.");
+				
+			}
+    			catch (Exception e) {
+				System.out.println("ADMIN CANCEL EMAIL FAILED: " + e.getMessage());
+				e.printStackTrace();
+			}
     }
     
     

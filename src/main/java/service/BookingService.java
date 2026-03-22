@@ -61,6 +61,17 @@ public class BookingService {
                 booking.getTotalAmount(),
                 booking.getBookingDate()
             );
+            
+            EmailUtil.sendAdminBookingAlertEmail(
+                    "onlinetats@gmail.com",
+                    user.getName(),
+                    user.getUserId(),
+                    booking.getBookingId(),
+                    booking.getPackageId(),
+                    booking.getTravelers(),
+                    booking.getTotalAmount(),
+                    booking.getBookingDate()
+                );
         }
     }
 
@@ -97,6 +108,7 @@ public class BookingService {
             User user = new UserDAO().getUserById(booking.getCustomerId());
             if (user != null) {
                 EmailUtil.sendCancellationEmail(user.getEmail(), user.getName(), bookingId);
+                EmailUtil.sendAdminCancellationAlertEmail("onlinetats@gmail.com",user.getName(),user.getUserId(),bookingId);
             }
         }
     }
