@@ -2,6 +2,7 @@ package dao;
 
 import model.User;
 import util.DBConnection;
+import util.EmailUtil;
 import util.PasswordUtil;
 
 import java.sql.Connection;
@@ -10,34 +11,62 @@ import java.sql.ResultSet;
 
 public class UserDAO {
 
-    public void registerUser(User user) {
+	public boolean isEmailExists(String email) {
 
-        try {
+	    try {
+	        Connection con = DBConnection.getConnection();
 
-            Connection con = DBConnection.getConnection();
+	        String query = "SELECT 1 FROM users WHERE email = ?";
+	        PreparedStatement ps = con.prepareStatement(query);
+	        ps.setString(1, email);
 
-            String query = "INSERT INTO users(name,email,password,phone,role) VALUES(?,?,?,?,?)";
+	        ResultSet rs = ps.executeQuery();
 
-            PreparedStatement ps = con.prepareStatement(query);
+	        return rs.next();
 
-            String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, hashedPassword);
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getRole());
+	    return false;
+	}
+	
+	public void registerUser(User user) {
 
-            ps.executeUpdate();
+	    try {
 
-            System.out.println("User registered successfully!");
+	        Connection con = DBConnection.getConnection();
 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	        if (isEmailExists(user.getEmail())) {
+	            System.out.println("Email already registered! Try login.");
+	            return;
+	        }
 
+	        String query = "INSERT INTO users(name,email,password,phone,role) VALUES(?,?,?,?,?)";
+
+	        PreparedStatement ps = con.prepareStatement(query);
+
+	        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+
+	        ps.setString(1, user.getName());
+	        ps.setString(2, user.getEmail());
+	        ps.setString(3, hashedPassword);
+	        ps.setString(4, user.getPhone());
+	        ps.setString(5, user.getRole());
+
+	        int rows = ps.executeUpdate();
+
+	        if (rows > 0) {
+	            System.out.println("User registered successfully!");
+	            EmailUtil.sendWelcomeEmail(user.getEmail(), user.getName()); // ← fires only on actual insert
+	        }
+
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
 
     public User login(String email, String password) {
 

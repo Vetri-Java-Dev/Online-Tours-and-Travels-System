@@ -1,47 +1,161 @@
 package util;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-import javax.mail.*;
-import javax.mail.internet.*;
+import java.util.stream.Collectors;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class EmailUtil {
 
-    public static void sendOTP(String toEmail, String otp) {
+    private static final String FROM_EMAIL = "onlinetats@gmail.com";
+    private static final String PASSWORD = "jlxpbnlcpqekpxcj";
 
-        String fromEmail = "onlinetats@gmail.com";
-        String password = "jlxp bnlc pqek pxcj";
+    private static String loadTemplate(String fileName, String userName) {
+        try {
+            InputStream is = EmailUtil.class
+                    .getClassLoader()
+                    .getResourceAsStream(fileName); // loads from src/main/resources/
 
+            if (is == null) {
+                System.out.println("Template file not found: " + fileName);
+                return null;
+            }
+
+            String html = new BufferedReader(
+                    new InputStreamReader(is, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+
+            // replace placeholder with actual name
+            html = html.replace("{{userName}}", userName);
+
+            return html;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Session createSession() {
+    	
         Properties props = new Properties();
-
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
-        Session session = Session.getInstance(props,
-                new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(fromEmail, password);
-                    }
-                });
+        return Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(FROM_EMAIL, PASSWORD);
+            }
+        });
+    }
 
+    public static void sendWelcomeEmail(String toEmail, String userName) {
         try {
+            String html = loadTemplate("welcome_email.html", userName);
 
-            Message message = new MimeMessage(session);
+            if (html == null) return;
 
-            message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(toEmail));
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Welcome to Tour & Travel System!");
+            message.setContent(html, "text/html; charset=utf-8");
 
+            Transport.send(message);
+            System.out.println("Welcome email sent to " + toEmail);
+
+        }
+        catch (Exception e) {
+            System.out.println("EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendCancellationEmail(String toEmail, String userName, int bookingId) {
+        try {
+            String html = loadTemplate("cancellation_email.html", userName);
+
+            if (html == null) return;
+
+            html = html.replace("{{bookingId}}", String.valueOf(bookingId));
+
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Booking Cancellation - ID #" + bookingId);
+            message.setContent(html, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("Cancellation email sent to " + toEmail);
+
+        }
+        catch (Exception e) {
+            System.out.println("CANCELLATION EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public static void sendBookingConfirmationEmail(String toEmail, String userName, 
+            int bookingId, int packageId,
+            int travelers, double totalAmount, 
+            String bookingDate) {
+    	
+			try {
+				String html = loadTemplate("booking_confirmation.html", userName);
+			
+				if (html == null) return;
+			
+				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
+				html = html.replace("{{packageId}}",    String.valueOf(packageId));
+				html = html.replace("{{travelers}}",    String.valueOf(travelers));
+				html = html.replace("{{totalAmount}}",  String.valueOf(totalAmount));
+				html = html.replace("{{bookingDate}}",  bookingDate);
+				
+				MimeMessage message = new MimeMessage(createSession());
+				message.setFrom(new InternetAddress(FROM_EMAIL));
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+				message.setSubject("Booking Confirmed - ID #" + bookingId);
+				message.setContent(html, "text/html; charset=utf-8");
+				
+				Transport.send(message);
+				System.out.println("Booking confirmation email sent to " + toEmail);
+			
+			}
+			catch (Exception e) {
+				System.out.println("BOOKING EMAIL FAILED: " + e.getMessage());
+				e.printStackTrace();
+			}
+	}
+    
+    public static void sendOTP(String toEmail, String otp) {
+        
+    		try {
+        	
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("Your OTP for Password Reset");
-
             message.setText("Your OTP is: " + otp);
 
             Transport.send(message);
+            System.out.println("OTP sent to " + toEmail);
 
-            System.out.println("OTP sent to email successfully!");
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            System.out.println("OTP EMAIL FAILED: " + e.getMessage());
             e.printStackTrace();
         }
     }

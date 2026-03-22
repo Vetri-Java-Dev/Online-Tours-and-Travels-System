@@ -2,8 +2,11 @@ package service;
 
 import dao.BookingDAO;
 import dao.TourPackageDAO;
+import dao.UserDAO;
 import model.Booking;
 import model.TourPackage;
+import model.User;
+import util.EmailUtil;
 
 public class BookingService {
 
@@ -46,6 +49,19 @@ public class BookingService {
         System.out.println("Total Amount : " + booking.getTotalAmount());
         System.out.println("Status       : " + booking.getStatus());
         System.out.println("----------------------------------------");
+
+        User user = new UserDAO().getUserById(booking.getCustomerId());
+        if (user != null) {
+            EmailUtil.sendBookingConfirmationEmail(
+                user.getEmail(),
+                user.getName(),
+                booking.getBookingId(),
+                booking.getPackageId(),
+                booking.getTravelers(),
+                booking.getTotalAmount(),
+                booking.getBookingDate()
+            );
+        }
     }
 
     public Booking viewBooking(int bookingId) {
@@ -75,6 +91,13 @@ public class BookingService {
 
         bookingDAO.cancelBooking(bookingId);
 
-        System.out.println("Booking cancelled successfully.");
+        Booking booking = bookingDAO.viewBooking(bookingId);
+        
+        if (booking != null) {
+            User user = new UserDAO().getUserById(booking.getCustomerId());
+            if (user != null) {
+                EmailUtil.sendCancellationEmail(user.getEmail(), user.getName(), bookingId);
+            }
+        }
     }
 }

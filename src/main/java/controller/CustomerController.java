@@ -124,6 +124,7 @@ public class CustomerController {
         System.out.println("2 Credit Card");
         System.out.println("3 Debit Card");
 
+        System.out.print("Enter payment choice : ");
         int choice = sc.nextInt();
         sc.nextLine();
 

@@ -2,6 +2,7 @@ package service;
 
 import dao.UserDAO;
 import model.User;
+import util.EmailUtil;
 import util.InputValidationUtil;
 
 public class UserService {
@@ -14,22 +15,19 @@ public class UserService {
         System.out.println("           USER REGISTRATION            ");
         System.out.println("========================================");
 
-        if(!InputValidationUtil.isValidEmail(user.getEmail())) {
+        if (!InputValidationUtil.isValidEmail(user.getEmail())) {
             System.out.println("Invalid email format.");
             return;
         }
 
-        if(!InputValidationUtil.isValidPassword(user.getPassword())) {
+        if (!InputValidationUtil.isValidPassword(user.getPassword())) {
             System.out.println("Password must be strong (min 8 chars, uppercase, lowercase, digit, special char).");
             return;
         }
 
         userDAO.registerUser(user);
 
-        System.out.println("----------------------------------------");
-        System.out.println("Registration completed successfully.");
-        System.out.println("User Email : " + user.getEmail());
-        System.out.println("----------------------------------------");
+        
     }
 
     public User login(String email, String password) {
