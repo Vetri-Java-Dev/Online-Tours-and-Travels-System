@@ -93,7 +93,8 @@ public class MainApp {
 
                     if(sortChoice == 1) {
                         Collections.sort(list, new PriceComparator());
-                    } else {
+                    }
+                    else {
                         Collections.sort(list, new DurationComparator());
                     }
 
