@@ -1,5 +1,5 @@
 package controller;
-import java.util.Scanner;
+import java.util.*;
 
 import model.Booking;
 import model.CreditCardPayment;
@@ -7,6 +7,9 @@ import model.DebitCardPayment;
 import model.Payment;
 import model.UPIPayment;
 import model.User;
+import model.TourPackage;
+import comparator.PriceComparator;
+import comparator.DurationComparator;
 import service.BookingService;
 import service.PaymentService;
 import service.TourPackageService;
@@ -41,7 +44,8 @@ public class CustomerController {
 	        	System.out.println("4.  Cancel Booking");
 	        	System.out.println("5.  View Profile");
 	        	System.out.println("6.  View Payment History");
-	        	System.out.println("7.  Exit");
+	        	System.out.println("7.  Search Package");
+	        	System.out.println("8.  Exit");
 	        	System.out.println("========================================");
 	        	System.out.print("Enter your choice: ");
 	        	
@@ -70,8 +74,12 @@ public class CustomerController {
                 case 6:
                     viewPaymentHistory();
                     break;
-
+                    
                 case 7:
+                	searchPackage();
+                	break;
+
+                case 8:
                     return;
             }
         }
@@ -203,4 +211,65 @@ public class CustomerController {
 
         bookingService.cancelBooking(bookingId);
     }
-}
+    public void searchPackage() {
+
+        System.out.println("\n===== SEARCH PACKAGE =====");
+        System.out.println("1. Search by Destination");
+        System.out.println("2. Filter Packages");
+        System.out.print("Enter choice: ");
+
+        int option = sc.nextInt();
+        sc.nextLine();
+
+        if(option == 1) {
+
+            System.out.print("Enter destination: ");
+            String dest = sc.nextLine();
+
+            List<TourPackage> list = tourService.searchByDestination(dest);
+
+            if(list.isEmpty()) {
+                System.out.println("No packages found!");
+            } else {
+                System.out.println("\n===== SEARCH RESULTS =====");
+                for(TourPackage tp : list) {
+                    System.out.println(
+                        tp.getPackageId() + " | " +
+                        tp.getDestination() + " | " +
+                        tp.getPrice() + " | " +
+                        tp.getDuration() + " days"
+                    );
+                }
+            }
+
+        } else if(option == 2) {
+
+            System.out.println("\n1. Filter by Price");
+            System.out.println("2. Filter by Title");
+            System.out.print("Enter choice: ");
+
+            int filterChoice = sc.nextInt();
+            sc.nextLine();
+
+            List<TourPackage> list = tourService.getAllPackages();
+
+            if(filterChoice == 1) {
+                Collections.sort(list, new PriceComparator());
+            } else if(filterChoice == 2) {
+                Collections.sort(list, new DurationComparator());
+            }
+
+            System.out.println("\n===== FILTERED RESULTS =====");
+
+            for(TourPackage tp : list) {
+                System.out.println(
+                    tp.getPackageId() + " | " +
+                    tp.getDestination() + " | " +
+                    tp.getPrice() + " | " +
+                    tp.getDuration() + " days"
+                );
+            }
+        }
+    }
+
+    }

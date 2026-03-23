@@ -1,4 +1,4 @@
-package main;
+package comparator;
 
 import java.util.Comparator;
 import model.TourPackage;
