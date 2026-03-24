@@ -65,19 +65,22 @@ public class EmailUtil {
     }
 
     public static void sendWelcomeEmail(String toEmail, String userName) {
-        try {
+        
+    		try {
             String html = loadTemplate("welcome_email.html", userName);
 
             if (html == null) return;
 
             MimeMessage message = new MimeMessage(createSession());
+            
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            
             message.setSubject("Welcome to Tour & Travel System!");
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("Welcome email sent to " + toEmail);
+            //System.out.println("Welcome email sent to " + toEmail);
 
         }
         catch (Exception e) {
@@ -95,13 +98,16 @@ public class EmailUtil {
             html = html.replace("{{bookingId}}", String.valueOf(bookingId));
 
             MimeMessage message = new MimeMessage(createSession());
+            
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            
             message.setSubject("Booking Cancellation - ID #" + bookingId);
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("Cancellation email sent to " + toEmail);
+            
+            //System.out.println("Cancellation email sent to " + toEmail);
 
         }
         catch (Exception e) {
@@ -116,6 +122,7 @@ public class EmailUtil {
             String bookingDate) {
     	
 			try {
+				
 				String html = loadTemplate("booking_confirmation.html", userName);
 			
 				if (html == null) return;
@@ -127,13 +134,16 @@ public class EmailUtil {
 				html = html.replace("{{bookingDate}}",  bookingDate);
 				
 				MimeMessage message = new MimeMessage(createSession());
+				
 				message.setFrom(new InternetAddress(FROM_EMAIL));
 				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+				
 				message.setSubject("Booking Confirmed - ID #" + bookingId);
 				message.setContent(html, "text/html; charset=utf-8");
 				
 				Transport.send(message);
-				System.out.println("Booking confirmation email sent to " + toEmail);
+				
+				//System.out.println("Booking confirmation email sent to " + toEmail);
 			
 			}
 			catch (Exception e) {

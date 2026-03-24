@@ -35,7 +35,7 @@ public class BookingDAO {
 	            if (rs.next()) {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
-	                System.out.println("Booking created successfully! Booking ID: " + bookingId);
+	                System.out.println("Booking created successfully! Booking ID : " + bookingId);
 	            }
 	        }
 
@@ -63,7 +63,7 @@ public class BookingDAO {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()) {
-
+            	
                 booking = new Booking(
                         rs.getInt("bookingId"),
                         rs.getString("bookingDate"),

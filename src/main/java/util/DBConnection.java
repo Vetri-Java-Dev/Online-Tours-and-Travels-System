@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/toursystem";
+    private static final String URL = "jdbc:mysql://centerbeam.proxy.rlwy.net:28342/railway";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "vetri@1234";
+    private static final String PASSWORD = "OUKaYjOKodUAFIgaspleIsRRReqHmLBq";
 
     public static Connection getConnection() {
 

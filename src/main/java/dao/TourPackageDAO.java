@@ -123,7 +123,8 @@ public class TourPackageDAO {
                 list.add(tp);
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -152,7 +153,8 @@ public class TourPackageDAO {
                 list.add(tp);
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
 

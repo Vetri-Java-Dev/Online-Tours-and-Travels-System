@@ -230,7 +230,9 @@ public class CustomerController {
 
             if(list.isEmpty()) {
                 System.out.println("No packages found!");
-            } else {
+            }
+            
+            else {
                 System.out.println("\n===== SEARCH RESULTS =====");
                 for(TourPackage tp : list) {
                     System.out.println(
@@ -242,7 +244,8 @@ public class CustomerController {
                 }
             }
 
-        } else if(option == 2) {
+        }
+        else if(option == 2) {
 
             System.out.println("\n1. Filter by Price");
             System.out.println("2. Filter by Title");
@@ -255,7 +258,8 @@ public class CustomerController {
 
             if(filterChoice == 1) {
                 Collections.sort(list, new PriceComparator());
-            } else if(filterChoice == 2) {
+            }
+            else if(filterChoice == 2) {
                 Collections.sort(list, new DurationComparator());
             }
 
