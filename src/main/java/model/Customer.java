@@ -2,11 +2,6 @@ package model;
 
 import java.util.List;
 
-/*preferences : String
-
-contactDetails : String
-
-bookingHistory : List<int>*/
 public class Customer extends User{
 	
 	private String preference;
