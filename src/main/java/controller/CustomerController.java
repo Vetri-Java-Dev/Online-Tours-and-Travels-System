@@ -14,6 +14,9 @@ import service.BookingService;
 import service.PaymentService;
 import service.TourPackageService;
 import service.UserService;
+import service.ItineraryService;
+import model.Itinerary;
+import model.ItineraryItem;
 
 public class CustomerController {
 
@@ -39,13 +42,14 @@ public class CustomerController {
         		System.out.println("           CUSTOMER DASHBOARD           ");
 	        	System.out.println("========================================");
 	        	System.out.println("1.  View Tour Packages");
-	        	System.out.println("2.  Create Booking");
-	        	System.out.println("3.  View Booking");
-	        	System.out.println("4.  Cancel Booking");
-	        	System.out.println("5.  View Profile");
-	        	System.out.println("6.  View Payment History");
-	        	System.out.println("7.  Search Package");
-	        	System.out.println("8.  Exit");
+	        	System.out.println("2.  View Package Itinerary");
+	        	System.out.println("3.  Create Booking");
+	        	System.out.println("4.  View Booking");
+	        	System.out.println("5.  Cancel Booking");
+	        	System.out.println("6.  View Profile");
+	        	System.out.println("7.  View Payment History");
+	        	System.out.println("8.  Search Package");
+	        	System.out.println("9.  Exit");
 	        	System.out.println("========================================");
 	        	System.out.print("Enter your choice: ");
 	        	
@@ -55,32 +59,37 @@ public class CustomerController {
             		case 1:
             			tourService.displayPackages();
             			break;
-            
+            			
             		case 2:
+            		    viewItinerary();
+            		    break;	
+            
+            		case 3:
             			createBooking();
             			break;
 
-            		case 3:
+            		case 4:
             			viewBooking();
             			break;
 
-            		case 4:
+            		case 5:
             			cancelBooking();
             			break;
-                case 5:
-                    viewProfile();
-                    break;
+            			
+                    case 6:
+                       viewProfile();
+                       break;
 
-                case 6:
-                    viewPaymentHistory();
-                    break;
+                   case 7:
+                       viewPaymentHistory();
+                       break;
                     
-                case 7:
-                	searchPackage();
-                	break;
+                   case 8:
+                	   searchPackage();
+                	   break;
 
-                case 8:
-                    return;
+                   case 9:
+                       return;
             }
         }
     }
@@ -271,5 +280,47 @@ public class CustomerController {
             }
         }
     }
+ private void viewItinerary() {
+
+     System.out.println("\n========================================");
+     System.out.println("        VIEW PACKAGE ITINERARY          ");
+     System.out.println("========================================");
+
+     System.out.print("Enter Package ID to view Itinerary : ");
+     int packageId = sc.nextInt();
+
+     ItineraryService itineraryService = new ItineraryService();
+
+     Itinerary itinerary = itineraryService.viewItinerary(packageId);
+
+     if (itinerary != null) {
+
+         List<ItineraryItem> items = itinerary.getItems();
+
+         // AC2 + AC3 - Display itinerary with day-wise schedule
+         System.out.println("\n--- ITINERARY DETAILS ---");
+         System.out.println("Package ID  : " + itinerary.getPackageId());
+         System.out.println("Total Days  : " + items.size());
+         System.out.println();
+         System.out.println("--- DAY-WISE SCHEDULE ---");
+         System.out.println("----------------------------------------------------------");
+         System.out.printf("%-5s %-15s %-35s%n", "Day", "Location", "Activity");
+         System.out.println("----------------------------------------------------------");
+
+         for (ItineraryItem item : items) {
+             System.out.printf("%-5d %-15s %-35s%n",
+                 item.getDayNumber(),
+                 item.getLocation(),
+                 item.getActivity());
+         }
+
+         System.out.println("----------------------------------------------------------");
+
+     } else {
+
+         // Invalid Case - Itinerary not found
+         System.out.println("\nItinerary not available for Package ID : " + packageId);
+     }
+ }
 
     }
