@@ -9,7 +9,6 @@ public class Package {
 	private int availableSeats;
 	private String startDate;
 	private String endDate;
-	
 	public Package(int packageId, String title, String location, double price, int availableSeats, String startDate, String endDate) {
         this.packageId = packageId;
         this.title = title;
@@ -19,7 +18,6 @@ public class Package {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-	
     public int getPackageId() {
         return packageId;
     }
