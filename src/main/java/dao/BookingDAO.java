@@ -1,12 +1,9 @@
 package dao;
-
 import model.Booking;
 import util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 public class BookingDAO {
 
 	public void createBooking(Booking booking) {
@@ -81,8 +78,6 @@ public class BookingDAO {
 
         return booking;
     }
-
-
     public void cancelBooking(int bookingId) {
 
         try {
