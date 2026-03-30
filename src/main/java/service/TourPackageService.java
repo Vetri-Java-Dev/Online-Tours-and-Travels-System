@@ -24,4 +24,11 @@ public class TourPackageService {
     public List<TourPackage> getAllPackages() {
         return dao.getAllPackages();
     }
+    public List<TourPackage> getAvailablePackages() {
+        return dao.getAvailablePackages();
+    }
+
+    public List<TourPackage> getPackagesSortedByPrice() {
+        return dao.getAllPackagesSortedByPrice();
+    }
 }

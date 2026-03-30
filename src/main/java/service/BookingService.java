@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import dao.BookingDAO;
 import dao.TourPackageDAO;
 import dao.UserDAO;
@@ -111,5 +113,8 @@ public class BookingService {
                 EmailUtil.sendAdminCancellationAlertEmail("onlinetats@gmail.com",user.getName(),user.getUserId(),bookingId);
             }
         }
+    }
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        return bookingDAO.getBookingsByCustomerId(customerId);
     }
 }

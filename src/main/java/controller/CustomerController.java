@@ -48,8 +48,11 @@ public class CustomerController {
 	        	System.out.println("5.  Cancel Booking");
 	        	System.out.println("6.  View Profile");
 	        	System.out.println("7.  View Payment History");
-	        	System.out.println("8.  Search Package");
-	        	System.out.println("9.  Exit");
+	        	System.out.println("8.  Search / Filter Packages");
+	        	System.out.println("9.  Update Profile");
+	        	System.out.println("10. View Booking History");
+	        	System.out.println("11. Delete Account");
+	        	System.out.println("12. Exit");
 	        	System.out.println("========================================");
 	        	System.out.print("Enter your choice: ");
 	        	
@@ -89,7 +92,16 @@ public class CustomerController {
                 	   break;
 
                    case 9:
-                       return;
+                	    updateProfile();
+                	    break;
+                	case 10:
+                	    viewBookingHistory();
+                	    break;
+                	case 11:
+                	    deleteAccount();
+                	    return;
+                	case 12:
+                	    return;
             }
         }
     }
@@ -221,64 +233,72 @@ public class CustomerController {
         bookingService.cancelBooking(bookingId);
     }
     public void searchPackage() {
-
-        System.out.println("\n===== SEARCH PACKAGE =====");
+        System.out.println("\n===== SEARCH / FILTER PACKAGES =====");
         System.out.println("1. Search by Destination");
-        System.out.println("2. Filter Packages");
+        System.out.println("2. Filter by Price Range");
+        System.out.println("3. View Available Packages");
+        System.out.println("4. Sort by Price (Low to High)");
         System.out.print("Enter choice: ");
 
         int option = sc.nextInt();
         sc.nextLine();
 
-        if(option == 1) {
-
+        if (option == 1) {
             System.out.print("Enter destination: ");
             String dest = sc.nextLine();
-
             List<TourPackage> list = tourService.searchByDestination(dest);
-
-            if(list.isEmpty()) {
-                System.out.println("No packages found!");
+            if (list.isEmpty()) {
+                System.out.println("No packages found for destination");
             } else {
-                System.out.println("\n===== SEARCH RESULTS =====");
-                for(TourPackage tp : list) {
-                    System.out.println(
-                        tp.getPackageId() + " | " +
-                        tp.getDestination() + " | " +
-                        tp.getPrice() + " | " +
-                        tp.getDuration() + " days"
-                    );
+                printPackageList(list);
+            }
+
+        } else if (option == 2) {
+            System.out.print("Enter minimum price: ");
+            double minPrice = sc.nextDouble();
+            System.out.print("Enter maximum price: ");
+            double maxPrice = sc.nextDouble();
+            List<TourPackage> all = tourService.getAllPackages();
+            List<TourPackage> filtered = new ArrayList<>();
+            for (TourPackage tp : all) {
+                if (tp.getPrice() >= minPrice && tp.getPrice() <= maxPrice) {
+                    filtered.add(tp);
                 }
             }
-
-        } else if(option == 2) {
-
-            System.out.println("\n1. Filter by Price");
-            System.out.println("2. Filter by Title");
-            System.out.print("Enter choice: ");
-
-            int filterChoice = sc.nextInt();
-            sc.nextLine();
-
-            List<TourPackage> list = tourService.getAllPackages();
-
-            if(filterChoice == 1) {
-                Collections.sort(list, new PriceComparator());
-            } else if(filterChoice == 2) {
-                Collections.sort(list, new DurationComparator());
+            if (filtered.isEmpty()) {
+                System.out.println("No packages available in this price range");
+            } else {
+                printPackageList(filtered);
             }
 
-            System.out.println("\n===== FILTERED RESULTS =====");
+        } else if (option == 3) {
+            List<TourPackage> list = tourService.getAvailablePackages();
+            if (list.isEmpty()) {
+                System.out.println("No available packages");
+            } else {
+                printPackageList(list);
+            }
 
-            for(TourPackage tp : list) {
-                System.out.println(
-                    tp.getPackageId() + " | " +
-                    tp.getDestination() + " | " +
-                    tp.getPrice() + " | " +
-                    tp.getDuration() + " days"
-                );
+        } else if (option == 4) {
+            List<TourPackage> list = tourService.getPackagesSortedByPrice();
+            if (list.isEmpty()) {
+                System.out.println("No packages available to sort");
+            } else {
+                System.out.println("\n===== PACKAGES (Low to High Price) =====");
+                printPackageList(list);
             }
         }
+    }
+
+    private void printPackageList(List<TourPackage> list) {
+        System.out.println("----------------------------------------------------------");
+        System.out.printf("%-5s %-30s %-10s %-10s%n", "ID", "Destination", "Price", "Duration");
+        System.out.println("----------------------------------------------------------");
+        for (TourPackage tp : list) {
+            System.out.printf("%-5d %-30s %-10.2f %-10d days%n",
+                tp.getPackageId(), tp.getDestination(), tp.getPrice(), tp.getDuration());
+        }
+        System.out.println("----------------------------------------------------------");
     }
  private void viewItinerary() {
 
@@ -318,9 +338,60 @@ public class CustomerController {
 
      } else {
 
-         // Invalid Case - Itinerary not found
          System.out.println("\nItinerary not available for Package ID : " + packageId);
      }
  }
+ 
+ public void updateProfile() {
+	    System.out.println("\n===== UPDATE PROFILE =====");
+	    System.out.print("Enter new Name: ");
+	    sc.nextLine();
+	    String name = sc.nextLine();
+	    System.out.print("Enter new Phone: ");
+	    String phone = sc.nextLine();
+
+	    if (name.isEmpty() || phone.isEmpty()) {
+	        System.out.println("Invalid input - Please enter valid details");
+	        return;
+	    }
+	    boolean updated = userService.updateUser(customerId, name, phone);
+	    if (updated) {
+	        System.out.println("Profile updated successfully");
+	    } else {
+	        System.out.println("Update failed. Please try again.");
+	    }
+	}
+
+	public void viewBookingHistory() {
+	    List<Booking> bookings = bookingService.getBookingsByCustomerId(customerId);
+	    if (bookings == null || bookings.isEmpty()) {
+	        System.out.println("No bookings found");
+	    } else {
+	        System.out.println("\n===== BOOKING HISTORY =====");
+	        System.out.printf("%-12s %-12s %-15s %-10s%n", "BookingID", "PackageID", "Date", "Status");
+	        System.out.println("--------------------------------------------------");
+	        for (Booking b : bookings) {
+	            System.out.printf("%-12d %-12d %-15s %-10s%n",
+	                b.getBookingId(), b.getPackageId(), b.getBookingDate(), b.getStatus());
+	        }
+	    }
+	}
+
+	public void deleteAccount() {
+	    System.out.println("\n===== DELETE ACCOUNT =====");
+	    System.out.print("Are you sure you want to delete your account? (yes/no): ");
+	    sc.nextLine();
+	    String confirm = sc.nextLine().trim().toLowerCase();
+	    if (confirm.equals("yes")) {
+	        boolean deleted = userService.deleteUser(customerId);
+	        if (deleted) {
+	            System.out.println("Account deleted successfully");
+	        } else {
+	            System.out.println("Failed to delete account.");
+	        }
+	    } else {
+	        System.out.println("Account deletion cancelled");
+	    }
+	}
 
     }

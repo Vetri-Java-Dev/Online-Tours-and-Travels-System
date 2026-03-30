@@ -48,4 +48,8 @@ public class TourPackage {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+    private int availableSeats;
+
+    public int getAvailableSeats() { return availableSeats; }
+    public void setAvailableSeats(int availableSeats) { this.availableSeats = availableSeats; }
 }

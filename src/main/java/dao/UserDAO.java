@@ -200,6 +200,27 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
+    public boolean updateUser(int userId, String name, String phone) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "UPDATE users SET name=?, phone=? WHERE userId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, phone);
+            ps.setInt(3, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); return false; }
+    }
+
+    public boolean deleteUser(int userId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "DELETE FROM users WHERE userId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) { e.printStackTrace(); return false; }
+    }
     
     
     

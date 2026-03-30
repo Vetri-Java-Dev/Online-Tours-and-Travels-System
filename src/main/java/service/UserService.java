@@ -8,6 +8,7 @@ import util.InputValidationUtil;
 public class UserService {
 
     private UserDAO userDAO = new UserDAO();
+    
 
     public void registerUser(User user) {
 
@@ -87,5 +88,12 @@ public class UserService {
         }
 
         userDAO.updatePassword(email, newPassword);
+    }
+    public boolean updateUser(int userId, String name, String phone) {
+        return userDAO.updateUser(userId, name, phone);
+    }
+
+    public boolean deleteUser(int userId) {
+        return userDAO.deleteUser(userId);
     }
 }

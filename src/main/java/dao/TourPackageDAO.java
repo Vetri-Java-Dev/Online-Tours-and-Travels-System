@@ -130,6 +130,43 @@ public class TourPackageDAO {
 
         return list;
     }
+    public List<TourPackage> getAvailablePackages() {
+        List<TourPackage> list = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM tour_package";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TourPackage tp = new TourPackage();
+                tp.setPackageId(rs.getInt("packageId"));
+                tp.setDestination(rs.getString("destination"));
+                tp.setPrice(rs.getDouble("price"));
+                tp.setDuration(rs.getInt("duration"));
+                list.add(tp);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<TourPackage> getAllPackagesSortedByPrice() {
+        List<TourPackage> list = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM tour_package ORDER BY price ASC";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TourPackage tp = new TourPackage();
+                tp.setPackageId(rs.getInt("packageId"));
+                tp.setDestination(rs.getString("destination"));
+                tp.setPrice(rs.getDouble("price"));
+                tp.setDuration(rs.getInt("duration"));
+                list.add(tp);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
     public List<TourPackage> getAllPackages() {
 
         List<TourPackage> list = new ArrayList<>();
