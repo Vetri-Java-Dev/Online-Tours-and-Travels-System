@@ -23,6 +23,19 @@ public class AdminController {
     // ================= MAIN MENU =================
     public void adminMenu() {
 
+        while(true) {
+            System.out.println("\n========================================");
+            System.out.println("            ADMIN DASHBOARD             ");
+            System.out.println("========================================");
+            System.out.println("1. Add Tour Package");
+            System.out.println("2. View Tour Packages");
+            System.out.println("3. Update Tour Package");
+            System.out.println("4. Delete Tour Package");
+            System.out.println("5. Exit");
+            System.out.println("========================================");
+            System.out.print("Enter your choice: ");
+
+
         while (true) {
 
             System.out.println("\n╔══════════════════════════════════════╗");
@@ -36,8 +49,21 @@ public class AdminController {
             System.out.println("║  6. Exit                            ║");
             System.out.println("╚══════════════════════════════════════╝");
 
+
             System.out.print("Enter choice: ");
             int choice = Integer.parseInt(sc.nextLine());
+
+            switch(choice) {
+                case 1:
+                    System.out.print("Enter Package Id : ");
+                    int id = sc.nextInt();
+                    System.out.print("Enter Destination : ");
+                    String destination = sc.next();
+                    System.out.print("Enter Price : ");
+                    int price = sc.nextInt();
+                    System.out.print("Enter Duration(Days) : ");
+                    int duration = sc.nextInt();
+                    service.createPackage(id, destination, price, duration);
 
             switch (choice) {
 
@@ -92,6 +118,7 @@ public class AdminController {
                     int duration = Integer.parseInt(sc.nextLine());
 
                     service.createPackage(id, dest, price, duration);
+
                     break;
 
                 case 2:
@@ -99,6 +126,35 @@ public class AdminController {
                     break;
 
                 case 3:
+                    System.out.print("Enter Package ID to update: ");
+                    int updateId = sc.nextInt();
+                    System.out.print("Enter new Destination: ");
+                    String newDest = sc.next();
+                    System.out.print("Enter new Price: ");
+                    int newPrice = sc.nextInt();
+                    System.out.print("Enter new Duration(Days): ");
+                    int newDuration = sc.nextInt();
+                    service.updatePackage(updateId, newDest, newPrice, newDuration);
+                    break;
+
+                case 4:
+                    System.out.print("Enter Package ID to delete: ");
+                    int deleteId = sc.nextInt();
+                    System.out.print("Are you sure? (yes/no): ");
+                    String confirm = sc.next();
+                    if (confirm.equalsIgnoreCase("yes")) {
+                        service.deletePackage(deleteId);
+                    } else {
+                        System.out.println("Package deletion cancelled");
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Exiting Admin Menu...");
+                    return;
+
+                default:
+                    System.out.println("Invalid Choice");
                     System.out.print("ID: ");
                     int uid = Integer.parseInt(sc.nextLine());
 
@@ -121,6 +177,7 @@ public class AdminController {
 
                 case 5:
                     return;
+
             }
         }
     }
