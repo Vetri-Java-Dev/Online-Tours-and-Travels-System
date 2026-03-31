@@ -14,8 +14,6 @@ public class Message {
         this.senderRole = senderRole;
     }
 
-    
-
     public int getSenderId() {
         return senderId;
     }

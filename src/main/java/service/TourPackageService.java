@@ -23,6 +23,14 @@ public class TourPackageService {
     }
     public List<TourPackage> getAllPackages() {
         return dao.getAllPackages();
+        
+    }
+        public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
+            return dao.updatePackage(packageId, newDestination, newPrice, newDuration);
+        }
+
+        public boolean deletePackage(int packageId) {
+            return dao.deletePackage(packageId);
     }
     public List<TourPackage> getAvailablePackages() {
         return dao.getAvailablePackages();

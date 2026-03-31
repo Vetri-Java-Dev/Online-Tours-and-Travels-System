@@ -6,6 +6,7 @@ public class ItineraryItem {
     private int dayNumber;
     private String activity;
     private String location;
+    
     public ItineraryItem(int itemId, int dayNumber, String activity, String location) {
         this.itemId = itemId;
         this.dayNumber = dayNumber;

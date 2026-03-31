@@ -6,6 +6,7 @@ public class Itinerary {
 	private int packageId;
 	private int userId;
 	private List<ItineraryItem> items;
+	
     public Itinerary(int itineraryId, int packageId, int userId, List<ItineraryItem> items) {
         this.itineraryId = itineraryId;
         this.packageId = packageId;
