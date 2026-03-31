@@ -1,12 +1,9 @@
 package dao;
-
 import model.Booking;
 import util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 public class BookingDAO {
 
 	public void createBooking(Booking booking) {
@@ -35,7 +32,7 @@ public class BookingDAO {
 	            if (rs.next()) {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
-	                System.out.println("Booking created successfully! Booking ID: " + bookingId);
+	                System.out.println("Booking created successfully! Booking ID : " + bookingId);
 	            }
 	        }
 
@@ -63,7 +60,7 @@ public class BookingDAO {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()) {
-
+            	
                 booking = new Booking(
                         rs.getInt("bookingId"),
                         rs.getString("bookingDate"),
@@ -81,8 +78,6 @@ public class BookingDAO {
 
         return booking;
     }
-
-
     public void cancelBooking(int bookingId) {
 
         try {
