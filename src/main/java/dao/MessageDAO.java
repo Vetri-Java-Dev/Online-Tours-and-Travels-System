@@ -8,7 +8,6 @@ import java.util.*;
 
 public class MessageDAO {
 
-    // SEND MESSAGE
     public void sendMessage(Message msg) {
         try (Connection con = DBConnection.getConnection()) {
 
@@ -21,33 +20,35 @@ public class MessageDAO {
             ps.setString(4, msg.getSenderRole());
 
             ps.executeUpdate();
-            System.out.println("✅ Message Sent!");
+            System.out.println("Message Sent!");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // ADMIN VIEW
     public List<String> getUnreadMessages() {
         List<String> list = new ArrayList<>();
 
         try (Connection con = DBConnection.getConnection()) {
 
-            String sql = "SELECT * FROM messages WHERE is_read=FALSE AND sender_role='CUSTOMER'";
+            String sql = "SELECT m.message_id, m.sender_id, m.content, u.name " +
+                         "FROM messages m " +
+                         "JOIN users u ON m.sender_id = u.userId " +
+                         "WHERE m.is_read = FALSE AND m.sender_role = 'CUSTOMER'";
+
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
 
             while (rs.next()) {
-                int cid = rs.getInt("sender_id");
-                String msg = rs.getString("content");
+                String name = rs.getString("name"); 
+                String msg  = rs.getString("content");
+                int id      = rs.getInt("message_id");
 
-                list.add("Customer " + cid + " : " + msg);
+                list.add(name + " : " + msg); 
 
-                // mark as read
-                int id = rs.getInt("message_id");
                 PreparedStatement ps = con.prepareStatement(
-                        "UPDATE messages SET is_read=TRUE WHERE message_id=?"
+                    "UPDATE messages SET is_read = TRUE WHERE message_id = ?"
                 );
                 ps.setInt(1, id);
                 ps.executeUpdate();
@@ -60,7 +61,6 @@ public class MessageDAO {
         return list;
     }
 
-    // CUSTOMER VIEW
     public List<String> getReplies(int customerId) {
         List<String> list = new ArrayList<>();
 
@@ -76,8 +76,9 @@ public class MessageDAO {
                 list.add(rs.getString("content"));
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e) {
+        		e.printStackTrace();
         }
 
         return list;

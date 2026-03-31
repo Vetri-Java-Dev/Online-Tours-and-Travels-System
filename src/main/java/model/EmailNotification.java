@@ -13,7 +13,7 @@ public class EmailNotification {
         this.subject = subject;
         this.message = message;
     }
-
+    
     public int getNotificationId() {
         return notificationId;
     }

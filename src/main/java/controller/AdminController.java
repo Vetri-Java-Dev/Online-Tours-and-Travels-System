@@ -1,13 +1,16 @@
 package controller;
 
+import java.util.List;
 import java.util.Scanner;
 
+import service.MessageService;
 import service.TourPackageService;
 
 public class AdminController {
 
     Scanner sc = new Scanner(System.in);
-    TourPackageService service = new TourPackageService();
+    TourPackageService service    = new TourPackageService();
+    MessageService messageService = new MessageService();
 
     public void adminMenu() {
         while(true) {
@@ -51,12 +54,7 @@ public class AdminController {
                     System.out.print("Enter new Duration(Days): ");
                     int newDuration = sc.nextInt();
                     service.updatePackage(updateId, newDest, newPrice, newDuration);
-                    System.out.print("Enter available seats: ");
-                    int seats = sc.nextInt();
-                    service.updateAvailableSeats(updateId, seats);
                     break;
-                    
-                
 
                 case 4:
                     System.out.print("Enter Package ID to delete: ");
@@ -79,5 +77,51 @@ public class AdminController {
             }
         }
     }
-    
+
+    private void messageMenu() {
+
+        System.out.println("\n┌─────────────────────────────────────┐");
+        System.out.println("│         MESSAGE CUSTOMER            │");
+        System.out.println("└─────────────────────────────────────┘");
+        System.out.println("  1.  View Messages from Customers");
+        System.out.println("  2.  Reply to Customer");
+        System.out.print("  Enter choice: ");
+
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        switch(choice) {
+
+            case 1:
+                List<String> messages = messageService.viewMessages();
+
+                if (messages.isEmpty()) {
+                    System.out.println("\n  No new messages from customers.");
+                } else {
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│       MESSAGES FROM CUSTOMERS       │");
+                    System.out.println("└─────────────────────────────────────┘");
+                    for (String m : messages) {
+                        System.out.println("  " + m);
+                        System.out.println("  ─────────────────────────────────────");
+                    }
+                }
+                break;
+
+            case 2:
+                System.out.print("  Customer ID : ");
+                int customerId = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("  Reply       : ");
+                String reply = sc.nextLine();
+
+                messageService.replyToCustomer(customerId, reply);
+                System.out.println("\n  Reply sent successfully!");
+                break;
+
+            default:
+                System.out.println("\n  Invalid choice.");
+        }
+    }
 }
