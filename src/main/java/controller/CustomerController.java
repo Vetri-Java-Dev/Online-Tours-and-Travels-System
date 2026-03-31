@@ -221,7 +221,7 @@ public class CustomerController {
         int opt = sc.nextInt();
         sc.nextLine();
 
-        List<TourPackage> list = tourService.getAllPackages();
+        List<TourPackage> list = tourService.getAvailablePackages();
 
         if (opt == 1) {
             System.out.print("Destination: ");
@@ -243,7 +243,16 @@ public class CustomerController {
 
     private void viewItinerary() {
         System.out.print("Package ID: ");
-        new ItineraryService().viewItinerary(sc.nextInt());
+        Itinerary itinerary = new ItineraryService().viewItinerary(sc.nextInt());
+        if (itinerary == null) {
+            System.out.println("No itinerary found for this package.");
+            return;
+        }
+        System.out.println("\n--- Itinerary ---");
+        for (ItineraryItem item : itinerary.getItems()) {
+            System.out.printf("Day %d | %s | %s%n",
+                item.getDayNumber(), item.getActivity(), item.getLocation());
+        }
     }
 
     private void messageMenu() {

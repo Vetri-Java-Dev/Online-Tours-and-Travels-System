@@ -21,10 +21,7 @@ public class TourPackageService {
     public List<TourPackage> searchByDestination(String destination) {
         return dao.searchByDestination(destination);
     }
-    public List<TourPackage> getAllPackages() {
-        return dao.getAllPackages();
-        
-    }
+    
         public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
             return dao.updatePackage(packageId, newDestination, newPrice, newDuration);
         }
@@ -35,9 +32,6 @@ public class TourPackageService {
 
     public List<TourPackage> getPackagesSortedByPrice() {
         return dao.getAllPackagesSortedByPrice();
-    }
-    public void updatePackage(int id, String dest, int price, int duration) {
-        dao.updatePackage(id, dest, price, duration);
     }
 
     public void deletePackage(int id) {

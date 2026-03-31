@@ -13,7 +13,6 @@ import java.util.List;
 
 public class TourPackageDAO {
 
-    List<TourPackage> packages = new ArrayList<>();
 
     public void addPackage(TourPackage tourPackage) {
 
@@ -168,35 +167,7 @@ public class TourPackageDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
-    public List<TourPackage> getAllPackages() {
-
-        List<TourPackage> list = new ArrayList<>();
-
-        try {
-            Connection con = DBConnection.getConnection();
-            String query = "SELECT * FROM tour_package";
-
-            PreparedStatement ps = con.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()) {
-
-                TourPackage tp = new TourPackage();
-
-                tp.setPackageId(rs.getInt("packageId"));
-                tp.setDestination(rs.getString("destination"));
-                tp.setPrice(rs.getDouble("price"));
-                tp.setDuration(rs.getInt("duration"));
-
-                list.add(tp);
-            }
-
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-            return list;
-        }
+    
     
         public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
             try {
@@ -222,23 +193,7 @@ public class TourPackageDAO {
         }
         
         
-    public void updatePackage(int packageId, String destination, int price, int duration) {
-        try {
-            Connection con = DBConnection.getConnection();
-            String query = "UPDATE tour_package SET destination=?, price=?, duration=? WHERE packageId=?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, destination);
-            ps.setInt(2, price);
-            ps.setInt(3, duration);
-            ps.setInt(4, packageId);
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                System.out.println("Package Updated Successfully");
-            } else {
-                System.out.println("Package not found");
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-    }
+    
 
     public void deletePackage(int packageId) {
         try {

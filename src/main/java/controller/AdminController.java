@@ -58,6 +58,7 @@ public class AdminController {
                     System.out.print("Enter Package Id : ");
                     int id = sc.nextInt();
                     System.out.print("Enter Destination : ");
+                    sc.nextLine();;
                     String destination = sc.next();
                     System.out.print("Enter Price : ");
                     int price = sc.nextInt();
@@ -134,7 +135,8 @@ public class AdminController {
                     int newPrice = sc.nextInt();
                     System.out.print("Enter new Duration(Days): ");
                     int newDuration = sc.nextInt();
-                    service.updatePackage(updateId, newDest, newPrice, newDuration);
+                    boolean updated = service.updatePackage(updateId, newDest, newPrice, newDuration);
+                    System.out.println(updated ? "Package updated!" : "Package not found.");
                     break;
 
                 case 4:
