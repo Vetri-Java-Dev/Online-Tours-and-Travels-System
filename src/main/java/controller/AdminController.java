@@ -9,26 +9,28 @@ import service.TourPackageService;
 public class AdminController {
 
     Scanner sc = new Scanner(System.in);
-    TourPackageService service    = new TourPackageService();
+    TourPackageService service = new TourPackageService();
     MessageService messageService = new MessageService();
 
     public void adminMenu() {
 
-        while(true) {
+        while (true) {
 
             System.out.println("\n========================================");
             System.out.println("            ADMIN DASHBOARD             ");
             System.out.println("========================================");
             System.out.println("1. Add Tour Package");
             System.out.println("2. View Tour Packages");
-            System.out.println("3. Message Customer");   // ← renamed
-            System.out.println("4. Exit");
+            System.out.println("3. Update Tour Package");
+            System.out.println("4. Delete Tour Package");
+            System.out.println("5. Message Customer");
+            System.out.println("6. Exit");
             System.out.println("========================================");
             System.out.print("Enter your choice: ");
 
             int choice = sc.nextInt();
 
-            switch(choice) {
+            switch (choice) {
 
                 case 1:
                     System.out.print("Enter Package Id : ");
@@ -51,10 +53,40 @@ public class AdminController {
                     break;
 
                 case 3:
-                    messageMenu();  
+                    System.out.print("Enter Package Id to Update : ");
+                    int updateId = sc.nextInt();
+
+                    System.out.print("Enter New Destination : ");
+                    String newDestination = sc.nextLine();
+
+                    System.out.print("Enter New Price : ");
+                    double newPrice = sc.nextDouble();
+
+                    System.out.print("Enter New Duration(Days) : ");
+                    int newDuration = sc.nextInt();
+
+                    service.updatePackage(updateId, newDestination, newPrice, newDuration);
                     break;
 
                 case 4:
+                    System.out.print("Enter Package Id to Delete : ");
+                    int deleteId = sc.nextInt();
+
+                    System.out.print("Are you sure you want to delete package " + deleteId + "? (yes/no): ");
+                    String confirm = sc.next();
+
+                    if (confirm.equalsIgnoreCase("yes")) {
+                        service.deletePackage(deleteId);
+                    } else {
+                        System.out.println("Delete cancelled.");
+                    }
+                    break;
+
+                case 5:
+                    messageMenu();
+                    break;
+
+                case 6:
                     System.out.println("Exiting Admin Menu...");
                     return;
 
@@ -75,17 +107,16 @@ public class AdminController {
         System.out.print("Enter your choice: ");
 
         int choice = sc.nextInt();
-        sc.nextLine();
+        sc.nextLine(); 
 
-        switch(choice) {
+        switch (choice) {
 
             case 1:
                 List<String> messages = messageService.viewMessages();
 
                 if (messages.isEmpty()) {
                     System.out.println("\nNo new messages from customers.");
-                }
-                else {
+                } else {
                     System.out.println("\n===== MESSAGES FROM CUSTOMERS =====");
                     for (String m : messages) {
                         System.out.println(m);
