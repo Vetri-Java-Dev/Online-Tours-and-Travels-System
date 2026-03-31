@@ -8,80 +8,178 @@ import model.Payment;
 import model.UPIPayment;
 import model.User;
 import model.TourPackage;
+import model.Itinerary;
+import model.ItineraryItem;
 import comparator.PriceComparator;
 import comparator.DurationComparator;
 import service.BookingService;
+import service.MessageService;
 import service.PaymentService;
 import service.TourPackageService;
 import service.UserService;
+import service.ItineraryService;
 
 public class CustomerController {
 
     private Scanner sc = new Scanner(System.in);
-    
-    private TourPackageService tourService = new TourPackageService();
-    private BookingService bookingService = new BookingService();
-    private UserService userService = new UserService();
-    
+
+    private TourPackageService tourService   = new TourPackageService();
+    private BookingService bookingService    = new BookingService();
+    private UserService userService          = new UserService();
+    private MessageService messageService    = new MessageService();
+
     private int customerId;
 
     public CustomerController(int customerId) {
         this.customerId = customerId;
     }
-    
+
     public CustomerController() {}
 
     public void customerMenu() {
 
         while(true) {
 
-        		System.out.println("\n========================================");
-        		System.out.println("           CUSTOMER DASHBOARD           ");
-	        	System.out.println("========================================");
-	        	System.out.println("1.  View Tour Packages");
-	        	System.out.println("2.  Create Booking");
-	        	System.out.println("3.  View Booking");
-	        	System.out.println("4.  Cancel Booking");
-	        	System.out.println("5.  View Profile");
-	        	System.out.println("6.  View Payment History");
-	        	System.out.println("7.  Search Package");
-	        	System.out.println("8.  Exit");
-	        	System.out.println("========================================");
-	        	System.out.print("Enter your choice: ");
-	        	
+            System.out.println("\n========================================");
+            System.out.println("           CUSTOMER DASHBOARD           ");
+            System.out.println("========================================");
+            System.out.println("1.  View Tour Packages");
+            System.out.println("2.  Search Package");
+            System.out.println("3.  View Package Itinerary");
+            System.out.println("4.  Create Booking");
+            System.out.println("5.  View Booking");
+            System.out.println("6.  Cancel Booking");
+            System.out.println("7.  View Payment History");
+            System.out.println("8.  View Profile");
+            System.out.println("9.  Message Admin");
+            System.out.println("10. Exit");
+            System.out.println("========================================");
+            System.out.print("Enter your choice: ");
+
             int choice = sc.nextInt();
 
             switch(choice) {
-            		case 1:
-            			tourService.displayPackages();
-            			break;
-            
-            		case 2:
-            			createBooking();
-            			break;
 
-            		case 3:
-            			viewBooking();
-            			break;
+                case 1:
+                    tourService.displayPackages();
+                    break;
 
-            		case 4:
-            			cancelBooking();
-            			break;
+                case 2:
+                    searchPackage();
+                    break;
+
+                case 3:
+                    viewItinerary();
+                    break;
+
+                case 4:
+                    createBooking();
+                    break;
+
                 case 5:
-                    viewProfile();
+                    viewBooking();
                     break;
 
                 case 6:
+                    cancelBooking();
+                    break;
+
+                case 7:
                     viewPaymentHistory();
                     break;
-                    
-                case 7:
-                	searchPackage();
-                	break;
 
                 case 8:
+                    viewProfile();
+                    break;
+
+                case 9:
+                    messageMenu();
+                    break;
+
+                case 10:
                     return;
+
+                default:
+                    System.out.println("Invalid choice!");
             }
+        }
+    }
+   
+    private void viewItinerary() {
+
+        System.out.println("\n========================================");
+        System.out.println("        VIEW PACKAGE ITINERARY          ");
+        System.out.println("========================================");
+
+        System.out.print("Enter Package ID to view Itinerary: ");
+        int packageId = sc.nextInt();
+
+        ItineraryService itineraryService = new ItineraryService();
+        Itinerary itinerary = itineraryService.viewItinerary(packageId);
+
+        if (itinerary != null) {
+
+            List<ItineraryItem> items = itinerary.getItems();
+
+            System.out.println("\n--- ITINERARY DETAILS ---");
+            System.out.println("Package ID  : " + itinerary.getPackageId());
+            System.out.println("Total Days  : " + items.size());
+            System.out.println();
+            System.out.println("--- DAY-WISE SCHEDULE ---");
+            System.out.println("----------------------------------------------------------");
+            System.out.printf("%-5s %-15s %-35s%n", "Day", "Location", "Activity");
+            System.out.println("----------------------------------------------------------");
+
+            for (ItineraryItem item : items) {
+                System.out.printf("%-5d %-15s %-35s%n",
+                    item.getDayNumber(),
+                    item.getLocation(),
+                    item.getActivity());
+            }
+
+            System.out.println("----------------------------------------------------------");
+
+        } else {
+            System.out.println("\nItinerary not available for Package ID: " + packageId);
+        }
+    }
+
+    private void messageMenu() {
+
+        System.out.println("\n========================================");
+        System.out.println("             MESSAGE ADMIN              ");
+        System.out.println("========================================");
+        System.out.println("1.  Send Message to Admin");
+        System.out.println("2.  View Replies from Admin");
+        System.out.println("========================================");
+        System.out.print("Enter your choice: ");
+
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        switch(choice) {
+
+            case 1:
+                System.out.print("Enter your message: ");
+                String msg = sc.nextLine();
+                messageService.sendToAdmin(customerId, msg);
+                break;
+
+            case 2:
+                List<String> replies = messageService.viewReplies(customerId);
+                if (replies.isEmpty()) {
+                    System.out.println("\nNo replies from admin yet.");
+                } else {
+                    System.out.println("\n===== REPLIES FROM ADMIN =====");
+                    for (String r : replies) {
+                        System.out.println("Admin : " + r);
+                        System.out.println("-------------------------------");
+                    }
+                }
+                break;
+
+            default:
+                System.out.println("Invalid choice!");
         }
     }
 
@@ -92,17 +190,14 @@ public class CustomerController {
         User user = userService.getUserById(customerId);
 
         if(user != null) {
-
-            System.out.println("Name : " + user.getName());
+            System.out.println("Name  : " + user.getName());
             System.out.println("Email : " + user.getEmail());
             System.out.println("Phone : " + user.getPhone());
-
-        }
-        else {
+        } else {
             System.out.println("Profile not found");
         }
     }
-    
+
     private void createBooking() {
 
         System.out.print("Enter Package ID: ");
@@ -122,17 +217,17 @@ public class CustomerController {
         booking.setBookingDate(bookingDate);
 
         bookingService.createBooking(booking);
-        
+
         int bookingId = booking.getBookingId();
         double amount = booking.getTotalAmount();
-        String date = java.time.LocalDate.now().toString();
+        String date   = java.time.LocalDate.now().toString();
 
         System.out.println("\n===== PAYMENT =====");
         System.out.println("1 UPI");
         System.out.println("2 Credit Card");
         System.out.println("3 Debit Card");
-
         System.out.print("Enter payment choice : ");
+
         int choice = sc.nextInt();
         sc.nextLine();
 
@@ -148,20 +243,16 @@ public class CustomerController {
             case 2:
                 System.out.print("Enter Card Number: ");
                 String cc = sc.nextLine();
-
                 System.out.print("Enter Card Holder Name: ");
                 String name = sc.nextLine();
-
                 payment = new CreditCardPayment(amount, date, "SUCCESS", bookingId, cc, name);
                 break;
 
             case 3:
                 System.out.print("Enter Card Number: ");
                 String cardNumber = sc.nextLine();
-
                 System.out.print("Enter Bank Name: ");
                 String bank = sc.nextLine();
-
                 payment = new DebitCardPayment(amount, date, "SUCCESS", bookingId, cardNumber, bank);
                 break;
 
@@ -181,36 +272,31 @@ public class CustomerController {
         Booking booking = bookingService.viewBooking(bookingId);
 
         if (booking != null) {
-        	
             System.out.println("\n===== BOOKING DETAILS =====");
-            System.out.println("Booking ID: " + booking.getBookingId());
-            System.out.println("Package ID: " + booking.getPackageId());
-            System.out.println("Travelers: " + booking.getTravelers());
-            System.out.println("Booking Date: " + booking.getBookingDate());
-            System.out.println("Total Amount: " + booking.getTotalAmount());
-            System.out.println("Status: " + booking.getStatus());
-            
-        }
-        else {
+            System.out.println("Booking ID   : " + booking.getBookingId());
+            System.out.println("Package ID   : " + booking.getPackageId());
+            System.out.println("Travelers    : " + booking.getTravelers());
+            System.out.println("Booking Date : " + booking.getBookingDate());
+            System.out.println("Total Amount : " + booking.getTotalAmount());
+            System.out.println("Status       : " + booking.getStatus());
+        } else {
             System.out.println("Booking not found!");
         }
     }
 
     private void viewPaymentHistory() {
-
         System.out.print("Enter Booking ID: ");
         int bookingId = sc.nextInt();
-
         PaymentService paymentService = new PaymentService();
         paymentService.viewPaymentHistory(bookingId);
     }
-    
+
     private void cancelBooking() {
         System.out.print("Enter Booking ID to cancel: ");
         int bookingId = sc.nextInt();
-
         bookingService.cancelBooking(bookingId);
     }
+
     public void searchPackage() {
 
         System.out.println("\n===== SEARCH PACKAGE =====");
@@ -222,7 +308,6 @@ public class CustomerController {
         sc.nextLine();
 
         if(option == 1) {
-
             System.out.print("Enter destination: ");
             String dest = sc.nextLine();
 
@@ -234,18 +319,16 @@ public class CustomerController {
                 System.out.println("\n===== SEARCH RESULTS =====");
                 for(TourPackage tp : list) {
                     System.out.println(
-                        tp.getPackageId() + " | " +
+                        tp.getPackageId()   + " | " +
                         tp.getDestination() + " | " +
-                        tp.getPrice() + " | " +
-                        tp.getDuration() + " days"
+                        tp.getPrice()       + " | " +
+                        tp.getDuration()    + " days"
                     );
                 }
             }
-
         } else if(option == 2) {
-
             System.out.println("\n1. Filter by Price");
-            System.out.println("2. Filter by Title");
+            System.out.println("2. Filter by Duration");
             System.out.print("Enter choice: ");
 
             int filterChoice = sc.nextInt();
@@ -260,16 +343,14 @@ public class CustomerController {
             }
 
             System.out.println("\n===== FILTERED RESULTS =====");
-
             for(TourPackage tp : list) {
                 System.out.println(
-                    tp.getPackageId() + " | " +
+                    tp.getPackageId()   + " | " +
                     tp.getDestination() + " | " +
-                    tp.getPrice() + " | " +
-                    tp.getDuration() + " days"
+                    tp.getPrice()       + " | " +
+                    tp.getDuration()    + " days"
                 );
             }
         }
     }
-
-    }
+}

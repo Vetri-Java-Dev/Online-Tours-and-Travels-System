@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 /bin/
+src/main/resources/config.properties
+src/main/resources/ca.pem
+src/main/resources/ca.pem

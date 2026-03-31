@@ -60,11 +60,9 @@ public class MainApp {
                 case 2:
                     loginController.login();
                     break;
-
                     
                 case 3:
-                    System.out.println("Exiting the system...");
-                    sc.close();
+                		System.out.println("Exiting the system...");
                     System.exit(0);
                     
                 default:

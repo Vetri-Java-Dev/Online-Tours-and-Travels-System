@@ -79,19 +79,20 @@ public class TourPackageDAO {
 
             ResultSet rs = st.executeQuery(query);
 
-            System.out.println("---------------------------------------------------------------------");
-            System.out.printf("| %-10s | %-20s | %-8s | %-8s |\n", "PackageID", "Destination", "Price", "Duration (Days)");
-            System.out.println("---------------------------------------------------------------------");
+            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.printf("| %-10s | %-35s | %-10s | %-15s |\n", 
+                    "PackageID", "Destination", "Price", "Duration (Days)");
+            System.out.println("-----------------------------------------------------------------------------------");
 
             while(rs.next()) {
-                System.out.printf("| %-10d | %-20s | %-8d | %-8d |\n",
+                System.out.printf("| %-10d | %-35s | %-10.2f | %-15d |\n",
                         rs.getInt("packageId"),
                         rs.getString("destination"),
-                        rs.getInt("price"),
+                        rs.getDouble("price"),
                         rs.getInt("duration"));
             }
 
-            System.out.println("---------------------------------------------------------------------");
+            System.out.println("-----------------------------------------------------------------------------------");
 
         }
         catch(Exception e) {
@@ -123,7 +124,8 @@ public class TourPackageDAO {
                 list.add(tp);
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -152,7 +154,8 @@ public class TourPackageDAO {
                 list.add(tp);
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
             return list;
