@@ -4,6 +4,8 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 public class BookingDAO {
 
 	public void createBooking(Booking booking) {
@@ -32,7 +34,6 @@ public class BookingDAO {
 	            if (rs.next()) {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
-	                System.out.println("Booking created successfully! Booking ID : " + bookingId);
 	            }
 	        }
 
@@ -98,5 +99,28 @@ public class BookingDAO {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        List<Booking> list = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM booking WHERE customerId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Booking b = new Booking(
+                    rs.getInt("bookingId"),
+                    rs.getString("bookingDate"),
+                    rs.getInt("travelers"),
+                    rs.getDouble("totalAmount"),
+                    rs.getString("status"),
+                    rs.getInt("customerId"),
+                    rs.getInt("packageId")
+                );
+                list.add(b);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
     }
 }

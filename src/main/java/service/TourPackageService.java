@@ -29,7 +29,21 @@ public class TourPackageService {
             return dao.updatePackage(packageId, newDestination, newPrice, newDuration);
         }
 
-        public boolean deletePackage(int packageId) {
-            return dao.deletePackage(packageId);
+    public List<TourPackage> getAvailablePackages() {
+        return dao.getAvailablePackages();
+    }
+
+    public List<TourPackage> getPackagesSortedByPrice() {
+        return dao.getAllPackagesSortedByPrice();
+    }
+    public void updatePackage(int id, String dest, int price, int duration) {
+        dao.updatePackage(id, dest, price, duration);
+    }
+
+    public void deletePackage(int id) {
+        dao.deletePackage(id);
+    }
+    public void updateAvailableSeats(int packageId, int seats) {
+        dao.updateAvailableSeats(packageId, seats);
     }
 }
