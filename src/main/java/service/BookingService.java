@@ -90,7 +90,8 @@ public class BookingService {
             System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
             System.out.println("  Status       : " + booking.getStatus());
             System.out.println("  ─────────────────────────────────────");
-        } else {
+        }
+        else {
             System.out.println("  Booking not found.");
         }
 

@@ -4,6 +4,8 @@ import dao.UserDAO;
 import model.User;
 import util.EmailUtil;
 import util.InputValidationUtil;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class UserService {
@@ -132,5 +134,9 @@ public class UserService {
         }
 
         userDAO.updatePassword(email, newPassword);
+    }
+    
+    public List<User> getAllUsers() {
+        return userDAO.getAllUsers();
     }
 }
