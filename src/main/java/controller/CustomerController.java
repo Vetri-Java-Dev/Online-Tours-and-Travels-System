@@ -19,6 +19,7 @@ import service.TourPackageService;
 import service.UserService;
 import service.ItineraryService;
 
+import java.time.LocalDate; 
 public class CustomerController {
 
     private Scanner sc = new Scanner(System.in);
@@ -48,11 +49,12 @@ public class CustomerController {
              System.out.println("║  3.  View Package Itinerary          ║");
              System.out.println("║  4.  Create Booking                  ║");
              System.out.println("║  5.  View Booking                    ║");
-             System.out.println("║  6.  Cancel Booking                  ║");
-             System.out.println("║  7.  View Payment History            ║");
-             System.out.println("║  8.  View Profile                    ║");
-             System.out.println("║  9.  Message Admin                   ║");
-             System.out.println("║  10. Exit                            ║");
+             System.out.println("║  6.  Modify Booking                  ║");
+             System.out.println("║  7.  Cancel Booking                  ║");
+             System.out.println("║  8.  View Payment History            ║");
+             System.out.println("║  9.  View Profile                    ║");
+             System.out.println("║  10. Message Admin                   ║");
+             System.out.println("║  11. Exit                            ║");
              System.out.println("╚══════════════════════════════════════╝");
              System.out.print("  Enter choice: ");
 
@@ -79,24 +81,27 @@ public class CustomerController {
                 case 5:
                     viewBooking();
                     break;
-
                 case 6:
+                	 modifyBooking();   
+                	 break;
+
+                case 7:
                     cancelBooking();
                     break;
 
-                case 7:
+                case 8:
                     viewPaymentHistory();
                     break;
 
-                case 8:
+                case 9:
                     viewProfile();
                     break;
 
-                case 9:
+                case 10:
                     messageMenu();
                     break;
 
-                case 10:
+                case 11:
                     return;
 
                 default:
@@ -219,9 +224,28 @@ public class CustomerController {
         int travelers = sc.nextInt();
         sc.nextLine();
 
-        System.out.print("  Booking Date      : ");
-        String bookingDate = sc.nextLine();
 
+        String bookingDate;
+
+        while (true) {
+
+            System.out.print("  Booking Date (YYYY-MM-DD): ");
+            bookingDate = sc.nextLine();
+
+            try {
+                LocalDate date = LocalDate.parse(bookingDate);
+                LocalDate today = LocalDate.now();
+
+                if (date.isBefore(today)) {
+                    System.out.println("Date is in the past. Enter again.");
+                    continue;
+                }
+
+                break;
+            } catch (Exception e) {
+                System.out.println(" Invalid format. Enter again.");
+            }
+        }
         Booking booking = new Booking();
         booking.setCustomerId(customerId);
         booking.setPackageId(packageId);
@@ -304,6 +328,64 @@ public class CustomerController {
         else {
             System.out.println("\n  Booking not found!");
         }
+    }
+    private void modifyBooking() {
+
+        System.out.println("\n┌─────────────────────────────────────┐");
+        System.out.println("│           MODIFY BOOKING            │");
+        System.out.println("└─────────────────────────────────────┘");
+
+        System.out.print("  Enter Booking ID: ");
+        int bookingId = sc.nextInt();
+
+        Booking booking = bookingService.viewBooking(bookingId);
+
+        if (booking == null) {
+            System.out.println("\n  Booking not found!");
+            return;
+        }
+
+        if (booking.getStatus().equalsIgnoreCase("Cancelled")) {
+            System.out.println("\n  Cannot modify a cancelled booking!");
+            return;
+        }
+
+        System.out.println("\n  Current Details:");
+        System.out.println("  Date       : " + booking.getBookingDate());
+        System.out.println("  Travelers  : " + booking.getTravelers());
+
+        sc.nextLine(); 
+
+        String newDate;
+
+        while (true) {
+
+            System.out.print("\n  Enter New Booking Date (YYYY-MM-DD): ");
+            newDate = sc.nextLine();
+
+            try {
+                LocalDate date = LocalDate.parse(newDate);
+                LocalDate today = LocalDate.now();
+
+                if (date.isBefore(today)) {
+                    System.out.println(" Date is in the past. Enter again.");
+                    continue;
+                }
+
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid format. Enter again.");
+            }
+        }
+        System.out.print("  Enter New Travelers: ");
+        int newTravelers = sc.nextInt();
+
+        booking.setBookingDate(newDate);
+        booking.setTravelers(newTravelers);
+
+        bookingService.modifyBooking(booking);
+
+        System.out.println("\n  Booking modified successfully!");
     }
 
     private void viewPaymentHistory() {

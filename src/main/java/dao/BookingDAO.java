@@ -33,6 +33,7 @@ public class BookingDAO {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
 	            }
+	            
 	        }
 
 	    }
@@ -77,6 +78,32 @@ public class BookingDAO {
 
         return booking;
     }
+    public void updateBooking(Booking booking) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, booking.getBookingDate());
+            ps.setInt(2, booking.getTravelers());
+            ps.setDouble(3, booking.getTotalAmount());
+            ps.setInt(4, booking.getBookingId());
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Booking updated successfully");
+            } else {
+                System.out.println("Booking update failed");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void cancelBooking(int bookingId) {
 
         try {
