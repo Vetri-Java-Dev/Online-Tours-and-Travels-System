@@ -31,4 +31,14 @@ public class TourPackageService {
     public List<TourPackage> getPackagesSortedByPrice() {
         return dao.getAllPackagesSortedByPrice();
     }
+    public void updatePackage(int id, String dest, int price, int duration) {
+        dao.updatePackage(id, dest, price, duration);
+    }
+
+    public void deletePackage(int id) {
+        dao.deletePackage(id);
+    }
+    public void updateAvailableSeats(int packageId, int seats) {
+        dao.updateAvailableSeats(packageId, seats);
+    }
 }

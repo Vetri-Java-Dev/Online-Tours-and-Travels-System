@@ -196,5 +196,47 @@ public class TourPackageDAO {
 
         return list;
     }
+    public void updatePackage(int packageId, String destination, int price, int duration) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "UPDATE tour_package SET destination=?, price=?, duration=? WHERE packageId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, destination);
+            ps.setInt(2, price);
+            ps.setInt(3, duration);
+            ps.setInt(4, packageId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Package Updated Successfully");
+            } else {
+                System.out.println("Package not found");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public void deletePackage(int packageId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "DELETE FROM tour_package WHERE packageId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, packageId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Package Deleted Successfully");
+            } else {
+                System.out.println("Package not found");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+    public void updateAvailableSeats(int packageId, int seats) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "UPDATE tour_package SET availableSeats=? WHERE packageId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, seats);
+            ps.setInt(2, packageId);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
 
 }
