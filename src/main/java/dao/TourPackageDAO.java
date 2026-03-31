@@ -21,15 +21,14 @@ public class TourPackageDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String query = "insert into tour_package values(?,?,?,?)";
-
+            String query = "INSERT INTO tour_package (packageId, destination, price, duration, availableSeats) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, tourPackage.getPackageId());
             ps.setString(2, tourPackage.getDestination());
             ps.setDouble(3, tourPackage.getPrice());
             ps.setInt(4, tourPackage.getDuration());
-
+            ps.setInt(5, tourPackage.getAvailableSeats()); 
             ps.executeUpdate();
 
             System.out.println("Package saved to database");
@@ -55,9 +54,11 @@ public class TourPackageDAO {
                 tourPackage = new TourPackage(
                     rs.getInt("packageId"),
                     rs.getString("destination"),
-                    rs.getInt("price"),
-                    rs.getInt("duration")
+                    rs.getDouble("price"),
+                    rs.getInt("duration"),
+                    rs.getInt("availableSeats")
                 );
+                tourPackage.setAvailableSeats(rs.getInt("availableSeats"));
             }
 
         } catch (Exception e) {
@@ -80,16 +81,16 @@ public class TourPackageDAO {
             ResultSet rs = st.executeQuery(query);
 
             System.out.println("-----------------------------------------------------------------------------------");
-            System.out.printf("| %-10s | %-35s | %-10s | %-15s |\n", 
-                    "PackageID", "Destination", "Price", "Duration (Days)");
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.printf("| %-10s | %-35s | %-10s | %-15s | %-10s |\n", 
+                    "PackageID", "Destination", "Price", "Duration", "Seats");System.out.println("-----------------------------------------------------------------------------------");
 
             while(rs.next()) {
-                System.out.printf("| %-10d | %-35s | %-10.2f | %-15d |\n",
-                        rs.getInt("packageId"),
-                        rs.getString("destination"),
-                        rs.getDouble("price"),
-                        rs.getInt("duration"));
+            	System.out.printf("| %-10d | %-35s | %-10.2f | %-15d | %-10d |\n",
+            	        rs.getInt("packageId"),
+            	        rs.getString("destination"),
+            	        rs.getDouble("price"),
+            	        rs.getInt("duration"),
+            	        rs.getInt("availableSeats"));
             }
 
             System.out.println("-----------------------------------------------------------------------------------");
@@ -119,8 +120,10 @@ public class TourPackageDAO {
                     rs.getInt("packageId"),
                     rs.getString("destination"),
                     rs.getDouble("price"),
-                    rs.getInt("duration")
+                    rs.getInt("duration"),
+                    rs.getInt("availableSeats")
                 );
+                tp.setAvailableSeats(rs.getInt("availableSeats")); 
                 list.add(tp);
             }
 
@@ -150,7 +153,7 @@ public class TourPackageDAO {
                 tp.setDestination(rs.getString("destination"));
                 tp.setPrice(rs.getDouble("price"));
                 tp.setDuration(rs.getInt("duration"));
-
+                tp.setAvailableSeats(rs.getInt("availableSeats"));
                 list.add(tp);
             }
 
@@ -183,7 +186,23 @@ public class TourPackageDAO {
                 return false;
             }
         }
-        
+        public void updateAvailableSeats(int packageId, int seats) {
+
+            try {
+                Connection con = DBConnection.getConnection();
+
+                String query = "UPDATE tour_package SET availableSeats=? WHERE packageId=?";
+                PreparedStatement ps = con.prepareStatement(query);
+
+                ps.setInt(1, seats);
+                ps.setInt(2, packageId);
+
+                ps.executeUpdate();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         public boolean deletePackage(int packageId) {
             try {
                 Connection con = DBConnection.getConnection();
