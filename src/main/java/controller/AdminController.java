@@ -16,37 +16,45 @@ public class AdminController {
 
         while(true) {
 
-            System.out.println("\n========================================");
-            System.out.println("            ADMIN DASHBOARD             ");
-            System.out.println("========================================");
-            System.out.println("1. Add Tour Package");
-            System.out.println("2. View Tour Packages");
-            System.out.println("3. Message Customer");   // ← renamed
-            System.out.println("4. Exit");
-            System.out.println("========================================");
-            System.out.print("Enter your choice: ");
+        		System.out.println("\n╔══════════════════════════════════════╗");
+            System.out.println("║           ADMIN DASHBOARD            ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║  1.  Add Tour Package                ║");
+            System.out.println("║  2.  View Tour Packages              ║");
+            System.out.println("║  3.  Message Customer                ║");
+            System.out.println("║  4.  Exit                            ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.print("  Enter choice: ");
 
             int choice = sc.nextInt();
 
             switch(choice) {
 
                 case 1:
-                    System.out.print("Enter Package Id : ");
+                		System.out.println("\n┌─────────────────────────────────────┐");
+                		System.out.println("│           ADD TOUR PACKAGE          │");
+                    System.out.println("└─────────────────────────────────────┘");
+
+                    System.out.print("  Package ID   : ");
                     int id = sc.nextInt();
 
-                    System.out.print("Enter Destination : ");
+                    System.out.print("  Destination  : ");
                     String destination = sc.next();
 
-                    System.out.print("Enter Price : ");
+                    System.out.print("  Price (INR)  : ");
                     int price = sc.nextInt();
 
-                    System.out.print("Enter Duration(Days) : ");
+                    System.out.print("  Duration     : ");
                     int duration = sc.nextInt();
 
                     service.createPackage(id, destination, price, duration);
+                    System.out.println("\n  Package added successfully!");
                     break;
 
                 case 2:
+                		System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│           TOUR PACKAGES             │");
+                    System.out.println("└─────────────────────────────────────┘");
                     service.displayPackages();
                     break;
 
@@ -55,7 +63,7 @@ public class AdminController {
                     break;
 
                 case 4:
-                    System.out.println("Exiting Admin Menu...");
+                    System.out.println("Logging out of Admin Dashboard...");
                     return;
 
                 default:
@@ -66,13 +74,12 @@ public class AdminController {
 
     private void messageMenu() {
 
-        System.out.println("\n========================================");
-        System.out.println("           MESSAGE CUSTOMER             ");
-        System.out.println("========================================");
-        System.out.println("1. View Messages from Customers");
-        System.out.println("2. Send Reply to Customer");
-        System.out.println("========================================");
-        System.out.print("Enter your choice: ");
+    		System.out.println("\n┌─────────────────────────────────────┐");
+        System.out.println("│         MESSAGE CUSTOMER            │");
+        System.out.println("└─────────────────────────────────────┘");
+        System.out.println("  1.  View Messages from Customers");
+        System.out.println("  2.  Reply to Customer");
+        System.out.print("  Enter choice: ");
 
         int choice = sc.nextInt();
         sc.nextLine();
@@ -86,12 +93,15 @@ public class AdminController {
                     System.out.println("\nNo new messages from customers.");
                 }
                 else {
-                    System.out.println("\n===== MESSAGES FROM CUSTOMERS =====");
-                    for (String m : messages) {
-                        System.out.println(m);
-                        System.out.println("-----------------------------------");
-                    }
-                }
+                	 	 System.out.println("\n┌─────────────────────────────────────┐");
+                     System.out.println("│       MESSAGES FROM CUSTOMERS       │");
+                     System.out.println("└─────────────────────────────────────┘");
+                     
+                     for (String m : messages) {
+                         System.out.println("  " + m);
+                         System.out.println("  ─────────────────────────────────");
+                     }
+                 }
                 break;
 
             case 2:

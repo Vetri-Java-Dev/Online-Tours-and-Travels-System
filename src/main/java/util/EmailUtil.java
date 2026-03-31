@@ -17,14 +17,29 @@ import javax.mail.internet.MimeMessage;
 public class EmailUtil {
 
     private static final String FROM_EMAIL = "onlinetats@gmail.com";
-    private static final String PASSWORD = "jlxpbnlcpqekpxcj";
+    private static final String PASSWORD   = "jlxpbnlcpqekpxcj";
+
+    private static Session createSession() {
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.smtp.host","smtp.gmail.com");
+        props.put("mail.smtp.port","587");
+        props.put("mail.smtp.ssl.trust","smtp.gmail.com");
+
+        return Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(FROM_EMAIL, PASSWORD);
+            }
+        });
+    }
 
     private static String loadTemplate(String fileName, String userName) {
-        
-    		try {
+        try {
             InputStream is = EmailUtil.class
                     .getClassLoader()
-                    .getResourceAsStream(fileName); // loads from src/main/resources/
+                    .getResourceAsStream(fileName);
 
             if (is == null) {
                 System.out.println("Template file not found: " + fileName);
@@ -36,51 +51,29 @@ public class EmailUtil {
                     .lines()
                     .collect(Collectors.joining("\n"));
 
-            // replace placeholder with actual name
             html = html.replace("{{userName}}", userName);
 
             return html;
 
         }
-    		catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private static Session createSession() {
-    	
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-        return Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(FROM_EMAIL, PASSWORD);
-            }
-        });
-    }
-
     public static void sendWelcomeEmail(String toEmail, String userName) {
-        
-    		try {
+        try {
             String html = loadTemplate("welcome_email.html", userName);
-
             if (html == null) return;
 
             MimeMessage message = new MimeMessage(createSession());
-            
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            
             message.setSubject("Welcome to Tour & Travel System!");
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            //System.out.println("Welcome email sent to " + toEmail);
 
         }
         catch (Exception e) {
@@ -92,22 +85,17 @@ public class EmailUtil {
     public static void sendCancellationEmail(String toEmail, String userName, int bookingId) {
         try {
             String html = loadTemplate("cancellation_email.html", userName);
-
             if (html == null) return;
 
             html = html.replace("{{bookingId}}", String.valueOf(bookingId));
 
             MimeMessage message = new MimeMessage(createSession());
-            
             message.setFrom(new InternetAddress(FROM_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            
             message.setSubject("Booking Cancellation - ID #" + bookingId);
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            
-            //System.out.println("Cancellation email sent to " + toEmail);
 
         }
         catch (Exception e) {
@@ -115,47 +103,39 @@ public class EmailUtil {
             e.printStackTrace();
         }
     }
-    
-    public static void sendBookingConfirmationEmail(String toEmail, String userName, 
+
+    public static void sendBookingConfirmationEmail(String toEmail, String userName,
             int bookingId, int packageId,
-            int travelers, double totalAmount, 
+            int travelers, double totalAmount,
             String bookingDate) {
-    	
-			try {
-				
-				String html = loadTemplate("booking_confirmation.html", userName);
-			
-				if (html == null) return;
-			
-				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
-				html = html.replace("{{packageId}}",    String.valueOf(packageId));
-				html = html.replace("{{travelers}}",    String.valueOf(travelers));
-				html = html.replace("{{totalAmount}}",  String.valueOf(totalAmount));
-				html = html.replace("{{bookingDate}}",  bookingDate);
-				
-				MimeMessage message = new MimeMessage(createSession());
-				
-				message.setFrom(new InternetAddress(FROM_EMAIL));
-				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-				
-				message.setSubject("Booking Confirmed - ID #" + bookingId);
-				message.setContent(html, "text/html; charset=utf-8");
-				
-				Transport.send(message);
-				
-				//System.out.println("Booking confirmation email sent to " + toEmail);
-			
-			}
-			catch (Exception e) {
-				System.out.println("BOOKING EMAIL FAILED: " + e.getMessage());
-				e.printStackTrace();
-			}
-	}
-    
+        try {
+            String html = loadTemplate("booking_confirmation.html", userName);
+            if (html == null) return;
+
+            html = html.replace("{{bookingId}}",   String.valueOf(bookingId));
+            html = html.replace("{{packageId}}",   String.valueOf(packageId));
+            html = html.replace("{{travelers}}",   String.valueOf(travelers));
+            html = html.replace("{{totalAmount}}", String.valueOf(totalAmount));
+            html = html.replace("{{bookingDate}}", bookingDate);
+
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Booking Confirmed - ID #" + bookingId);
+            message.setContent(html, "text/html; charset=utf-8");
+
+            Transport.send(message);
+
+        }
+        catch (Exception e) {
+            System.out.println("BOOKING EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public static void sendOTPEmail(String toEmail, String userName, String otp) {
         try {
             String html = loadTemplate("otp_email.html", userName);
-
             if (html == null) return;
 
             html = html.replace("{{otp}}", otp);
@@ -175,73 +155,63 @@ public class EmailUtil {
             e.printStackTrace();
         }
     }
-    public static void sendAdminBookingAlertEmail(String adminEmail,
-            String customerName,
-            int customerId,
-            int bookingId,
-            int packageId,
-            int travelers,
-            double totalAmount,
-            String bookingDate) {
-    	
-			try {
-				String html = loadTemplate("admin_booking_alert.html", "Admin");
-				
-				if (html == null) return;
-				
-				html = html.replace("{{customerName}}", customerName);
-				html = html.replace("{{customerId}}",   String.valueOf(customerId));
-				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
-				html = html.replace("{{packageId}}",    String.valueOf(packageId));
-				html = html.replace("{{travelers}}",    String.valueOf(travelers));
-				html = html.replace("{{totalAmount}}",  String.valueOf(totalAmount));
-				html = html.replace("{{bookingDate}}",  bookingDate);
-				
-				MimeMessage message = new MimeMessage(createSession());
-				message.setFrom(new InternetAddress(FROM_EMAIL));
-				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
-				message.setSubject("New Booking Alert - ID #" + bookingId);
-				message.setContent(html, "text/html; charset=utf-8");
-				
-				Transport.send(message);
-				System.out.println("Admin booking alert sent.");
-			
-			}
-			catch (Exception e) {
-				System.out.println("ADMIN ALERT EMAIL FAILED: " + e.getMessage());
-				e.printStackTrace();
-			}
-    }
-    
-    public static void sendAdminCancellationAlertEmail(String adminEmail,
-            String customerName,
-            int customerId,
-            int bookingId) {
-    	
-    			try {
-    				String html = loadTemplate("admin_cancellation_alert.html", "Admin");
 
-				if (html == null) return;
-				
-				html = html.replace("{{customerName}}", customerName);
-				html = html.replace("{{customerId}}",   String.valueOf(customerId));
-				html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
-				
-				MimeMessage message = new MimeMessage(createSession());
-				message.setFrom(new InternetAddress(FROM_EMAIL));
-				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
-				message.setSubject("Booking Cancelled - ID #" + bookingId);
-				message.setContent(html, "text/html; charset=utf-8");
-				
-				Transport.send(message);
-				System.out.println("Admin cancellation alert sent.");
-				
-			}
-    			catch (Exception e) {
-				System.out.println("ADMIN CANCEL EMAIL FAILED: " + e.getMessage());
-				e.printStackTrace();
-			}
+    public static void sendAdminBookingAlertEmail(String adminEmail,
+            String customerName, int customerId,
+            int bookingId, int packageId,
+            int travelers, double totalAmount,
+            String bookingDate) {
+        try {
+            String html = loadTemplate("admin_booking_alert.html", "Admin");
+            if (html == null) return;
+
+            html = html.replace("{{customerName}}", customerName);
+            html = html.replace("{{customerId}}",   String.valueOf(customerId));
+            html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
+            html = html.replace("{{packageId}}",    String.valueOf(packageId));
+            html = html.replace("{{travelers}}",    String.valueOf(travelers));
+            html = html.replace("{{totalAmount}}",  String.valueOf(totalAmount));
+            html = html.replace("{{bookingDate}}",  bookingDate);
+
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
+            message.setSubject("New Booking Alert - ID #" + bookingId);
+            message.setContent(html, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("Admin booking alert sent.");
+
+        }
+        catch (Exception e) {
+            System.out.println("ADMIN ALERT EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-    
-    
+
+    public static void sendAdminCancellationAlertEmail(String adminEmail,
+            String customerName, int customerId, int bookingId) {
+        try {
+            String html = loadTemplate("admin_cancellation_alert.html", "Admin");
+            if (html == null) return;
+
+            html = html.replace("{{customerName}}", customerName);
+            html = html.replace("{{customerId}}",   String.valueOf(customerId));
+            html = html.replace("{{bookingId}}",    String.valueOf(bookingId));
+
+            MimeMessage message = new MimeMessage(createSession());
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminEmail));
+            message.setSubject("Booking Cancelled - ID #" + bookingId);
+            message.setContent(html, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("Admin cancellation alert sent.");
+
+        }
+        catch (Exception e) {
+            System.out.println("ADMIN CANCEL EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
