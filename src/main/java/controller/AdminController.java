@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import model.Booking;
 import model.Itinerary;
 import model.ItineraryItem;
 import model.User;
@@ -34,8 +34,9 @@ public class AdminController {
             System.out.println("║  3. Manage Booking                   ║");
             System.out.println("║  4. View Payment History             ║");
             System.out.println("║  5. Manage Itinerary                 ║");
-            System.out.println("║  6. Reports                          ║");
-            System.out.println("║  7. Exit                             ║");
+            System.out.println("║  6. Track All Bookings              ║"); 
+            System.out.println("║  7. Reports                          ║");
+            System.out.println("║  8. Exit                            ║");
             System.out.println("╚══════════════════════════════════════╝");
 
             System.out.print("Enter choice: ");
@@ -52,10 +53,13 @@ public class AdminController {
                     paymentService.viewPaymentHistory(Integer.parseInt(sc.nextLine()));
                     break;
 
-                case 5: itineraryMenu(); break;
-                case 6: reportsMenu();   break;   
 
-                case 7:
+                case 5: itineraryMenu(); break;
+              
+                case 6: trackAllBookings(); break;
+                case 7: reportsMenu();   break; 
+
+                case 8:
                     System.out.println("Logging out...");
                     return;
 
@@ -93,9 +97,11 @@ public class AdminController {
 
                     System.out.print("Duration: ");
                     int duration = Integer.parseInt(sc.nextLine());
+                    
+                    System.out.print("Available Seats: ");
+                    int seats = Integer.parseInt(sc.nextLine());
 
-                    service.createPackage(id, dest, price, duration);
-                    break;
+                    service.createPackage(id, dest, price, duration, seats); break;
 
                 case 2:
                     service.displayPackages();
@@ -226,8 +232,36 @@ public class AdminController {
             }
         }
     }
+    private void trackAllBookings() {
 
-    // ================= ITINERARY MENU =================
+        System.out.println("\n===== TRACK PACKAGE BOOKINGS =====");
+
+        List<Booking> list = bookingService.getAllBookings();
+
+        if (list.isEmpty()) {
+            System.out.println("No bookings found");
+            return;
+        }
+
+        System.out.println("ID | Customer | Package | Travel Date | Status");
+        System.out.println("-----------------------------------------------------");
+
+        for (Booking b : list) {
+            System.out.println(
+                    b.getBookingId() + " | " +
+                    b.getCustomerName() + " | " +
+                    b.getPackageName() + " | " +
+                    b.getBookingDate() + " | " +
+                    b.getStatus()
+            );
+        }
+
+        System.out.print("\nEnter Booking ID to view details: ");
+        int id = Integer.parseInt(sc.nextLine());
+
+        bookingService.viewBooking(id);
+    }
+      // ================= ITINERARY MENU =================
     private void itineraryMenu() {
 
         while (true) {

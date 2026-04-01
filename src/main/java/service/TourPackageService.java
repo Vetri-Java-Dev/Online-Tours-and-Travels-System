@@ -5,17 +5,21 @@ import model.TourPackage;
 
 public class TourPackageService {
 
-    TourPackageDAO dao = new TourPackageDAO();
-    
 
-    public void createPackage(int id, String dest, int price, int duration) {
+	    TourPackageDAO dao = new TourPackageDAO(); 
 
-        TourPackage p = new TourPackage(id, dest, price, duration);
+	    public void createPackage(int id, String dest, double price, int duration, int seats) {
 
-        dao.addPackage(p);
-    }
+	        TourPackage p = new TourPackage();
 
-    public void displayPackages() {
+	        p.setPackageId(id);
+	        p.setDestination(dest);
+	        p.setPrice(price);
+	        p.setDuration(duration);
+	        p.setAvailableSeats(seats);
+	        dao.addPackage(p); 
+	    }
+   public void displayPackages() {
         dao.viewPackages();
     }
     public List<TourPackage> searchByDestination(String destination) {
