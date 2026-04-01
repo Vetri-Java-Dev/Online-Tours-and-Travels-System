@@ -162,4 +162,32 @@ public class BookingDAO {
             e.printStackTrace();
         }
     }
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        List<Booking> list = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM booking WHERE customerId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+           
+            	while (rs.next()) {
+
+            	    Booking b = new Booking();
+
+            	    b.setBookingId(rs.getInt("bookingId"));
+            	    b.setBookingDate(rs.getString("bookingDate"));
+            	    b.setTravelers(rs.getInt("travelers"));
+            	    b.setTotalAmount(rs.getDouble("totalAmount"));
+            	    b.setStatus(rs.getString("status"));
+            	    b.setCustomerId(rs.getInt("customerId"));
+            	    b.setPackageId(rs.getInt("packageId"));
+
+            	    list.add(b);
+            	}
+            
+        }
+        catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 }

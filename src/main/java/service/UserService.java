@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class UserService {
 
     private UserDAO userDAO = new UserDAO();
+    
 
     private static final String ADMIN_EMAIL = "onlinetats@gmail.com";
 
@@ -135,8 +136,17 @@ public class UserService {
 
         userDAO.updatePassword(email, newPassword);
     }
+
+    public boolean updateUser(int userId, String name, String phone) {
+        return userDAO.updateUser(userId, name, phone);
+    }
+
+    public boolean deleteUser(int userId) {
+        return userDAO.deleteUser(userId);
+    }
     
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
+
     }
 }
