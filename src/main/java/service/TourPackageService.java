@@ -5,17 +5,21 @@ import model.TourPackage;
 
 public class TourPackageService {
 
-    TourPackageDAO dao = new TourPackageDAO();
-    
 
-    public void createPackage(int id, String dest, int price, int duration) {
+	    TourPackageDAO dao = new TourPackageDAO(); 
 
-        TourPackage p = new TourPackage(id, dest, price, duration);
+	    public void createPackage(int id, String dest, double price, int duration, int seats) {
 
-        dao.addPackage(p);
-    }
+	        TourPackage p = new TourPackage();
 
-    public void displayPackages() {
+	        p.setPackageId(id);
+	        p.setDestination(dest);
+	        p.setPrice(price);
+	        p.setDuration(duration);
+	        p.setAvailableSeats(seats);
+	        dao.addPackage(p); 
+	    }
+   public void displayPackages() {
         dao.viewPackages();
     }
     public List<TourPackage> searchByDestination(String destination) {
@@ -25,10 +29,9 @@ public class TourPackageService {
         return dao.getAllPackages();
         
     }
-        public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
-            return dao.updatePackage(packageId, newDestination, newPrice, newDuration);
-        }
-
+    public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
+        return dao.updatePackage(packageId, newDestination, newPrice, newDuration);
+    }
     public List<TourPackage> getAvailablePackages() {
         return dao.getAvailablePackages();
     }
@@ -36,10 +39,7 @@ public class TourPackageService {
     public List<TourPackage> getPackagesSortedByPrice() {
         return dao.getAllPackagesSortedByPrice();
     }
-    public void updatePackage(int id, String dest, int price, int duration) {
-        dao.updatePackage(id, dest, price, duration);
-    }
-
+   
     public void deletePackage(int id) {
         dao.deletePackage(id);
     }

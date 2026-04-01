@@ -9,21 +9,42 @@ public class Booking {
     private String status;
     private int customerId;
     private int packageId;
+    private String customerName;
+    private String packageName;
 
     public Booking() {}
-    
-    public Booking(int bookingId, String bookingDate, int travelers, double totalAmount,
-                   String status, int customerId, int packageId) {
-        this.bookingId = bookingId;
-        this.bookingDate = bookingDate;
-        this.travelers = travelers;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.customerId = customerId;
-        this.packageId = packageId;
-    }
+   
+    public String getCustomerName() {
+		return customerName;
+	}
 
-    public int getBookingId() {
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public Booking(int bookingId, String bookingDate, int travelers, double totalAmount, String status, int customerId,
+			int packageId, String customerName, String packageName) {
+		super();
+		this.bookingId = bookingId;
+		this.bookingDate = bookingDate;
+		this.travelers = travelers;
+		this.totalAmount = totalAmount;
+		this.status = status;
+		this.customerId = customerId;
+		this.packageId = packageId;
+		this.customerName = customerName;
+		this.packageName = packageName;
+	}
+
+	public int getBookingId() {
         return bookingId;
     }
 

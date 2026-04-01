@@ -4,8 +4,8 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 public class BookingDAO {
 
 	public void createBooking(Booking booking) {
@@ -15,8 +15,7 @@ public class BookingDAO {
 	        Connection con = DBConnection.getConnection();
 
 	       
-	        String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId) VALUES(?,?,?,?,?,?)";
-
+	        String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId,customerName,packageName) VALUES(?,?,?,?,?,?,?,?)";
 	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
 	        ps.setString(1, booking.getBookingDate());
@@ -25,6 +24,8 @@ public class BookingDAO {
 	        ps.setString(4, booking.getStatus());
 	        ps.setInt(5, booking.getCustomerId());
 	        ps.setInt(6, booking.getPackageId());
+	        ps.setString(7, booking.getCustomerName());   
+	        ps.setString(8, booking.getPackageName());    
 
 	        int rowsAffected = ps.executeUpdate();
 
@@ -35,6 +36,7 @@ public class BookingDAO {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
 	            }
+	            
 	        }
 
 	    }
@@ -62,15 +64,15 @@ public class BookingDAO {
 
             if(rs.next()) {
             	
-                booking = new Booking(
-                        rs.getInt("bookingId"),
-                        rs.getString("bookingDate"),
-                        rs.getInt("travelers"),
-                        rs.getDouble("totalAmount"),
-                        rs.getString("status"),
-                        rs.getInt("customerId"),
-                        rs.getInt("packageId")
-                );
+            	booking = new Booking();
+
+            	booking.setBookingId(rs.getInt("bookingId"));
+            	booking.setBookingDate(rs.getString("bookingDate"));
+            	booking.setTravelers(rs.getInt("travelers"));
+            	booking.setTotalAmount(rs.getDouble("totalAmount"));
+            	booking.setStatus(rs.getString("status"));
+            	booking.setCustomerId(rs.getInt("customerId"));
+            	booking.setPackageId(rs.getInt("packageId"));
             }
 
         } catch (Exception e) {
@@ -79,6 +81,66 @@ public class BookingDAO {
 
         return booking;
     }
+    public void updateBooking(Booking booking) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, booking.getBookingDate());
+            ps.setInt(2, booking.getTravelers());
+            ps.setDouble(3, booking.getTotalAmount());
+            ps.setInt(4, booking.getBookingId());
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Booking updated successfully");
+            } else {
+                System.out.println("Booking update failed");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Booking> getAllBookings() {
+
+        List<Booking> list = new ArrayList<>();
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT b.bookingId, u.name, p.destination, b.bookingDate, b.status " +
+                           "FROM booking b " +
+                           "JOIN users u ON b.customerId = u.userId " +
+                           "JOIN tour_package p ON b.packageId = p.packageId";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Booking b = new Booking();
+
+                b.setBookingId(rs.getInt("bookingId"));
+                b.setCustomerName(rs.getString("name"));        // ✅
+                b.setPackageName(rs.getString("destination"));  // ✅
+                b.setBookingDate(rs.getString("bookingDate"));
+                b.setStatus(rs.getString("status"));
+
+                list.add(b);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
     public void cancelBooking(int bookingId) {
 
         try {
@@ -108,19 +170,24 @@ public class BookingDAO {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Booking b = new Booking(
-                    rs.getInt("bookingId"),
-                    rs.getString("bookingDate"),
-                    rs.getInt("travelers"),
-                    rs.getDouble("totalAmount"),
-                    rs.getString("status"),
-                    rs.getInt("customerId"),
-                    rs.getInt("packageId")
-                );
-                list.add(b);
-            }
-        } catch (Exception e) { e.printStackTrace(); }
+           
+            	while (rs.next()) {
+
+            	    Booking b = new Booking();
+
+            	    b.setBookingId(rs.getInt("bookingId"));
+            	    b.setBookingDate(rs.getString("bookingDate"));
+            	    b.setTravelers(rs.getInt("travelers"));
+            	    b.setTotalAmount(rs.getDouble("totalAmount"));
+            	    b.setStatus(rs.getString("status"));
+            	    b.setCustomerId(rs.getInt("customerId"));
+            	    b.setPackageId(rs.getInt("packageId"));
+
+            	    list.add(b);
+            	}
+            
+        }
+        catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 }
