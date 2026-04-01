@@ -128,36 +128,72 @@ public class AdminController {
         }
     }
 
-    // ================= MESSAGE MENU =================
+ // ================= MESSAGE MENU =================
     private void messageMenu() {
 
-        System.out.println("\n1. View Messages");
-        System.out.println("2. Send Message");
-        int choice = Integer.parseInt(sc.nextLine());
+        while (true) {
+        	
 
-        switch (choice) {
+            System.out.println("\n╔══════════════════════════════════════╗");
+            System.out.println("║           MESSAGE CENTER             ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║  1. View Customer Messages           ║");
+            System.out.println("║  2. Send Reply to Customer           ║");
+            System.out.println("║  3. Back                             ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.print("Enter choice: ");
 
-            case 1:
-                List<String> messages = messageService.viewMessages();
-                messages.forEach(System.out::println);
-                break;
+            int choice = Integer.parseInt(sc.nextLine());
 
-            case 2:
-                List<User> users = userService.getAllUsers();
+            switch (choice) {
 
-                System.out.println("\n--- CUSTOMER LIST ---");
-                for (User u : users) {
-                    System.out.println(u.getUserId() + " - " + u.getName());
-                }
+                case 1:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│        CUSTOMER MESSAGES            │");
+                    System.out.println("└─────────────────────────────────────┘");
+                    List<String> messages = messageService.viewMessages();
+                    if (messages.isEmpty()) {
+                        System.out.println("  No unread messages.");
+                    } else {
+                        int i = 1;
+                        for (String m : messages) {
+                            System.out.println("  [" + i++ + "] " + m);
+                        }
+                    }
+                    break;
 
-                System.out.print("Enter Customer ID: ");
-                int cid = Integer.parseInt(sc.nextLine());
+                case 2:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│         SEND REPLY TO CUSTOMER      │");
+                    System.out.println("└─────────────────────────────────────┘");
 
-                System.out.print("Message: ");
-                String msg = sc.nextLine();
+                    List<User> users = userService.getAllUsers();
+                    if (users.isEmpty()) {
+                        System.out.println("  No customers found.");
+                        break;
+                    }
 
-                messageService.replyToCustomer(cid, msg);
-                break;
+                    System.out.println("  ── Customer List ──");
+                    for (User u : users) {
+                        System.out.println("  " + u.getUserId() + " - " + u.getName());
+                    }
+
+                    System.out.print("  Enter Customer ID: ");
+                    int cid = Integer.parseInt(sc.nextLine());
+
+                    System.out.print("  Message           : ");
+                    String msg = sc.nextLine();
+
+                    messageService.replyToCustomer(cid, msg);
+                    System.out.println("  Reply sent successfully!");
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    System.out.println("  Invalid choice!");
+            }
         }
     }
 

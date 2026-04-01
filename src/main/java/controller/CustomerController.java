@@ -57,7 +57,8 @@ public class CustomerController {
                 case 6: cancelBooking(); break;
                 case 7: viewPaymentHistory(); break;
                 case 8: viewProfile(); break;
-                case 9: messageMenu(); break;
+                case 9: sc.nextLine();
+                        messageMenu(); break;
                 case 10: updateProfile(); break;
                 case 11: viewBookingHistory(); break;
                 case 12: deleteAccount(); return;
@@ -246,9 +247,60 @@ public class CustomerController {
         new ItineraryService().viewItinerary(sc.nextInt());
     }
 
+ // ---------------- MESSAGE ----------------
+
     private void messageMenu() {
-        System.out.print("Message: ");
-        sc.nextLine();
-        messageService.sendToAdmin(customerId, sc.nextLine());
+
+        while (true) {
+
+            System.out.println("\n╔══════════════════════════════════════╗");
+            System.out.println("║           MESSAGE CENTER             ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║  1. Send Message to Admin            ║");
+            System.out.println("║  2. View Admin Replies               ║");
+            System.out.println("║  3. Back                             ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.print("  Enter choice: ");
+
+            int choice = Integer.parseInt(sc.nextLine().trim());
+
+            switch (choice) {
+
+                case 1:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│         SEND MESSAGE TO ADMIN       │");
+                    System.out.println("└─────────────────────────────────────┘");
+                    System.out.print("  Your message: ");
+                    String msg = sc.nextLine();
+                    if (msg == null || msg.trim().isEmpty()) {
+                        System.out.println("  Message cannot be empty.");
+                    } else {
+                        messageService.sendToAdmin(customerId, msg.trim());
+                        System.out.println("  Message sent to admin successfully!");
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│           ADMIN REPLIES             │");
+                    System.out.println("└─────────────────────────────────────┘");
+                    List<String> replies = messageService.viewReplies(customerId);
+                    if (replies.isEmpty()) {
+                        System.out.println("  No replies from admin yet.");
+                    } else {
+                        int i = 1;
+                        for (String r : replies) {
+                            System.out.println("  [" + i++ + "] Admin: " + r);
+                        }
+                    }
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    System.out.println("  Invalid choice!");
+            }
+        }
     }
 }
