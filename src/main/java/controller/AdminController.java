@@ -86,6 +86,8 @@ public class AdminController {
                 default:
                     System.out.println("Invalid choice!");
             }
+            }
+        }
         }
     }
 
@@ -140,15 +142,8 @@ public class AdminController {
                     break;
 
                 case 4:
-                    System.out.print("Enter Package ID to delete: ");
-                    int deleteId = sc.nextInt();
-                    System.out.print("Are you sure? (yes/no): ");
-                    String confirm = sc.next();
-                    if (confirm.equalsIgnoreCase("yes")) {
-                        service.deletePackage(deleteId);
-                    } else {
-                        System.out.println("Package deletion cancelled");
-                    }
+                    System.out.print("ID: ");
+                    service.deletePackage(Integer.parseInt(sc.nextLine()));
                     break;
 
                 case 5:
@@ -172,13 +167,7 @@ public class AdminController {
                     service.updatePackage(uid, nd, np, ndur);
                     break;
 
-                case 4:
-                    System.out.print("ID: ");
-                    service.deletePackage(Integer.parseInt(sc.nextLine()));
-                    break;
 
-                case 5:
-                    return;
 
             }
         }

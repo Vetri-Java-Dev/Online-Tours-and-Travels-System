@@ -143,6 +143,7 @@ public class UserService {
 
     public boolean deleteUser(int userId) {
         return userDAO.deleteUser(userId);
+    }
     
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
