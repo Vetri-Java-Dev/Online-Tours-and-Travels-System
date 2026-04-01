@@ -93,9 +93,11 @@ public class AdminController {
 
                     System.out.print("Duration: ");
                     int duration = Integer.parseInt(sc.nextLine());
+                    
+                    System.out.print("Available Seats: ");
+                    int seats = Integer.parseInt(sc.nextLine());
 
-                    service.createPackage(id, dest, price, duration);
-                    break;
+                    service.createPackage(id, dest, price, duration, seats); break;
 
                 case 2:
                     service.displayPackages();

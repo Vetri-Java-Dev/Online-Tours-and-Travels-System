@@ -9,6 +9,7 @@ import model.Booking;
 import model.TourPackage;
 import model.User;
 import util.EmailUtil;
+import java.time.LocalDate;
 
 public class BookingService {
 
@@ -25,25 +26,43 @@ public class BookingService {
             System.out.println("  Booking date cannot be empty.");
             return;
         }
+        try {
+            LocalDate bookingDate = LocalDate.parse(booking.getBookingDate());
+            LocalDate today = LocalDate.now();
+
+            if (bookingDate.isBefore(today)) {
+                System.out.println("  Booking date cannot be in the past.");
+                return;
+            }
+
+        } catch (Exception e) {
+            System.out.println("  Invalid date format! Use YYYY-MM-DD.");
+            return;
+        }
 
         if (booking.getTravelers() <= 0) {
             System.out.println("  Travelers must be greater than 0.");
             return;
         }
-
         TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
 
         if (tourPackage == null) {
             System.out.println("  Invalid Package ID.");
             return;
         }
+        if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
+            System.out.println("Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
+            return;
+        }
+
 
         double totalAmount = tourPackage.getPrice() * booking.getTravelers();
         booking.setTotalAmount(totalAmount);
         booking.setStatus("CONFIRMED");
 
         bookingDAO.createBooking(booking);
-
+        int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
+        tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
         System.out.println("  Booking created successfully!");
         System.out.println("  ─────────────────────────────────────");
         System.out.println("  Booking ID   : " + booking.getBookingId());
@@ -99,6 +118,52 @@ public class BookingService {
 
         return booking;
     }
+    public void modifyBooking(Booking booking) {
+
+        if (booking.getBookingId() <= 0) {
+            System.out.println("Invalid Booking ID");
+            return;
+        }
+
+        if (booking.getBookingDate() == null || booking.getBookingDate().isEmpty()) {
+            System.out.println("  Booking date cannot be empty.");
+            return;
+        }
+
+        try {
+            LocalDate bookingDate = LocalDate.parse(booking.getBookingDate());
+            LocalDate today = LocalDate.now();
+
+            if (bookingDate.isBefore(today)) {
+                System.out.println("  Booking date cannot be in the past.");
+                return;
+            }
+
+        } catch (Exception e) {
+            System.out.println("  Invalid date format! Use YYYY-MM-DD.");
+            return;
+        }
+
+        if (booking.getTravelers() <= 0) {
+            System.out.println("  Travelers must be greater than 0.");
+            return;
+        }
+
+      
+        TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
+
+        if (tourPackage == null) {
+            System.out.println("Invalid Package ID");
+            return;
+        }
+
+        double totalAmount = tourPackage.getPrice() * booking.getTravelers();
+        booking.setTotalAmount(totalAmount);
+
+        bookingDAO.updateBooking(booking);
+
+    }
+   
 
     public void cancelBooking(int bookingId) {
 

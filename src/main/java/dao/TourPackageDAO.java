@@ -21,15 +21,14 @@ public class TourPackageDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String query = "insert into tour_package values(?,?,?,?)";
-
+            String query = "INSERT INTO tour_package (packageId, destination, price, duration, availableSeats) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, tourPackage.getPackageId());
             ps.setString(2, tourPackage.getDestination());
             ps.setDouble(3, tourPackage.getPrice());
             ps.setInt(4, tourPackage.getDuration());
-
+            ps.setInt(5, tourPackage.getAvailableSeats()); 
             ps.executeUpdate();
 
             System.out.println("Package saved to database");
@@ -55,9 +54,11 @@ public class TourPackageDAO {
                 tourPackage = new TourPackage(
                     rs.getInt("packageId"),
                     rs.getString("destination"),
-                    rs.getInt("price"),
-                    rs.getInt("duration")
+                    rs.getDouble("price"),
+                    rs.getInt("duration"),
+                    rs.getInt("availableSeats")
                 );
+                tourPackage.setAvailableSeats(rs.getInt("availableSeats"));
             }
 
         } catch (Exception e) {
@@ -80,16 +81,16 @@ public class TourPackageDAO {
             ResultSet rs = st.executeQuery(query);
 
             System.out.println("-----------------------------------------------------------------------------------");
-            System.out.printf("| %-10s | %-35s | %-10s | %-15s |\n", 
-                    "PackageID", "Destination", "Price", "Duration (Days)");
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.printf("| %-10s | %-35s | %-10s | %-15s | %-10s |\n", 
+                    "PackageID", "Destination", "Price", "Duration", "Seats");System.out.println("-----------------------------------------------------------------------------------");
 
             while(rs.next()) {
-                System.out.printf("| %-10d | %-35s | %-10.2f | %-15d |\n",
-                        rs.getInt("packageId"),
-                        rs.getString("destination"),
-                        rs.getDouble("price"),
-                        rs.getInt("duration"));
+            	System.out.printf("| %-10d | %-35s | %-10.2f | %-15d | %-10d |\n",
+            	        rs.getInt("packageId"),
+            	        rs.getString("destination"),
+            	        rs.getDouble("price"),
+            	        rs.getInt("duration"),
+            	        rs.getInt("availableSeats"));
             }
 
             System.out.println("-----------------------------------------------------------------------------------");
@@ -119,8 +120,10 @@ public class TourPackageDAO {
                     rs.getInt("packageId"),
                     rs.getString("destination"),
                     rs.getDouble("price"),
-                    rs.getInt("duration")
+                    rs.getInt("duration"),
+                    rs.getInt("availableSeats")
                 );
+                tp.setAvailableSeats(rs.getInt("availableSeats")); 
                 list.add(tp);
             }
 
@@ -187,7 +190,7 @@ public class TourPackageDAO {
                 tp.setDestination(rs.getString("destination"));
                 tp.setPrice(rs.getDouble("price"));
                 tp.setDuration(rs.getInt("duration"));
-
+                tp.setAvailableSeats(rs.getInt("availableSeats"));
                 list.add(tp);
             }
 
@@ -198,49 +201,46 @@ public class TourPackageDAO {
             return list;
         }
     
-        public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
+        public void updateAvailableSeats(int packageId, int seats) {
+
+            try {
+                Connection con = DBConnection.getConnection();
+
+                String query = "UPDATE tour_package SET availableSeats=? WHERE packageId=?";
+                PreparedStatement ps = con.prepareStatement(query);
+
+                ps.setInt(1, seats);
+                ps.setInt(2, packageId);
+
+                ps.executeUpdate();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+                
+        public boolean updatePackage(int packageId, String destination, double price, int duration) {
             try {
                 Connection con = DBConnection.getConnection();
                 String query = "UPDATE tour_package SET destination=?, price=?, duration=? WHERE packageId=?";
                 PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1, newDestination);
-                ps.setDouble(2, newPrice);
-                ps.setInt(3, newDuration);
+
+                ps.setString(1, destination);
+                ps.setDouble(2, price);  
+                ps.setInt(3, duration);
                 ps.setInt(4, packageId);
+
                 int rows = ps.executeUpdate();
-                if (rows > 0) {
-                    System.out.println("Package updated successfully!");
-                    return true;
-                } else {
-                    System.out.println("Package ID not found!");
-                    return false;
-                }
+
+                return rows > 0;
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
         }
-        
-        
-    public void updatePackage(int packageId, String destination, int price, int duration) {
-        try {
-            Connection con = DBConnection.getConnection();
-            String query = "UPDATE tour_package SET destination=?, price=?, duration=? WHERE packageId=?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, destination);
-            ps.setInt(2, price);
-            ps.setInt(3, duration);
-            ps.setInt(4, packageId);
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                System.out.println("Package Updated Successfully");
-            } else {
-                System.out.println("Package not found");
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    public void deletePackage(int packageId) {
+    public boolean deletePackage(int packageId) {
         try {
             Connection con = DBConnection.getConnection();
             String query = "DELETE FROM tour_package WHERE packageId=?";
@@ -248,22 +248,19 @@ public class TourPackageDAO {
             ps.setInt(1, packageId);
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                System.out.println("Package Deleted Successfully");
+                System.out.println("Package deleted successfully!");
+                return true;
             } else {
-                System.out.println("Package not found");
+                System.out.println("Package ID not found!");
+                return false;
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-    public void updateAvailableSeats(int packageId, int seats) {
-        try {
-            Connection con = DBConnection.getConnection();
-            String query = "UPDATE tour_package SET availableSeats=? WHERE packageId=?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, seats);
-            ps.setInt(2, packageId);
-            ps.executeUpdate();
-        } catch (Exception e) { e.printStackTrace(); }
 
-    }
+
+
 }
 
