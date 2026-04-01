@@ -3,11 +3,12 @@ package service;
 import dao.BookingDAO;
 import dao.TourPackageDAO;
 import dao.UserDAO;
-import model.Booking;
 import model.TourPackage;
 import model.User;
 import util.EmailUtil;
 import java.time.LocalDate;
+import java.util.List;
+import model.Booking;
 
 public class BookingService {
 
@@ -52,7 +53,13 @@ public class BookingService {
         double totalAmount = tourPackage.getPrice() * booking.getTravelers();
         booking.setTotalAmount(totalAmount);
         booking.setStatus("CONFIRMED");
+        User user = new UserDAO().getUserById(booking.getCustomerId());
+        TourPackage tourPackageDetails = tourPackageDAO.getPackageById(booking.getPackageId());
 
+        if (user != null && tourPackageDetails != null) {
+            booking.setCustomerName(user.getName());
+            booking.setPackageName(tourPackageDetails.getDestination());
+        }
         bookingDAO.createBooking(booking);
         int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
         tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
@@ -65,15 +72,14 @@ public class BookingService {
         System.out.println("  Status       : " + booking.getStatus());
         System.out.println("  ─────────────────────────────────────");
 
-        User user = new UserDAO().getUserById(booking.getCustomerId());
-        if (user != null) {
+        User user2 = new UserDAO().getUserById(booking.getCustomerId());
+        if (user2 != null) {
             EmailUtil.sendBookingConfirmationEmail(
-                user.getEmail(), user.getName(),
+                user2.getEmail(), user2.getName(),
                 booking.getBookingId(), booking.getPackageId(),
                 booking.getTravelers(), booking.getTotalAmount(),
                 booking.getBookingDate()
-            );
-            EmailUtil.sendAdminBookingAlertEmail(
+            );    EmailUtil.sendAdminBookingAlertEmail(
                 "onlinetats@gmail.com", user.getName(), user.getUserId(),
                 booking.getBookingId(), booking.getPackageId(),
                 booking.getTravelers(), booking.getTotalAmount(),
@@ -155,6 +161,9 @@ public class BookingService {
 
         bookingDAO.updateBooking(booking);
 
+    }
+    public List<Booking> getAllBookings() {
+        return bookingDAO.getAllBookings();
     }
    
 
