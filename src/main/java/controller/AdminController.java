@@ -8,233 +8,284 @@ import model.Itinerary;
 import model.ItineraryItem;
 import model.User;
 import service.*;
+import util.ColorText;
 
 public class AdminController {
 
     Scanner sc = new Scanner(System.in);
 
-    TourPackageService service       = new TourPackageService();
-    MessageService messageService    = new MessageService();
-    BookingService bookingService    = new BookingService();
-    PaymentService paymentService    = new PaymentService();
+    TourPackageService service        = new TourPackageService();
+    MessageService messageService     = new MessageService();
+    BookingService bookingService     = new BookingService();
+    PaymentService paymentService     = new PaymentService();
     ItineraryService itineraryService = new ItineraryService();
-    UserService userService          = new UserService();
+    UserService userService           = new UserService();
 
-    // ================= MAIN MENU =================
     public void adminMenu() {
 
-        while (true) {
+        while(true) {
 
-            System.out.println("\n╔══════════════════════════════════════╗");
-            System.out.println("║           ADMIN DASHBOARD            ║");
-            System.out.println("╠══════════════════════════════════════╣");
-            System.out.println("║  1. Manage Tour Packages            ║");
-            System.out.println("║  2. Message Customer                ║");
-            System.out.println("║  3. Manage Booking                  ║");
-            System.out.println("║  4. View Payment History            ║");
-            System.out.println("║  5. Manage Itinerary                ║");
-            System.out.println("║  6. Exit                            ║");
-            System.out.println("╚══════════════════════════════════════╝");
+            System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
+            System.out.println(ColorText.warning("║") + ColorText.bold("           ADMIN DASHBOARD            ") + ColorText.warning("║"));
+            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+            System.out.println(ColorText.warning("║") + "  1.  Manage Tour Packages            " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  2.  Message Customer                " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  3.  Manage Bookings                 " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  4.  View Payment History            " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  5.  Manage Itinerary                " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  6.  Exit                            " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+            System.out.print(ColorText.bold("  Enter choice: "));
 
-            System.out.print("Enter choice: ");
             int choice = Integer.parseInt(sc.nextLine());
 
-            switch (choice) {
-
-                case 1: packageMenu(); break;
-                case 2: messageMenu(); break;
-                case 3: bookingMenu(); break;
+            switch(choice) {
+                case 1: packageMenu();   break;
+                case 2: messageMenu();   break;
+                case 3: bookingMenu();   break;
 
                 case 4:
-                    System.out.print("Enter Booking ID: ");
+                    System.out.print(ColorText.bold("  Enter Booking ID: "));
                     paymentService.viewPaymentHistory(Integer.parseInt(sc.nextLine()));
                     break;
 
                 case 5: itineraryMenu(); break;
 
                 case 6:
-                    System.out.println("Logging out...");
+                    System.out.println(ColorText.yellow("\n  Logging out of Admin Dashboard..."));
                     return;
 
                 default:
-                    System.out.println("Invalid choice!");
+                    System.out.println(ColorText.error("\n  Invalid choice. Please enter 1-6."));
             }
         }
     }
 
-    // ================= PACKAGE MENU =================
     private void packageMenu() {
 
-        while (true) {
+        while(true) {
 
-            System.out.println("\n===== MANAGE PACKAGES =====");
-            System.out.println("1. Add");
-            System.out.println("2. View");
-            System.out.println("3. Update");
-            System.out.println("4. Delete");
-            System.out.println("5. Back");
+            System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+            System.out.println(ColorText.warning("│") + ColorText.bold("         MANAGE TOUR PACKAGES        ") + ColorText.warning("│"));
+            System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+            System.out.println("  1.  Add Package");
+            System.out.println("  2.  View Packages");
+            System.out.println("  3.  Update Package");
+            System.out.println("  4.  Delete Package");
+            System.out.println("  5.  Back");
+            System.out.print(ColorText.bold("  Enter choice: "));
 
             int choice = Integer.parseInt(sc.nextLine());
 
-            switch (choice) {
+            switch(choice) {
 
                 case 1:
-                    System.out.print("ID: ");
+                    System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+                    System.out.println(ColorText.warning("│") + ColorText.bold("           ADD TOUR PACKAGE          ") + ColorText.warning("│"));
+                    System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+                    System.out.print("  Package ID   : ");
                     int id = Integer.parseInt(sc.nextLine());
 
-                    System.out.print("Destination: ");
+                    System.out.print("  Destination  : ");
                     String dest = sc.nextLine();
 
-                    System.out.print("Price: ");
+                    System.out.print("  Price (INR)  : ");
                     int price = Integer.parseInt(sc.nextLine());
 
-                    System.out.print("Duration: ");
+                    System.out.print("  Duration     : ");
                     int duration = Integer.parseInt(sc.nextLine());
 
                     service.createPackage(id, dest, price, duration);
+                    System.out.println(ColorText.success("\n  Package added successfully!"));
                     break;
 
                 case 2:
+                    System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+                    System.out.println(ColorText.warning("│") + ColorText.bold("           TOUR PACKAGES             ") + ColorText.warning("│"));
+                    System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
                     service.displayPackages();
                     break;
 
                 case 3:
-                    System.out.print("ID: ");
+                    System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+                    System.out.println(ColorText.warning("│") + ColorText.bold("         UPDATE TOUR PACKAGE         ") + ColorText.warning("│"));
+                    System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+                    System.out.print("  Package ID      : ");
                     int uid = Integer.parseInt(sc.nextLine());
 
-                    System.out.print("New Destination: ");
+                    System.out.print("  New Destination : ");
                     String nd = sc.nextLine();
 
-                    System.out.print("New Price: ");
+                    System.out.print("  New Price (INR) : ");
                     double np = Double.parseDouble(sc.nextLine());
 
-                    System.out.print("New Duration: ");
+                    System.out.print("  New Duration    : ");
                     int ndur = Integer.parseInt(sc.nextLine());
 
                     service.updatePackage(uid, nd, np, ndur);
+                    System.out.println(ColorText.success("\n  Package updated successfully!"));
                     break;
 
                 case 4:
-                    System.out.print("ID: ");
-                    service.deletePackage(Integer.parseInt(sc.nextLine()));
+                    System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+                    System.out.println(ColorText.warning("│") + ColorText.bold("         DELETE TOUR PACKAGE         ") + ColorText.warning("│"));
+                    System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+                    System.out.print("  Package ID : ");
+                    int deleteId = Integer.parseInt(sc.nextLine());
+
+                    System.out.print(ColorText.warning("  Confirm delete? (yes/no) : "));
+                    String confirm = sc.nextLine();
+
+                    if(confirm.equalsIgnoreCase("yes")) {
+                        service.deletePackage(deleteId);
+                        System.out.println(ColorText.success("\n  Package deleted successfully!"));
+                    } else {
+                        System.out.println(ColorText.yellow("\n  Delete cancelled."));
+                    }
                     break;
 
                 case 5:
                     return;
+
+                default:
+                    System.out.println(ColorText.error("\n  Invalid choice."));
             }
         }
     }
 
-    // ================= MESSAGE MENU =================
     private void messageMenu() {
 
-        System.out.println("\n1. View Messages");
-        System.out.println("2. Send Message");
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        System.out.println(ColorText.warning("│") + ColorText.bold("         MESSAGE CUSTOMER            ") + ColorText.warning("│"));
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+        System.out.println("  1.  View Messages from Customers");
+        System.out.println("  2.  Reply to Customer");
+        System.out.print(ColorText.bold("  Enter choice: "));
+
         int choice = Integer.parseInt(sc.nextLine());
 
-        switch (choice) {
+        switch(choice) {
 
             case 1:
                 List<String> messages = messageService.viewMessages();
-                messages.forEach(System.out::println);
+                if(messages.isEmpty()) {
+                    System.out.println(ColorText.yellow("\n  No new messages from customers."));
+                } else {
+                    System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+                    System.out.println(ColorText.warning("│") + ColorText.bold("       MESSAGES FROM CUSTOMERS       ") + ColorText.warning("│"));
+                    System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+                    for(String m : messages) {
+                        System.out.println("  " + m);
+                        System.out.println(ColorText.warning("  ─────────────────────────────────────"));
+                    }
+                }
                 break;
 
             case 2:
                 List<User> users = userService.getAllUsers();
-
-                System.out.println("\n--- CUSTOMER LIST ---");
-                for (User u : users) {
-                    System.out.println(u.getUserId() + " - " + u.getName());
+                System.out.println(ColorText.warning("\n  --- CUSTOMER LIST ---"));
+                for(User u : users) {
+                    System.out.println("  " + u.getUserId() + " - " + u.getName());
                 }
-
-                System.out.print("Enter Customer ID: ");
+                System.out.print(ColorText.bold("  Enter Customer ID : "));
                 int cid = Integer.parseInt(sc.nextLine());
 
-                System.out.print("Message: ");
+                System.out.print("  Reply              : ");
                 String msg = sc.nextLine();
 
                 messageService.replyToCustomer(cid, msg);
+                System.out.println(ColorText.success("\n  Reply sent successfully!"));
                 break;
+
+            default:
+                System.out.println(ColorText.error("\n  Invalid choice."));
         }
     }
 
-    // ================= BOOKING MENU =================
     private void bookingMenu() {
 
-        while (true) {
+        while(true) {
 
-            System.out.println("\n===== MANAGE BOOKINGS =====");
-            System.out.println("1. View Booking");
-            System.out.println("2. Cancel Booking");
-            System.out.println("3. Back");
+            System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+            System.out.println(ColorText.warning("│") + ColorText.bold("         MANAGE BOOKINGS             ") + ColorText.warning("│"));
+            System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+            System.out.println("  1.  View Booking");
+            System.out.println("  2.  Cancel Booking");
+            System.out.println("  3.  Back");
+            System.out.print(ColorText.bold("  Enter choice: "));
 
             int choice = Integer.parseInt(sc.nextLine());
 
-            switch (choice) {
-
+            switch(choice) {
                 case 1:
-                    System.out.print("Booking ID: ");
+                    System.out.print(ColorText.bold("  Booking ID: "));
                     bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
                     break;
 
                 case 2:
-                    System.out.print("Booking ID: ");
+                    System.out.print(ColorText.bold("  Booking ID: "));
                     bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
                     break;
 
                 case 3:
                     return;
+
+                default:
+                    System.out.println(ColorText.error("\n  Invalid choice."));
             }
         }
     }
 
-    // ================= ITINERARY MENU =================
     private void itineraryMenu() {
 
-        while (true) {
+        while(true) {
 
-            System.out.println("\n===== MANAGE ITINERARY =====");
-            System.out.println("1. Add");
-            System.out.println("2. View");
-            System.out.println("3. Modify");
-            System.out.println("4. Delete");
-            System.out.println("5. Back");
+            System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+            System.out.println(ColorText.warning("│") + ColorText.bold("         MANAGE ITINERARY            ") + ColorText.warning("│"));
+            System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+            System.out.println("  1.  Add Itinerary");
+            System.out.println("  2.  View Itinerary");
+            System.out.println("  3.  Modify Itinerary");
+            System.out.println("  4.  Delete Itinerary");
+            System.out.println("  5.  Back");
+            System.out.print(ColorText.bold("  Enter choice: "));
 
             int choice = Integer.parseInt(sc.nextLine());
 
-            switch (choice) {
-
-                case 1: addItinerary(); break;
-                case 2: viewItinerary(); break;
+            switch(choice) {
+                case 1: addItinerary();    break;
+                case 2: viewItinerary();   break;
                 case 3: modifyItinerary(); break;
                 case 4: deleteItinerary(); break;
                 case 5: return;
+                default: System.out.println(ColorText.error("\n  Invalid choice."));
             }
         }
     }
 
-    // ================= ITINERARY METHODS =================
-
     private void addItinerary() {
 
-        System.out.print("Package ID: ");
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        System.out.println(ColorText.warning("│") + ColorText.bold("           ADD ITINERARY             ") + ColorText.warning("│"));
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        System.out.print("  Package ID : ");
         int pid = Integer.parseInt(sc.nextLine());
 
-        System.out.print("Days: ");
+        System.out.print("  Days       : ");
         int days = Integer.parseInt(sc.nextLine());
 
         List<ItineraryItem> items = new ArrayList<>();
 
-        for (int i = 1; i <= days; i++) {
-
-            System.out.println("Day " + i);
-
-            System.out.print("Location: ");
+        for(int i = 1; i <= days; i++) {
+            System.out.println(ColorText.warning("\n  Day " + i));
+            System.out.print("  Location : ");
             String loc = sc.nextLine();
-
-            System.out.print("Activity: ");
+            System.out.print("  Activity : ");
             String act = sc.nextLine();
-
             items.add(new ItineraryItem(0, i, act, loc));
         }
 
@@ -243,29 +294,51 @@ public class AdminController {
 
     private void viewItinerary() {
 
-        System.out.print("Package ID: ");
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        System.out.println(ColorText.warning("│") + ColorText.bold("          VIEW ITINERARY             ") + ColorText.warning("│"));
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        System.out.print("  Package ID: ");
         int pid = Integer.parseInt(sc.nextLine());
 
         Itinerary it = itineraryService.viewItinerary(pid);
 
-        if (it != null) {
-            for (ItineraryItem item : it.getItems()) {
-                System.out.println("Day " + item.getDayNumber() +
-                        " | " + item.getLocation() +
-                        " | " + item.getActivity());
+        if(it != null) {
+            System.out.println(ColorText.bold("\n  ┌──────┬─────────────────┬───────────────────────────────────┐"));
+            System.out.printf(ColorText.bold("  │ %-4s │ %-15s │ %-33s │%n"), "Day", "Location", "Activity");
+            System.out.println(ColorText.bold("  ├──────┼─────────────────┼───────────────────────────────────┤"));
+            for(ItineraryItem item : it.getItems()) {
+                System.out.printf("  │ %-4d │ %-15s │ %-33s │%n",
+                        item.getDayNumber(), item.getLocation(), item.getActivity());
             }
+            System.out.println(ColorText.bold("  └──────┴─────────────────┴───────────────────────────────────┘"));
         } else {
-            System.out.println("No itinerary found.");
+            System.out.println(ColorText.error("\n  No itinerary found for this package."));
         }
     }
 
     private void modifyItinerary() {
-        addItinerary(); // simple replace logic
+        System.out.println(ColorText.warning("\n  Modifying itinerary replaces existing data."));
+        addItinerary();
     }
 
     private void deleteItinerary() {
-        System.out.print("Package ID: ");
-        itineraryService.deleteItinerary(Integer.parseInt(sc.nextLine()));
+
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        System.out.println(ColorText.warning("│") + ColorText.bold("         DELETE ITINERARY            ") + ColorText.warning("│"));
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        System.out.print("  Package ID : ");
+        int pid = Integer.parseInt(sc.nextLine());
+
+        System.out.print(ColorText.warning("  Confirm delete? (yes/no) : "));
+        String confirm = sc.nextLine();
+
+        if(confirm.equalsIgnoreCase("yes")) {
+            itineraryService.deleteItinerary(pid);
+            System.out.println(ColorText.success("\n  Itinerary deleted successfully!"));
+        } else {
+            System.out.println(ColorText.yellow("\n  Delete cancelled."));
+        }
     }
-    
 }

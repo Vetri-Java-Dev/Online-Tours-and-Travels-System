@@ -198,7 +198,8 @@ public class UserDAO {
                 System.out.println("Email not found!");
             }
 
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
         }
     }
@@ -231,8 +232,5 @@ public class UserDAO {
 
         return list;
     }
-    
-    
-    
     
 }

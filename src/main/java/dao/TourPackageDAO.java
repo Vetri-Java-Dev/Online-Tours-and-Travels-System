@@ -163,22 +163,28 @@ public class TourPackageDAO {
     
         public boolean updatePackage(int packageId, String newDestination, double newPrice, int newDuration) {
             try {
+            	
                 Connection con = DBConnection.getConnection();
                 String query = "UPDATE tour_package SET destination=?, price=?, duration=? WHERE packageId=?";
                 PreparedStatement ps = con.prepareStatement(query);
+                
                 ps.setString(1, newDestination);
                 ps.setDouble(2, newPrice);
                 ps.setInt(3, newDuration);
                 ps.setInt(4, packageId);
+                
                 int rows = ps.executeUpdate();
+                
                 if (rows > 0) {
                     System.out.println("Package updated successfully!");
                     return true;
-                } else {
+                }
+                else {
                     System.out.println("Package ID not found!");
                     return false;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
@@ -186,19 +192,25 @@ public class TourPackageDAO {
         
         public boolean deletePackage(int packageId) {
             try {
+            	
                 Connection con = DBConnection.getConnection();
                 String query = "DELETE FROM tour_package WHERE packageId=?";
+                
                 PreparedStatement ps = con.prepareStatement(query);
                 ps.setInt(1, packageId);
+                
                 int rows = ps.executeUpdate();
+                
                 if (rows > 0) {
                     System.out.println("Package deleted successfully!");
                     return true;
-                } else {
+                }
+                else {
                     System.out.println("Package ID not found!");
                     return false;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
