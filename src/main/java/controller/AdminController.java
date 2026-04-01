@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+import model.Booking;
 import model.Itinerary;
 import model.ItineraryItem;
 import model.User;
@@ -24,20 +24,24 @@ public class AdminController {
 
     public void adminMenu() {
 
-        while(true) {
 
-            System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-            System.out.println(ColorText.warning("║") + ColorText.bold("           ADMIN DASHBOARD            ") + ColorText.warning("║"));
-            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
-            System.out.println(ColorText.warning("║") + "  1.  Manage Tour Packages            " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  2.  Message Customer                " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  3.  Manage Booking                  " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  4.  View Payment History            " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  5.  Manage Itinerary                " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  6.  Reports                         " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("║") + "  7.  Exit                            " + ColorText.warning("║"));
-            System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-            System.out.print(ColorText.bold("  Enter choice: "));
+        while (true) {
+
+            System.out.println("\n╔══════════════════════════════════════╗");
+            System.out.println("║           ADMIN DASHBOARD            ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║  1. Manage Tour Packages             ║");
+            System.out.println("║  2. Message Customer                 ║");
+            System.out.println("║  3. Manage Booking                   ║");
+            System.out.println("║  4. View Payment History             ║");
+            System.out.println("║  5. Track All Bookings               ║");
+            System.out.println("║  6. Manage Itinerary                 ║");
+            System.out.println("║  7. Reports                          ║");
+            System.out.println("║  8. Exit                             ║");           
+            System.out.println("╚══════════════════════════════════════╝");
+
+            System.out.print("Enter choice: ");
+       
 
             int choice = Integer.parseInt(sc.nextLine());
 
@@ -51,11 +55,11 @@ public class AdminController {
                     paymentService.viewPaymentHistory(Integer.parseInt(sc.nextLine()));
                     break;
 
-                case 5: itineraryMenu(); break;
-                case 6: reportsMenu(); break;
-
-                case 7:
-                    System.out.println(ColorText.yellow("\n  Logging out of Admin Dashboard..."));
+                case 5: trackAllBookings(); break;
+                case 6: itineraryMenu(); break;
+                case 7: reportsMenu(); break;
+                case 8:
+                    System.out.println("Logging out...");
                     return;
 
                 default:
@@ -198,8 +202,36 @@ public class AdminController {
             else return;
         }
     }
+    private void trackAllBookings() {
 
-    // ================= ITINERARY MENU =================
+        System.out.println("\n===== TRACK PACKAGE BOOKINGS =====");
+
+        List<Booking> list = bookingService.getAllBookings();
+
+        if (list.isEmpty()) {
+            System.out.println("No bookings found");
+            return;
+        }
+
+        System.out.println("ID | Customer | Package | Travel Date | Status");
+        System.out.println("-----------------------------------------------------");
+
+        for (Booking b : list) {
+            System.out.println(
+                    b.getBookingId() + " | " +
+                    b.getCustomerName() + " | " +
+                    b.getPackageName() + " | " +
+                    b.getBookingDate() + " | " +
+                    b.getStatus()
+            );
+        }
+
+        System.out.print("\nEnter Booking ID to view details: ");
+        int id = Integer.parseInt(sc.nextLine());
+
+        bookingService.viewBooking(id);
+    }
+      // ================= ITINERARY MENU =================
     private void itineraryMenu() {
         while(true) {
             System.out.println("\n1.Add 2.View 3.Modify 4.Delete 5.Back");

@@ -33,7 +33,7 @@ public class TourPackage {
     public void setDestination(String destination) {
         this.destination = destination;
     }
-   public double getPrice() {
+    public double getPrice() {
     	return price;
     }
 
@@ -57,7 +57,3 @@ public class TourPackage {
         this.availableSeats = availableSeats;
     }
 }
-
-
-
- 
