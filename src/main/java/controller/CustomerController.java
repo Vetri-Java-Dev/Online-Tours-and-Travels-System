@@ -120,14 +120,14 @@ public class CustomerController {
                 break;
 
             case 2:
-                System.out.print("  Card No: ");
+                System.out.print(" Credit Card No: ");
                 String cc = sc.nextLine();
                 System.out.print("  Holder: ");
                 payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, sc.nextLine());
                 break;
 
             case 3:
-                System.out.print("  Card No: ");
+                System.out.print(" Debit Card No: ");
                 String dc = sc.nextLine();
                 System.out.print("  Bank: ");
                 payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, sc.nextLine());
