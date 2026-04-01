@@ -2,6 +2,7 @@ package service;
 
 import dao.ItineraryDAO;
 import model.Itinerary;
+import util.ColorText;
 
 public class ItineraryService {
 
@@ -10,27 +11,23 @@ public class ItineraryService {
     public Itinerary viewItinerary(int packageId) {
         return dao.getItineraryByPackageId(packageId);
     }
-    
-    public void deleteItinerary(int packageId) {
 
-        if (packageId <= 0) {
-            System.out.println("Invalid Package ID.");
+    public void deleteItinerary(int packageId) {
+        if(packageId <= 0) {
+            System.out.println(ColorText.error("  Invalid Package ID."));
             return;
         }
-
         dao.deleteItineraryByPackageId(packageId);
+        System.out.println(ColorText.success("  Itinerary deleted successfully!"));
     }
-    
+
     public void createItinerary(Itinerary itinerary) {
-
         int itineraryId = dao.createItinerary(itinerary);
-
-        if (itineraryId > 0) {
+        if(itineraryId > 0) {
             dao.addItineraryItems(itineraryId, itinerary.getItems());
-            System.out.println("Itinerary saved successfully!");
+            System.out.println(ColorText.success("\n  Itinerary saved successfully!"));
         } else {
-            System.out.println("Failed to save itinerary.");
+            System.out.println(ColorText.error("\n  Failed to save itinerary."));
         }
     }
-
 }

@@ -67,7 +67,8 @@ public class PaymentService {
             System.out.println("  Method     : " + payment.getPaymentMethod());
             System.out.println("  Status     : " + payment.getStatus());
             System.out.println("  ─────────────────────────────────────");
-        } else {
+        }
+        else {
             System.out.println("  Payment not found.");
         }
 
