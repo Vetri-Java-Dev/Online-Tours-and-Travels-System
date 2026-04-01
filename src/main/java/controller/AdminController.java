@@ -19,6 +19,7 @@ public class AdminController {
     PaymentService paymentService    = new PaymentService();
     ItineraryService itineraryService = new ItineraryService();
     UserService userService          = new UserService();
+    ReportService reportService = new ReportService();
 
     // ================= MAIN MENU =================
     public void adminMenu() {
@@ -28,12 +29,13 @@ public class AdminController {
             System.out.println("\n╔══════════════════════════════════════╗");
             System.out.println("║           ADMIN DASHBOARD            ║");
             System.out.println("╠══════════════════════════════════════╣");
-            System.out.println("║  1. Manage Tour Packages            ║");
-            System.out.println("║  2. Message Customer                ║");
-            System.out.println("║  3. Manage Booking                  ║");
-            System.out.println("║  4. View Payment History            ║");
-            System.out.println("║  5. Manage Itinerary                ║");
-            System.out.println("║  6. Exit                            ║");
+            System.out.println("║  1. Manage Tour Packages             ║");
+            System.out.println("║  2. Message Customer                 ║");
+            System.out.println("║  3. Manage Booking                   ║");
+            System.out.println("║  4. View Payment History             ║");
+            System.out.println("║  5. Manage Itinerary                 ║");
+            System.out.println("║  6. Reports                          ║");
+            System.out.println("║  7. Exit                             ║");
             System.out.println("╚══════════════════════════════════════╝");
 
             System.out.print("Enter choice: ");
@@ -51,8 +53,9 @@ public class AdminController {
                     break;
 
                 case 5: itineraryMenu(); break;
+                case 6: reportsMenu();   break;   
 
-                case 6:
+                case 7:
                     System.out.println("Logging out...");
                     return;
 
@@ -127,36 +130,72 @@ public class AdminController {
         }
     }
 
-    // ================= MESSAGE MENU =================
+ // ================= MESSAGE MENU =================
     private void messageMenu() {
 
-        System.out.println("\n1. View Messages");
-        System.out.println("2. Send Message");
-        int choice = Integer.parseInt(sc.nextLine());
+        while (true) {
+        	
 
-        switch (choice) {
+            System.out.println("\n╔══════════════════════════════════════╗");
+            System.out.println("║           MESSAGE CENTER             ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║  1. View Customer Messages           ║");
+            System.out.println("║  2. Send Reply to Customer           ║");
+            System.out.println("║  3. Back                             ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.print("Enter choice: ");
 
-            case 1:
-                List<String> messages = messageService.viewMessages();
-                messages.forEach(System.out::println);
-                break;
+            int choice = Integer.parseInt(sc.nextLine());
 
-            case 2:
-                List<User> users = userService.getAllUsers();
+            switch (choice) {
 
-                System.out.println("\n--- CUSTOMER LIST ---");
-                for (User u : users) {
-                    System.out.println(u.getUserId() + " - " + u.getName());
-                }
+                case 1:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│        CUSTOMER MESSAGES            │");
+                    System.out.println("└─────────────────────────────────────┘");
+                    List<String> messages = messageService.viewMessages();
+                    if (messages.isEmpty()) {
+                        System.out.println("  No unread messages.");
+                    } else {
+                        int i = 1;
+                        for (String m : messages) {
+                            System.out.println("  [" + i++ + "] " + m);
+                        }
+                    }
+                    break;
 
-                System.out.print("Enter Customer ID: ");
-                int cid = Integer.parseInt(sc.nextLine());
+                case 2:
+                    System.out.println("\n┌─────────────────────────────────────┐");
+                    System.out.println("│         SEND REPLY TO CUSTOMER      │");
+                    System.out.println("└─────────────────────────────────────┘");
 
-                System.out.print("Message: ");
-                String msg = sc.nextLine();
+                    List<User> users = userService.getAllUsers();
+                    if (users.isEmpty()) {
+                        System.out.println("  No customers found.");
+                        break;
+                    }
 
-                messageService.replyToCustomer(cid, msg);
-                break;
+                    System.out.println("  ── Customer List ──");
+                    for (User u : users) {
+                        System.out.println("  " + u.getUserId() + " - " + u.getName());
+                    }
+
+                    System.out.print("  Enter Customer ID: ");
+                    int cid = Integer.parseInt(sc.nextLine());
+
+                    System.out.print("  Message           : ");
+                    String msg = sc.nextLine();
+
+                    messageService.replyToCustomer(cid, msg);
+                    System.out.println("  Reply sent successfully!");
+                    break;
+
+                case 3:
+                    return;
+
+                default:
+                    System.out.println("  Invalid choice!");
+            }
         }
     }
 
@@ -269,5 +308,34 @@ public class AdminController {
         System.out.print("Package ID: ");
         itineraryService.deleteItinerary(Integer.parseInt(sc.nextLine()));
     }
-    
+ // ================= REPORTS MENU =================
+    private void reportsMenu() {
+
+        while (true) {
+
+            System.out.println("\n╔════════════════════════════════════════╗");
+            System.out.println("║        REPORTS & ANALYTICS             ║");
+            System.out.println("╠════════════════════════════════════════╣");
+            System.out.println("║  1. Booking Report (All)               ║");
+            System.out.println("║  2. Booking Report (Confirmed only)    ║");
+            System.out.println("║  3. Booking Report (Cancelled only)    ║");
+            System.out.println("║  4. Payment & Revenue Report           ║");
+            System.out.println("║  5. Package Availability Report        ║");
+            System.out.println("║  6. Back                               ║");
+            System.out.println("╚════════════════════════════════════════╝");
+
+            System.out.print("Enter choice: ");
+            int choice = Integer.parseInt(sc.nextLine());
+
+            switch (choice) {
+                case 1: reportService.showAllBookingsReport();                      break;
+                case 2: reportService.showBookingReportByStatus("CONFIRMED");       break;
+                case 3: reportService.showBookingReportByStatus("Cancelled");       break;
+                case 4: reportService.showPaymentReport();                          break;
+                case 5: reportService.showPackageAvailabilityReport();              break;
+                case 6: return;
+                default: System.out.println("Invalid choice!");
+            }
+        }
+    }
 }
