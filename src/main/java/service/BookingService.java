@@ -43,16 +43,11 @@ public class BookingService {
             return;
         }
         TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
-
-        if (tourPackage == null) {
-            System.out.println("  Invalid Package ID.");
-            return;
-        }
+  
         if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
             System.out.println("Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
             return;
         }
-
 
         double totalAmount = tourPackage.getPrice() * booking.getTravelers();
         booking.setTotalAmount(totalAmount);
