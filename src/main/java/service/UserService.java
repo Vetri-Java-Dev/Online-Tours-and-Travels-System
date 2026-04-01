@@ -12,10 +12,10 @@ import java.util.Scanner;
 public class UserService {
 
     private UserDAO userDAO = new UserDAO();
+    
     private static final String ADMIN_EMAIL = "onlinetats@gmail.com";
 
     public void registerUser(User user) {
-
         System.out.println(ColorText.cyan("\n┌─────────────────────────────────────┐"));
         System.out.println(ColorText.cyan("│") + ColorText.bold("           USER REGISTRATION         ") + ColorText.cyan("│"));
         System.out.println(ColorText.cyan("└─────────────────────────────────────┘"));
@@ -45,7 +45,6 @@ public class UserService {
     }
 
     private boolean verifyAdminOTP() {
-
         Scanner sc = new Scanner(System.in);
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
         long generatedTime = System.currentTimeMillis();
@@ -70,21 +69,16 @@ public class UserService {
 
         if(enteredOtp.equals(otp)) {
             return true;
-        } else {
+        }
+        else {
             System.out.println(ColorText.error("\n  Invalid OTP. Registration denied."));
             return false;
         }
     }
 
     public User login(String email, String password) {
-
         if(!InputValidationUtil.isValidEmail(email)) {
             System.out.println(ColorText.error("\n  Invalid email format."));
-            return null;
-        }
-
-        if(!InputValidationUtil.isValidPassword(password)) {
-            System.out.println(ColorText.error("\n  Invalid password format."));
             return null;
         }
 
@@ -114,7 +108,6 @@ public class UserService {
     }
 
     public void updatePassword(String email, String newPassword) {
-
         System.out.println(ColorText.cyan("\n┌─────────────────────────────────────┐"));
         System.out.println(ColorText.cyan("│") + ColorText.bold("           UPDATE PASSWORD           ") + ColorText.cyan("│"));
         System.out.println(ColorText.cyan("└─────────────────────────────────────┘"));
@@ -127,6 +120,15 @@ public class UserService {
         userDAO.updatePassword(email, newPassword);
     }
 
+    
+    public boolean updateUser(int userId, String name, String phone) {
+        return userDAO.updateUser(userId, name, phone);
+    }
+
+    public boolean deleteUser(int userId) {
+        return userDAO.deleteUser(userId);
+    }
+    
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
     }

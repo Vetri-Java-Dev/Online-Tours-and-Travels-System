@@ -4,6 +4,8 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 public class BookingDAO {
 
 	public void createBooking(Booking booking) {
@@ -33,6 +35,7 @@ public class BookingDAO {
 	                int bookingId = rs.getInt(1);
 	                booking.setBookingId(bookingId);
 	            }
+	            
 	        }
 
 	    }
@@ -77,6 +80,32 @@ public class BookingDAO {
 
         return booking;
     }
+    public void updateBooking(Booking booking) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, booking.getBookingDate());
+            ps.setInt(2, booking.getTravelers());
+            ps.setDouble(3, booking.getTotalAmount());
+            ps.setInt(4, booking.getBookingId());
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Booking updated successfully");
+            } else {
+                System.out.println("Booking update failed");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public void cancelBooking(int bookingId) {
 
         try {
@@ -97,5 +126,28 @@ public class BookingDAO {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        List<Booking> list = new ArrayList<>();
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT * FROM booking WHERE customerId=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Booking b = new Booking(
+                    rs.getInt("bookingId"),
+                    rs.getString("bookingDate"),
+                    rs.getInt("travelers"),
+                    rs.getDouble("totalAmount"),
+                    rs.getString("status"),
+                    rs.getInt("customerId"),
+                    rs.getInt("packageId")
+                );
+                list.add(b);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
     }
 }
