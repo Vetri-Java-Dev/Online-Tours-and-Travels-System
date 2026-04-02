@@ -4,6 +4,7 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 public class BookingDAO {
@@ -95,12 +96,6 @@ public class BookingDAO {
 
             int rows = ps.executeUpdate();
 
-            if (rows > 0) {
-                System.out.println("Booking updated successfully");
-            } else {
-                System.out.println("Booking update failed");
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,12 +120,16 @@ public class BookingDAO {
                 Booking b = new Booking();
 
                 b.setBookingId(rs.getInt("bookingId"));
-                b.setCustomerName(rs.getString("name"));        // ✅
-                b.setPackageName(rs.getString("destination"));  // ✅
-                b.setBookingDate(rs.getDate("bookingDate").toLocalDate());
+                b.setCustomerName(rs.getString("name"));        
+                b.setPackageName(rs.getString("destination")); 
+                LocalDate date = rs.getObject("bookingDate", LocalDate.class);
+                if (date != null) {
+                    b.setBookingDate(date);
+                }
                 b.setStatus(rs.getString("status"));
 
                 list.add(b);
+                
             }
 
         } catch (Exception e) {
@@ -154,8 +153,7 @@ public class BookingDAO {
 
             ps.executeUpdate();
 
-            System.out.println("Booking cancelled successfully!");
-
+           
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -172,7 +170,7 @@ public class BookingDAO {
             while (rs.next()) {
             	Booking b = new Booking(
             		    rs.getInt("bookingId"),
-            		    rs.getDate("bookingDate").toLocalDate(),
+            		    rs.getObject("bookingDate", LocalDate.class),
             		    rs.getInt("travelers"),
             		    rs.getDouble("totalAmount"),
             		    rs.getString("status"),

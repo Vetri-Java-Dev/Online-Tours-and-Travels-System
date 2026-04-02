@@ -193,7 +193,7 @@ public class AdminController {
         while(true) {
             System.out.println("\n1.View  2.Cancel  3.Back");
             int c = Integer.parseInt(sc.nextLine());
-
+            System.out.println("Enter the Booking Id:");
             if(c==1) bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
             else if(c==2) bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
             else return;
