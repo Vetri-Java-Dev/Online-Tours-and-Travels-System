@@ -17,6 +17,7 @@ public class Package {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+	
     public int getPackageId() {
         return packageId;
     }
