@@ -29,45 +29,42 @@ public class CustomerController {
     public void customerMenu() {
 
         while(true) {
+        	System.out.println(ColorText.warning("╔══════════════════════════════════════╗"));
 
-        	 	 System.out.println("\n╔══════════════════════════════════════╗");
-             System.out.println("║         CUSTOMER DASHBOARD           ║");
-             System.out.println("╠══════════════════════════════════════╣");
-             System.out.println("║  1.  View Tour Packages              ║");
-             System.out.println("║  2.  Search Package                  ║");
-             System.out.println("║  3.  View Package Itinerary          ║");
-             System.out.println("║  4.  Create Booking                  ║");
-             System.out.println("║  5.  View Booking                    ║");
-             System.out.println("║  6.  Modify Booking                  ║");
-             System.out.println("║  7.  Cancel Booking                  ║");
-             System.out.println("║  8.  View Payment History            ║");
-             System.out.println("║  9.  View Profile                    ║");
-             System.out.println("║ 10.  Update Profile                  ║");
-             System.out.println("║ 11.  Booking History                 ║");
-             System.out.println("║ 12.  Message Admin                   ║");
-             System.out.println("║ 13.  Delete Account                  ║");
-             System.out.println("║ 14.  Exit                            ║");        
-             System.out.println("╚══════════════════════════════════════╝");
-             System.out.print("  Enter choice: ");
+        	System.out.println(ColorText.warning("║") 
+        	        + ColorText.bold("         CUSTOMER DASHBOARD           ") 
+        	        + ColorText.warning("║"));
 
-            int choice = sc.nextInt();
+        	System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+
+        	System.out.println(ColorText.warning("║") + "  1.  View Tour Packages              " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  2.  Search Package                  " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  3.  View Package Itinerary          " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  4.  Manage Booking                  " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  5.  View Payment History            " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  6.  View Profile                    " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + " 7.  Update Profile                   " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + " 8.  Message Admin                    " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + " 9.  Delete Account                   " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + " 10.  Exit                            " + ColorText.warning("║"));
+
+        	System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+
+        	System.out.print(ColorText.bold("Enter choice: "));
+        	int choice = sc.nextInt();
 
             switch(choice) {
 
             case 1: tourService.displayPackages(); break;
             case 2: searchPackage(); break;
             case 3: viewItinerary(); break;
-            case 4: createBooking(); break;
-            case 5: viewBooking(); break;
-            case 6: modifyBooking(); break;
-            case 7: cancelBooking(); break;
-            case 8: viewPaymentHistory(); break;
-            case 9: viewProfile(); break;
-            case 10: updateProfile(); break;
-            case 11: viewBookingHistory(); break;
-            case 12: sc.nextLine(); messageMenu(); break;
-            case 13: deleteAccount(); return;
-            case 14: 
+            case 4: manageBookingMenu(); break;
+            case 5: viewPaymentHistory(); break;
+            case 6: viewProfile(); break;
+            case 7: updateProfile(); break;
+            case 8: sc.nextLine(); messageMenu(); break;
+            case 9: deleteAccount(); return;
+            case 10: 
                 System.out.println("Exiting...");
                 return;
 
@@ -75,6 +72,44 @@ public class CustomerController {
                 System.out.println("Invalid choice!");
         } 
        }
+    }
+    
+    private void manageBookingMenu() {
+
+        while (true) {
+        	System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        	System.out.println(ColorText.warning("│") 
+        	        + ColorText.bold("          MANAGE BOOKING             ") 
+        	        + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("├─────────────────────────────────────┤"));
+
+        	System.out.println(ColorText.warning("│") + "  1. Create Booking                  " + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("│") + "  2. View Booking                    " + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("│") + "  3. Modify Booking                  " + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("│") + "  4. Cancel Booking                  " + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("│") + "  5. Booking History                 " + ColorText.warning("│"));
+        	System.out.println(ColorText.warning("│") + "  6. Back                            " + ColorText.warning("│"));
+
+        	System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        	System.out.print(ColorText.bold("Enter choice: "));
+        	int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1: createBooking(); break;
+                case 2: viewBooking(); break;
+                case 3: modifyBooking(); break;
+                case 4: cancelBooking(); break;
+                case 5: viewBookingHistory(); break;
+
+                case 6:
+                    return;
+
+                default:
+                    System.out.println(ColorText.error("Invalid choice!"));
+            }
+        }
     }
     
 
@@ -114,15 +149,37 @@ public class CustomerController {
         booking.setTravelers(travelers);
         booking.setBookingDate(date);
         bookingService.createBooking(booking);
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+        System.out.println(ColorText.warning("│") 
+                + ColorText.bold("        BOOKING CONFIRMATION         ") 
+                + ColorText.warning("│"));
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        System.out.println("  Booking ID   : " + booking.getBookingId());
+        System.out.println("  Package ID   : " + booking.getPackageId());
+        System.out.println("  Travelers    : " + booking.getTravelers());
+        System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
+        System.out.println("  Status       : " + booking.getStatus());
+        System.out.println("  ─────────────────────────────────────");
 
         int bookingId = booking.getBookingId();
         double amount = booking.getTotalAmount();
       
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│           SELECT PAYMENT            │");
-        System.out.println("└─────────────────────────────────────┘");
+        System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
 
-        System.out.println("\n1. UPI\n2. Credit Card\n3. Debit Card");
+        System.out.println(ColorText.warning("│") 
+                + ColorText.bold("           SELECT PAYMENT            ") 
+                + ColorText.warning("│"));
+
+        System.out.println(ColorText.warning("├─────────────────────────────────────┤"));
+
+        System.out.println(ColorText.warning("│") + "  1. UPI                              " + ColorText.warning("│"));
+        System.out.println(ColorText.warning("│") + "  2. Credit Card                      " + ColorText.warning("│"));
+        System.out.println(ColorText.warning("│") + "  3. Debit Card                       " + ColorText.warning("│"));
+
+        System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+        System.out.print(ColorText.bold("Enter choice: "));
         int choice = sc.nextInt();
         sc.nextLine();
 
@@ -152,45 +209,53 @@ public class CustomerController {
     }
 
     private void viewBooking() {
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│            VIEW BOOKING             │");
-        System.out.println("└─────────────────────────────────────┘");
-        
-        System.out.print("  Booking ID: ");
-        int bookingId = sc.nextInt();
-        sc.nextLine();
+    	System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+    	System.out.println(ColorText.warning("│") 
+    	        + ColorText.bold("            VIEW BOOKING             ") 
+    	        + ColorText.warning("│"));
+    	System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        Booking booking = bookingService.viewBooking(bookingId);
+    	System.out.print("Enter Booking ID: ");
+    	int bookingId = sc.nextInt();
+    	sc.nextLine(); 
 
-        if (booking != null) {
-            System.out.println("\n  ─────────────────────────────────────");
-            System.out.println("  Booking ID   : " + booking.getBookingId());
-            System.out.println("  Package ID   : " + booking.getPackageId());
-            System.out.println("  Travelers    : " + booking.getTravelers());
-            System.out.println("  Booking Date : " + booking.getBookingDate());
-            System.out.println("  Total Amount : Rs." + booking.getTotalAmount());
-            System.out.println("  Status       : " + booking.getStatus());
-            System.out.println("  ─────────────────────────────────────");
-        }
-        
-        else {
-            System.out.println("\n  Booking not found!");
-        }
+    	Booking booking = bookingService.viewBooking(bookingId);
+
+    	if (booking != null) {
+    	    System.out.println("  ─────────────────────────────────────");
+    	    System.out.println("  Booking ID   : " + booking.getBookingId());
+    	    System.out.println("  Package ID   : " + booking.getPackageId());
+    	    System.out.println("  Travelers    : " + booking.getTravelers());
+    	    System.out.println("  Booking Date : " + booking.getBookingDate());
+    	    System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
+    	    System.out.println("  Status       : " + booking.getStatus());
+    	    System.out.println("  ─────────────────────────────────────");
+    	} else {
+    	    System.out.println(ColorText.error("Booking not found!"));
+    	}
     }
     private void modifyBooking() {
 
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│           MODIFY BOOKING            │");
-        System.out.println("└─────────────────────────────────────┘");
+    	System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
 
-        System.out.print("  Enter Booking ID: ");
-        int bookingId = sc.nextInt();
+    	System.out.println(ColorText.warning("│") 
+    	        + ColorText.bold("           MODIFY BOOKING             ") 
+    	        + ColorText.warning("│"));
+
+    	System.out.println(ColorText.warning("├─────────────────────────────────────┤"));
+
+    	System.out.println(ColorText.warning("│") + "  Enter Booking ID:                  " + ColorText.warning("│"));
+
+    	System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+    	System.out.print(ColorText.bold("Enter Booking ID: "));
+    	int bookingId = sc.nextInt();
 
         Booking booking = bookingService.viewBooking(bookingId);
 
         if (booking == null) {
-            System.out.println("\n  Booking not found!");
-            return;
+        	System.out.println(ColorText.error("Booking not found!"));
+        	return;
         }
 
         if (booking.getStatus().equalsIgnoreCase("Cancelled")) {
@@ -233,14 +298,28 @@ public class CustomerController {
 
         bookingService.modifyBooking(booking);
 
-        System.out.println("\n  Booking modified successfully!");
+        System.out.println(ColorText.success("Booking modified successfully!"));
     }
 
-     private void cancelBooking() {
-        System.out.print("Booking ID: ");
-        bookingService.cancelBooking(sc.nextInt());
-    }
-     private void viewPaymentHistory() {
+    private void cancelBooking() {
+
+    	System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
+    	System.out.println(ColorText.warning("│") 
+    	        + ColorText.bold("           CANCEL BOOKING            ") 
+    	        + ColorText.warning("│"));
+    	System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
+
+    	System.out.print(ColorText.bold("Enter Booking ID: "));
+    	int bookingId = sc.nextInt();
+
+    	boolean result = bookingService.cancelBooking(bookingId);
+
+    	if (result) {
+    	    System.out.println(ColorText.success("Booking cancelled successfully!"));
+    	} else {
+    	    System.out.println(ColorText.error("Invalid Booking ID!"));
+    	}
+    } private void viewPaymentHistory() {
     	    System.out.print("Booking ID: ");
     	    int bookingId = sc.nextInt();
     	    new PaymentService().viewPaymentHistory(bookingId);
