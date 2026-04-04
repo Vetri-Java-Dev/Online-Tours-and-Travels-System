@@ -74,7 +74,8 @@ public class BookingDAO {
             	booking.setPackageId(rs.getInt("packageId"));
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 

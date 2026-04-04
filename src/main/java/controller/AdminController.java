@@ -245,6 +245,7 @@ public class AdminController {
     }
 
     private void addItinerary() {
+    	
         int pid = Integer.parseInt(sc.nextLine());
         int days = Integer.parseInt(sc.nextLine());
 
@@ -266,7 +267,7 @@ public class AdminController {
     private void reportsMenu() {
 
         while(true) {
-            System.out.println("\n1.All 2.Confirmed 3.Cancelled 4.Payment 5.Availability 6.Back");
+            System.out.println("\n1.All\n2.Confirmed\n3.Cancelled\n4.Payment\n5.Availability\n6.Back");
             int c = Integer.parseInt(sc.nextLine());
 
             switch(c) {

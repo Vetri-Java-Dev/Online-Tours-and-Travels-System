@@ -116,7 +116,9 @@ public class PaymentDAO {
                 System.out.println("No payment records found for this booking.");
             }
 
-        } catch (Exception e) {
+        }
+        
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
