@@ -18,10 +18,6 @@ public class BookingService {
 
     public void createBooking(Booking booking) {
 
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│           CREATE BOOKING            │");
-        System.out.println("└─────────────────────────────────────┘");
-
         if (booking.getBookingDate() == null) {
             System.out.println("  Booking date cannot be empty.");
             return;
@@ -45,6 +41,10 @@ public class BookingService {
             return;
         }
         TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
+        if (tourPackage == null) {
+            System.out.println("Invalid Package ID");
+            return;
+        }
   
         if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
             System.out.println("Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
@@ -64,19 +64,10 @@ public class BookingService {
         bookingDAO.createBooking(booking);
         int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
         tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
-        System.out.println("  Booking created successfully!");
-        System.out.println("  ─────────────────────────────────────");
-        System.out.println("  Booking ID   : " + booking.getBookingId());
-        System.out.println("  Package ID   : " + booking.getPackageId());
-        System.out.println("  Travelers    : " + booking.getTravelers());
-        System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
-        System.out.println("  Status       : " + booking.getStatus());
-        System.out.println("  ─────────────────────────────────────");
-
-        User user2 = new UserDAO().getUserById(booking.getCustomerId());
-        if (user2 != null) {
+       
+        if (user != null) {
             EmailUtil.sendBookingConfirmationEmail(
-                user2.getEmail(), user2.getName(),
+                user.getEmail(), user.getName(),
                 booking.getBookingId(), booking.getPackageId(),
                 booking.getTravelers(), booking.getTotalAmount(),
                 booking.getBookingDate().toString()
@@ -90,33 +81,12 @@ public class BookingService {
     }
 
     public Booking viewBooking(int bookingId) {
-
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│            VIEW BOOKING             │");
-        System.out.println("└─────────────────────────────────────┘");
-
         if (bookingId <= 0) {
-            System.out.println("  Invalid Booking ID.");
+            System.out.println("Invalid Booking ID");
             return null;
         }
 
-        Booking booking = bookingDAO.viewBooking(bookingId);
-
-        if (booking != null) {
-            System.out.println("  ─────────────────────────────────────");
-            System.out.println("  Booking ID   : " + booking.getBookingId());
-            System.out.println("  Package ID   : " + booking.getPackageId());
-            System.out.println("  Travelers    : " + booking.getTravelers());
-            System.out.println("  Booking Date : " + booking.getBookingDate());
-            System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
-            System.out.println("  Status       : " + booking.getStatus());
-            System.out.println("  ─────────────────────────────────────");
-        }
-        else {
-            System.out.println("  Booking not found.");
-        }
-
-        return booking;
+        return bookingDAO.viewBooking(bookingId);
     }
     public void modifyBooking(Booking booking) {
 
@@ -168,40 +138,32 @@ public class BookingService {
     }
    
 
-    public void cancelBooking(int bookingId) {
-
-        System.out.println("\n┌─────────────────────────────────────┐");
-        System.out.println("│           CANCEL BOOKING            │");
-        System.out.println("└─────────────────────────────────────┘");
+    public boolean cancelBooking(int bookingId) {
 
         if (bookingId <= 0) {
-            System.out.println("  Invalid Booking ID.");
-            return;
+            return false;
         }
 
         bookingDAO.cancelBooking(bookingId);
 
         Booking booking = bookingDAO.viewBooking(bookingId);
 
-        System.out.println("  Booking cancelled successfully!");
-        System.out.println("  ─────────────────────────────────────");
-        System.out.println("  Booking ID : " + bookingId);
-
-        if (booking != null) {
-            System.out.println("  Status     : " + booking.getStatus());
-        }
-
-        System.out.println("  ─────────────────────────────────────");
-
         if (booking != null) {
             User user = new UserDAO().getUserById(booking.getCustomerId());
+
             if (user != null) {
                 EmailUtil.sendCancellationEmail(user.getEmail(), user.getName(), bookingId);
+
                 EmailUtil.sendAdminCancellationAlertEmail(
-                    "onlinetats@gmail.com", user.getName(), user.getUserId(), bookingId
+                    "onlinetats@gmail.com",
+                    user.getName(),
+                    user.getUserId(),
+                    bookingId
                 );
             }
         }
+
+        return true;
     }
     public List<Booking> getBookingsByCustomerId(int customerId) {
         return bookingDAO.getBookingsByCustomerId(customerId);
