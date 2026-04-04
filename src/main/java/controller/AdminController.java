@@ -27,21 +27,26 @@ public class AdminController {
 
         while (true) {
 
-            System.out.println("\n╔══════════════════════════════════════╗");
-            System.out.println("║           ADMIN DASHBOARD            ║");
-            System.out.println("╠══════════════════════════════════════╣");
-            System.out.println("║  1. Manage Tour Packages             ║");
-            System.out.println("║  2. Message Customer                 ║");
-            System.out.println("║  3. Manage Booking                   ║");
-            System.out.println("║  4. View Payment History             ║");
-            System.out.println("║  5. Manage Itinerary                 ║");
-            System.out.println("║  6. Track All Bookings              ║"); 
-            System.out.println("║  7. Reports                          ║");
-            System.out.println("║  8. Exit                            ║");
-            System.out.println("╚══════════════════════════════════════╝");
+        	System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
 
-            System.out.print("Enter choice: ");
-       
+        	System.out.println(ColorText.warning("║") 
+        	        + ColorText.bold("           ADMIN DASHBOARD            ") 
+        	        + ColorText.warning("║"));
+
+        	System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+
+        	System.out.println(ColorText.warning("║") + "  1. Manage Tour Packages             " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  2. Message Customer                 " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  3. Manage Booking                   " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  4. View Payment History             " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  5. Manage Itinerary                 " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  6. Track All Bookings               " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  7. Reports                          " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  8. Exit                             " + ColorText.warning("║"));
+
+        	System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+
+        	System.out.print(ColorText.bold("Enter choice: "));
 
             int choice = Integer.parseInt(sc.nextLine());
 
@@ -149,14 +154,21 @@ public class AdminController {
 
         while(true) {
 
-            System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-            System.out.println(ColorText.warning("║") + ColorText.bold("          MESSAGE CENTER             ") + ColorText.warning("║"));
-            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
-            System.out.println("  1. View Messages");
-            System.out.println("  2. Reply to Customer");
-            System.out.println("  3. Back");
-            System.out.print(ColorText.bold("  Enter choice: "));
+        	System.out.println(ColorText.warning("\n╔═════════════════════════════════════╗"));
 
+        	System.out.println(ColorText.warning("║") 
+        	        + ColorText.bold("          MESSAGE CENTER             ") 
+        	        + ColorText.warning("║"));
+
+        	System.out.println(ColorText.warning("╠═════════════════════════════════════╣"));
+
+        	System.out.println(ColorText.warning("║") + "  1. View Messages                   " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  2. Reply to Customer               " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + "  3. Back                            " + ColorText.warning("║"));
+
+        	System.out.println(ColorText.warning("╚═════════════════════════════════════╝"));
+
+        	System.out.print(ColorText.bold("Enter choice: "));
             int choice = Integer.parseInt(sc.nextLine());
 
             switch(choice) {
@@ -190,15 +202,41 @@ public class AdminController {
 
     // ================= BOOKING MENU =================
     private void bookingMenu() {
-        while(true) {
-            System.out.println("\n1.View  2.Cancel  3.Back");
-            int c = Integer.parseInt(sc.nextLine());
+    	    while(true) {
 
-            if(c==1) bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
-            else if(c==2) bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
-            else return;
-        }
-    }
+    	        System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
+
+    	        System.out.println(ColorText.warning("║") 
+    	                + ColorText.bold("           MANAGE BOOKING             ") 
+    	                + ColorText.warning("║"));
+
+    	        System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+
+    	        System.out.println(ColorText.warning("║") + "  1. View Booking                     " + ColorText.warning("║"));
+    	        System.out.println(ColorText.warning("║") + "  2. Cancel Booking                   " + ColorText.warning("║"));
+    	        System.out.println(ColorText.warning("║") + "  3. Back                             " + ColorText.warning("║"));
+
+    	        System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+
+    	        System.out.print(ColorText.bold("Enter choice: "));
+    	        int c = Integer.parseInt(sc.nextLine());
+
+    	        if(c == 1) {
+    	            System.out.print(ColorText.bold("Enter Booking ID: "));
+    	            bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
+    	        }
+    	        else if(c == 2) {
+    	            System.out.print(ColorText.bold("Enter Booking ID: "));
+    	            bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
+    	        }
+    	        else if(c == 3) {
+    	            return;
+    	        }
+    	        else {
+    	            System.out.println(ColorText.error("Invalid choice!"));
+    	        }
+    	    }
+    	}
     private void trackAllBookings() {
 
         System.out.println("\n===== TRACK PACKAGE BOOKINGS =====");
