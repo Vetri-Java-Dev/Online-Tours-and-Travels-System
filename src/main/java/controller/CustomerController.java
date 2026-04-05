@@ -239,13 +239,14 @@ public class CustomerController {
         System.out.print(ColorText.bold("  Travelers  : "));
         int travelers = sc.nextInt();
         sc.nextLine();
+        LocalDate date = null;
 
         String bookingDate;
         while (true) {
             System.out.print(ColorText.bold("  Booking Date (YYYY-MM-DD): "));
             bookingDate = sc.nextLine();
             try {
-                LocalDate date = LocalDate.parse(bookingDate);
+                 date = LocalDate.parse(bookingDate);
                 if (date.isBefore(LocalDate.now())) {
                     System.out.println(ColorText.error("  Date is in the past. Enter again."));
                     continue;
@@ -316,7 +317,6 @@ public class CustomerController {
         System.out.print(ColorText.bold("  Booking ID: "));
         bookingService.viewBooking(sc.nextInt());
     }
-    private void modifyBooking() {
 
     private void cancelBooking() {
         System.out.print(ColorText.bold("  Booking ID: "));
@@ -336,7 +336,9 @@ public class CustomerController {
         String date = sc.nextLine();
         System.out.print(ColorText.bold("  New Travelers : "));
         int t = sc.nextInt();
-        b.setBookingDate(date);
+        LocalDate newDate = LocalDate.parse(date);
+        b.setBookingDate(newDate);
+
         b.setTravelers(t);
         bookingService.modifyBooking(b);
         System.out.println(ColorText.success("  Booking updated successfully!"));
@@ -485,6 +487,7 @@ public class CustomerController {
                     }
                     System.out.println(ColorText.warning("╚══════════════════════════════════════════════════╝"));
                     break;
+         
                 case 3: return;
                 default: System.out.println(ColorText.error("  Invalid choice."));
             }
