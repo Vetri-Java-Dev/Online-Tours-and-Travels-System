@@ -1,5 +1,6 @@
 package controller;
 
+import model.ItineraryItem;
 import java.util.*;
 
 import model.*;
@@ -568,7 +569,39 @@ private void manageBookingMenu() {
 
     private void viewItinerary() {
         System.out.print(ColorText.bold("  Package ID: "));
-        new ItineraryService().viewItinerary(sc.nextInt());
+        int packageId = sc.nextInt();
+
+        Itinerary itinerary = new ItineraryService().viewItinerary(packageId);
+
+        if (itinerary == null || itinerary.getItems().isEmpty()) {
+            System.out.println(ColorText.error("  No itinerary found for this package."));
+            return;
+        }
+
+        System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("║") + ColorText.bold("          PACKAGE ITINERARY           ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+
+        for (ItineraryItem item : itinerary.getItems()) {
+            // Split long activity into chunks of 30 chars
+            String activity = item.getActivity();
+            String firstLine  = activity.length() > 30 ? activity.substring(0, 30) : activity;
+            String secondLine = activity.length() > 30 ? activity.substring(30)    : "";
+
+            System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Day %-2d") + "  %-30s" + ColorText.warning("║") + "%n",
+                item.getDayNumber(), firstLine);
+
+            if (!secondLine.isEmpty()) {
+                System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", "        " + secondLine);
+            }
+
+            System.out.printf(ColorText.warning("║") + "  " + ColorText.yellow("📍 %-34s") + ColorText.warning("║") + "%n",
+                item.getLocation());
+
+            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+        }
+
+        System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
     }
 
     // ── Message ───────────────────────────────────────────────────────────────
