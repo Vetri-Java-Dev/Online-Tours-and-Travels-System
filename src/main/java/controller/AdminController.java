@@ -273,7 +273,22 @@ public class AdminController {
 
             if(c==1) {
                 System.out.print(ColorText.bold("  Booking ID: "));
-                bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
+                int bookingId = Integer.parseInt(sc.nextLine());
+
+                Booking booking = bookingService.viewBooking(bookingId);
+
+                if (booking != null) {
+                    System.out.println("\n  ─────────────────────────────────────");
+                    System.out.println("  Booking ID   : " + booking.getBookingId());
+                    System.out.println("  Package ID   : " + booking.getPackageId());
+                    System.out.println("  Travelers    : " + booking.getTravelers());
+                    System.out.println("  Booking Date : " + booking.getBookingDate());
+                    System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
+                    System.out.println("  Status       : " + booking.getStatus());
+                    System.out.println("  ─────────────────────────────────────");
+                } else {
+                    System.out.println("Booking not found!");
+                }
             }
             else if(c==2) {
                 System.out.print(ColorText.bold("  Booking ID: "));
