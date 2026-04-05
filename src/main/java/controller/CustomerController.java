@@ -75,7 +75,7 @@ public class CustomerController {
     private void manageBookingMenu() {
 
         while (true) {
-        	System.out.println(ColorText.warning("\n|┌─────────────────────────────────────┐"));
+        	System.out.println(ColorText.warning("\n┌─────────────────────────────────────┐"));
         	System.out.println(ColorText.warning("│") 
         	        + ColorText.bold("          MANAGE BOOKING             ") 
         	        + ColorText.warning("│"));
