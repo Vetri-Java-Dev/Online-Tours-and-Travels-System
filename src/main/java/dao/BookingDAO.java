@@ -4,6 +4,7 @@ import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 public class BookingDAO {
@@ -18,8 +19,7 @@ public class BookingDAO {
 	        String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId,customerName,packageName) VALUES(?,?,?,?,?,?,?,?)";
 	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
-	        ps.setString(1, booking.getBookingDate());
-	        ps.setInt(2, booking.getTravelers());
+	        ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate())); ps.setInt(2, booking.getTravelers());
 	        ps.setDouble(3, booking.getTotalAmount());
 	        ps.setString(4, booking.getStatus());
 	        ps.setInt(5, booking.getCustomerId());
@@ -67,7 +67,7 @@ public class BookingDAO {
             	booking = new Booking();
 
             	booking.setBookingId(rs.getInt("bookingId"));
-            	booking.setBookingDate(rs.getString("bookingDate"));
+            	booking.setBookingDate(rs.getDate("bookingDate").toLocalDate());
             	booking.setTravelers(rs.getInt("travelers"));
             	booking.setTotalAmount(rs.getDouble("totalAmount"));
             	booking.setStatus(rs.getString("status"));
@@ -89,18 +89,12 @@ public class BookingDAO {
             String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
 
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, booking.getBookingDate());
+            ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate()));
             ps.setInt(2, booking.getTravelers());
             ps.setDouble(3, booking.getTotalAmount());
             ps.setInt(4, booking.getBookingId());
 
             int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("Booking updated successfully");
-            } else {
-                System.out.println("Booking update failed");
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,12 +120,16 @@ public class BookingDAO {
                 Booking b = new Booking();
 
                 b.setBookingId(rs.getInt("bookingId"));
-                b.setCustomerName(rs.getString("name"));        // ✅
-                b.setPackageName(rs.getString("destination"));  // ✅
-                b.setBookingDate(rs.getString("bookingDate"));
+                b.setCustomerName(rs.getString("name"));        
+                b.setPackageName(rs.getString("destination")); 
+                LocalDate date = rs.getObject("bookingDate", LocalDate.class);
+                if (date != null) {
+                    b.setBookingDate(date);
+                }
                 b.setStatus(rs.getString("status"));
 
                 list.add(b);
+                
             }
 
         } catch (Exception e) {
@@ -155,8 +153,7 @@ public class BookingDAO {
 
             ps.executeUpdate();
 
-            System.out.println("Booking cancelled successfully!");
-
+           
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -170,24 +167,21 @@ public class BookingDAO {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
-           
-            	while (rs.next()) {
-
-            	    Booking b = new Booking();
-
-            	    b.setBookingId(rs.getInt("bookingId"));
-            	    b.setBookingDate(rs.getString("bookingDate"));
-            	    b.setTravelers(rs.getInt("travelers"));
-            	    b.setTotalAmount(rs.getDouble("totalAmount"));
-            	    b.setStatus(rs.getString("status"));
-            	    b.setCustomerId(rs.getInt("customerId"));
-            	    b.setPackageId(rs.getInt("packageId"));
-
-            	    list.add(b);
-            	}
-            
-        }
-        catch (Exception e) { e.printStackTrace(); }
+            while (rs.next()) {
+            	Booking b = new Booking(
+            		    rs.getInt("bookingId"),
+            		    rs.getObject("bookingDate", LocalDate.class),
+            		    rs.getInt("travelers"),
+            		    rs.getDouble("totalAmount"),
+            		    rs.getString("status"),
+            		    rs.getInt("customerId"),
+            		    rs.getInt("packageId"),
+            		    rs.getString("customerName"),
+            		    rs.getString("packageName")
+            		); 
+                list.add(b);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 }

@@ -152,8 +152,12 @@ public class TourPackageDAO {
             e.printStackTrace();
         }
 
-        return list;
-    }
+            return list;
+        }
+    
+       
+                
+
 
     // ================= SORT =================
     public List<TourPackage> getAllPackagesSortedByPrice() {
@@ -253,23 +257,21 @@ public class TourPackageDAO {
                 System.out.println("Package ID not found!");
                 return false;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     
     public List<TourPackage> getAvailablePackages() {
         List<TourPackage> list = new ArrayList<>();
         try {
             Connection con = DBConnection.getConnection();
-            // Filter: Only packages with seats > 0
             String query = "SELECT * FROM tour_package WHERE availableSeats > 0";
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
+             while (rs.next()) {
                 list.add(new TourPackage(
                         rs.getInt("packageId"),
                         rs.getString("destination"),
@@ -282,5 +284,6 @@ public class TourPackageDAO {
             e.printStackTrace();
         }
         return list;
+    
     }
 }

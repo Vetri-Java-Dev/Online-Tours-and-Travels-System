@@ -1,9 +1,9 @@
 package model;
-
+import java.time.LocalDate; 
 public class Booking {
 
     private int bookingId;
-    private String bookingDate;
+    private LocalDate bookingDate;
     private int travelers;
     private double totalAmount;
     private String status;
@@ -30,7 +30,7 @@ public class Booking {
 		this.packageName = packageName;
 	}
 
-	public Booking(int bookingId, String bookingDate, int travelers, double totalAmount, String status, int customerId,
+	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount, String status, int customerId,
 			int packageId, String customerName, String packageName) {
 		super();
 		this.bookingId = bookingId;
@@ -48,10 +48,9 @@ public class Booking {
         return bookingId;
     }
 
-    public String getBookingDate() {
-        return bookingDate;
-    }
-
+	public LocalDate getBookingDate() {
+	    return bookingDate;
+	}
     public int getTravelers() {
         return travelers;
     }
@@ -80,10 +79,9 @@ public class Booking {
 		this.bookingId = bookingId;
 	}
 
-	public void setBookingDate(String bookingDate) {
-		this.bookingDate = bookingDate;
+	public void setBookingDate(LocalDate bookingDate) {
+	    this.bookingDate = bookingDate;
 	}
-
 	public void setTravelers(int travelers) {
 		this.travelers = travelers;
 	}

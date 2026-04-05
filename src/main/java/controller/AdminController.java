@@ -49,7 +49,6 @@ public class AdminController {
                 case 1: packageMenu(); break;
                 case 2: messageMenu(); break;
                 case 3: bookingMenu(); break;
-
                 case 4:
                     System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("  ║") + ColorText.bold("          VIEW PAYMENT HISTORY        ") + ColorText.warning("║"));
@@ -66,7 +65,6 @@ public class AdminController {
                 case 9:
                     System.out.println(ColorText.success("  Logging out..."));
                     return;
-
                 default:
                     System.out.println(ColorText.error("  Invalid choice."));
             }
