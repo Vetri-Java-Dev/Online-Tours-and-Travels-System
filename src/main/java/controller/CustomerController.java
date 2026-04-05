@@ -174,34 +174,27 @@ private void manageBookingMenu() {
     // ── Submit feedback ───────────────────────────────────────────────────────
     private void submitFeedback() {
 
-        List<Booking> all = bookingService.getBookingsByCustomerId(customerId);
-        List<Booking> eligible = new ArrayList<>();
+        // Get only this logged-in user's bookings
+        List<Booking> myBookings = bookingService.getBookingsByCustomerId(customerId);
 
-        for (Booking b : all) {
-            if ("CONFIRMED".equalsIgnoreCase(b.getStatus()) &&
-                !feedbackService.hasFeedback(b.getBookingId())) {
-                eligible.add(b);
-            }
-        }
-
-        if (eligible.isEmpty()) {
-            System.out.println(ColorText.warning("\n  No eligible bookings found."));
-            System.out.println(ColorText.yellow("  You can submit feedback only for CONFIRMED bookings"));
-            System.out.println(ColorText.yellow("  that have not been reviewed yet."));
+        if (myBookings.isEmpty()) {
+            System.out.println(ColorText.warning("\n  You have no booked packages yet."));
             return;
         }
 
-        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("  ║") + ColorText.bold("     BOOKINGS ELIGIBLE FOR FEEDBACK     ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("  ╠════════════╦═══════════════╦════════════╣"));
-        System.out.println(ColorText.warning("  ║") + ColorText.cyan("  Booking ID") + ColorText.warning("║") + ColorText.cyan("  Date         ") + ColorText.warning("║") + ColorText.cyan("  Pkg ID    ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("  ╠════════════╬═══════════════╬════════════╣"));
-        for (Booking b : eligible) {
-            System.out.printf(ColorText.warning("  ║") + "  %-10d" + ColorText.warning("║") + "  %-13s" + ColorText.warning("║") + "  %-10d" + ColorText.warning("║") + "%n",
+        // Show only logged-in user's booked packages
+        System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("         BOOKINGS ELIGIBLE FOR FEEDBACK          ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠══════════════╦══════════════════╦══════════════╣"));
+        System.out.println(ColorText.warning("  ║") + ColorText.cyan("  Booking ID  ") + ColorText.warning("║") + ColorText.cyan("  Date            ") + ColorText.warning("║") + ColorText.cyan("  Package ID  ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠══════════════╬══════════════════╬══════════════╣"));
+        for (Booking b : myBookings) {
+            System.out.printf(ColorText.warning("  ║") + "  %-12d" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║") + "  %-12d" + ColorText.warning("║") + "%n",
                 b.getBookingId(), b.getBookingDate(), b.getPackageId());
         }
-        System.out.println(ColorText.warning("  ╚════════════╩═══════════════╩════════════╝"));
+        System.out.println(ColorText.warning("  ╚══════════════╩══════════════════╩══════════════╝"));
 
+        // Ask user to select a booking
         System.out.print(ColorText.bold("\n  Enter Booking ID: "));
         int bookingId;
         try {
@@ -211,12 +204,19 @@ private void manageBookingMenu() {
             return;
         }
 
+        // Validate selected booking belongs to this logged-in user
         Booking selected = null;
-        for (Booking b : eligible) {
+        for (Booking b : myBookings) {
             if (b.getBookingId() == bookingId) { selected = b; break; }
         }
         if (selected == null) {
-            System.out.println(ColorText.error("  Invalid Booking ID or not eligible."));
+            System.out.println(ColorText.error("  Invalid Booking ID."));
+            return;
+        }
+
+        // Check if feedback already submitted
+        if (feedbackService.hasFeedback(bookingId)) {
+            System.out.println(ColorText.error("  You have already submitted feedback for this booking."));
             return;
         }
 
@@ -327,6 +327,11 @@ private void manageBookingMenu() {
         int    bookingId = booking.getBookingId();
         double amount    = booking.getTotalAmount();
 
+        if (bookingId <= 0) {
+            System.out.println(ColorText.error("  ✘  Booking could not be created. Payment cancelled."));
+            return;
+        }
+
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           SELECT PAYMENT             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
@@ -358,6 +363,13 @@ private void manageBookingMenu() {
                 System.out.print(ColorText.bold("  Bank           : "));
                 payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, sc.nextLine());
                 break;
+            default:
+                System.out.println(ColorText.error("  ✘  Invalid payment choice."));
+                return;
+        }
+        if (payment == null) {
+            System.out.println(ColorText.error("  ✘  Payment details incomplete. Aborting."));
+            return;
         }
         new PaymentService().processPayment(payment);
     }
@@ -599,16 +611,16 @@ private void manageBookingMenu() {
                     System.out.println(ColorText.warning("\n╔══════════════════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("║") + ColorText.bold("             REPLIES FROM ADMIN                   ") + ColorText.warning("║"));
                     System.out.println(ColorText.warning("╠══════════════════════════════════════════════════╣"));
-                   if (replies == null || replies.isEmpty()) {
+                    if (replies == null || replies.isEmpty()) {
                         System.out.println(ColorText.warning("║") + ColorText.yellow("  No replies from admin yet.                      ") + ColorText.warning("║"));
                     } else {
                         int idx = 1;
                         for (String r : replies) {
-                            System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan(String.format("[%2d]", idx)) + "  %-44s" + ColorText.warning("║") + "%n",
+                            System.out.printf(ColorText.warning("║") + " " + ColorText.cyan(String.format("[%2d]", idx)) + " %-44s" + ColorText.warning("║") + "%n",
                                 r.length() > 44 ? r.substring(0, 44) : r);
                             String rest = r.length() > 44 ? r.substring(44) : "";
                             while (!rest.isEmpty()) {
-                                System.out.printf(ColorText.warning("║") + "        %-44s" + ColorText.warning("║") + "%n",
+                                System.out.printf(ColorText.warning("║") + "      %-44s" + ColorText.warning("║") + "%n",
                                     rest.length() > 44 ? rest.substring(0, 44) : rest);
                                 rest = rest.length() > 44 ? rest.substring(44) : "";
                             }

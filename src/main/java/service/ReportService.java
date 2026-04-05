@@ -59,7 +59,7 @@ public class ReportService {
         double total    = rows.stream().mapToDouble(BookingReportRow::getTotalAmount).sum();
 
         System.out.println(ColorText.warning("  ╠════════════════════════════════════════════════════════════════════════════════════════════════════╣"));
-        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Total: %-4d  │  Confirmed: %-4d  │  Cancelled: %-4d  │  Total Amount: Rs. %-19.2f  ") + ColorText.warning("║") + "%n",
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Tickets: %-4d │ Confirmed: %-4d │ Cancelled: %-4d │ Total Revenue: Rs. %-15.2f ") + ColorText.warning("║") + "%n",
             rows.size(), confirmed, cancelled, total);
         System.out.println(ColorText.warning("  ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝"));
         System.out.println();
@@ -99,24 +99,24 @@ public class ReportService {
     }
 
     public void showPackageAvailabilityReport() {
-        System.out.println(ColorText.warning("\n  ╔════════════════════════════════════════════════════════════════════════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("  ║") + ColorText.bold("                              PACKAGE AVAILABILITY REPORT                                               ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("  ╠════════╦════════════════════╦══════════╦══════════╦════════════╦══════════╦═══════════╦═══════════╦════╣"));
-        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  %-6s") + ColorText.warning("║") + ColorText.cyan("  %-18s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-10s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("%-4s") + ColorText.warning("║") + "%n",
-            "PkgID", "Destination", "Price", "Days", "TotalSeats", "Booked", "Available", "Cancelled", "Occ");
-        System.out.println(ColorText.warning("  ╠════════╬════════════════════╬══════════╬══════════╬════════════╬══════════╬═══════════╬═══════════╬════╣"));
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("                                       PACKAGE AVAILABILITY & OCCUPANCY REPORT                                        ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠════════╦════════════════════╦══════════╦══════════╦════════════╦══════════╦═══════════╦═══════════╦═════════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  %-6s") + ColorText.warning("║") + ColorText.cyan("  %-18s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-10s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-19s") + ColorText.warning("║") + "%n",
+            "PkgID", "Destination", "Price", "Days", "TotalSeats", "Booked", "Available", "Cancelled", "Occupancy Bar");
+        System.out.println(ColorText.warning("  ╠════════╬════════════════════╬══════════╬══════════╬════════════╬══════════╬═══════════╬═══════════╬═════════════════════╣"));
 
         List<PackageAvailabilityRow> rows = reportDAO.getPackageAvailabilityReport();
 
         if (rows.isEmpty()) {
-            System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No packages found.                                                                                     ") + ColorText.warning("║"));
+            System.out.println(ColorText.warning("  ║") + ColorText.yellow("                                    No packages found in the system.                                                 ") + ColorText.warning("║"));
         } else {
             for (PackageAvailabilityRow r : rows) {
                 String occupancy = occupancyBar(r.getBookedSeats(), r.getTotalSeats());
-                System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-18s" + ColorText.warning("║") + "  %-8.0f" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-10d" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "%-4s" + ColorText.warning("║") + "%n",
+                System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-18s" + ColorText.warning("║") + "  %-8.0f" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-10d" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + " %-19s" + ColorText.warning("║") + "%n",
                     r.getPackageId(), truncate(r.getDestination(), 18), r.getPrice(), r.getDuration(),
                     r.getTotalSeats(), r.getBookedSeats(), r.getAvailableSeats(), r.getCancelledBookings(),
-                    occupancy.length() > 4 ? occupancy.substring(0,4) : occupancy);
+                    occupancy);
             }
         }
 
@@ -124,10 +124,10 @@ public class ReportService {
         int totalBooked    = rows.stream().mapToInt(PackageAvailabilityRow::getBookedSeats).sum();
         int totalAvailable = rows.stream().mapToInt(PackageAvailabilityRow::getAvailableSeats).sum();
 
-        System.out.println(ColorText.warning("  ╠════════════════════════════════════════════════════════════════════════════════════════════════════════╣"));
-        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Packages: %-4d  │  Total Seats: %-5d  │  Booked: %-5d  │  Available: %-5d                           ") + ColorText.warning("║") + "%n",
+        System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Packages: %-4d  │  Overall Seats: %-6d  │  Booked: %-6d  │  Free: %-6d                                         ") + ColorText.warning("║") + "%n",
             rows.size(), totalSeats, totalBooked, totalAvailable);
-        System.out.println(ColorText.warning("  ╚════════════════════════════════════════════════════════════════════════════════════════════════════════╝"));
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"));
         System.out.println();
     }
 
