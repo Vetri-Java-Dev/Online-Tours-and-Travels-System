@@ -1,6 +1,7 @@
 package dao;
 
 import model.Message;
+import util.ColorText;
 import util.DBConnection;
 
 import java.sql.*;
@@ -20,7 +21,6 @@ public class MessageDAO {
             ps.setString(4, msg.getSenderRole());
 
             ps.executeUpdate();
-            System.out.println("Message Sent!");
 
         } catch (Exception e) {
             e.printStackTrace();
