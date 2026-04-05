@@ -159,7 +159,7 @@ public class BookingDAO {
         List<Booking> list = new ArrayList<>();
         try {
             Connection con = DBConnection.getConnection();
-            String query = "SELECT * FROM booking WHERE customer_id=?";
+            String query = "SELECT b.*, u.name AS customerName, p.destination AS packageName FROM booking b JOIN users u ON b.customerId = u.userId JOIN tour_package p ON b.packageId = p.packageId WHERE b.customerId=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
