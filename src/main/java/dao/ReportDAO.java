@@ -3,6 +3,7 @@ package dao;
 import model.ReportData.BookingReportRow;
 import model.ReportData.PackageAvailabilityRow;
 import model.ReportData.PaymentReportRow;
+import util.ColorText;
 import util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,8 +84,6 @@ public class ReportDAO {
         return list;
     }
 
-    
-
     /** Returns all payments. */
     public List<PaymentReportRow> getAllPayments() {
         List<PaymentReportRow> list = new ArrayList<>();
@@ -126,7 +125,7 @@ public class ReportDAO {
         return 0;
     }
 
-    /** Revenue grouped by payment method. */
+    /** Revenue grouped by payment method — with color formatting. */
     public void printRevenueByMethod() {
         String sql =
             "SELECT paymentMethod, COUNT(*) AS txnCount, SUM(amount) AS total " +
@@ -137,28 +136,36 @@ public class ReportDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            System.out.println("  ┌──────────────────┬──────────┬──────────────────┐");
-            System.out.println("  │  Payment Method  │  Count   │  Total (Rs.)     │");
-            System.out.println("  ├──────────────────┼──────────┼──────────────────┤");
+            System.out.println(ColorText.warning("  ┌──────────────────┬──────────┬──────────────────┐"));
+            System.out.println(ColorText.warning("  │") + ColorText.cyan("  Payment Method  ") + ColorText.warning("│") + ColorText.cyan("  Count   ") + ColorText.warning("│") + ColorText.cyan("  Total (Rs.)     ") + ColorText.warning("│"));
+            System.out.println(ColorText.warning("  ├──────────────────┼──────────┼──────────────────┤"));
+
+            boolean hasRows = false;
             while (rs.next()) {
-                System.out.printf("  │ %-16s │ %-8d │ %-16.2f │%n",
+                hasRows = true;
+                System.out.printf(
+                    ColorText.warning("  │") + " %-16s " + ColorText.warning("│") + " %-8d " + ColorText.warning("│") + " %-16.2f " + ColorText.warning("│") + "%n",
                     rs.getString("paymentMethod"),
                     rs.getInt("txnCount"),
-                    rs.getDouble("total"));
+                    rs.getDouble("total")
+                );
             }
-            System.out.println("  └──────────────────┴──────────┴──────────────────┘");
+
+            if (!hasRows) {
+                System.out.println(ColorText.warning("  │") + ColorText.yellow("  No revenue data found.                       ") + ColorText.warning("│"));
+            }
+
+            System.out.println(ColorText.warning("  └──────────────────┴──────────┴──────────────────┘"));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-   
-
     /**
      * Returns seat occupancy per package.
      * bookedSeats = SUM of travelers for CONFIRMED bookings.
-     * availableSeats = tp.availableSeats - bookedSeats  (cannot go below 0).
+     * availableSeats = tp.availableSeats - bookedSeats (cannot go below 0).
      */
     public List<PackageAvailabilityRow> getPackageAvailabilityReport() {
         List<PackageAvailabilityRow> list = new ArrayList<>();
@@ -177,10 +184,10 @@ public class ReportDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                int totalSeats   = rs.getInt("totalSeats");
-                int bookedSeats  = rs.getInt("bookedSeats");
-                int available    = Math.max(0, totalSeats - bookedSeats);
-                int cancelled    = rs.getInt("cancelledBookings");
+                int totalSeats  = rs.getInt("totalSeats");
+                int bookedSeats = rs.getInt("bookedSeats");
+                int available   = Math.max(0, totalSeats - bookedSeats);
+                int cancelled   = rs.getInt("cancelledBookings");
 
                 list.add(new PackageAvailabilityRow(
                     rs.getInt("packageId"),
