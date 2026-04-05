@@ -16,17 +16,13 @@ public class BookingDAO {
 	        Connection con = DBConnection.getConnection();
 
 	       
-	        String query = "INSERT INTO booking(bookingDate,travelers,totalAmount,status,customerId,packageId,customerName,packageName) VALUES(?,?,?,?,?,?,?,?)";
-	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+	        String query = "INSERT INTO booking(bookingDate, travelers, totalAmount, status, customerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
 	        ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate())); ps.setInt(2, booking.getTravelers());
 	        ps.setDouble(3, booking.getTotalAmount());
 	        ps.setString(4, booking.getStatus());
 	        ps.setInt(5, booking.getCustomerId());
 	        ps.setInt(6, booking.getPackageId());
-	        ps.setString(7, booking.getCustomerName());   
-	        ps.setString(8, booking.getPackageName());    
-
 	        int rowsAffected = ps.executeUpdate();
 
 	        if (rowsAffected > 0) {
@@ -164,7 +160,7 @@ public class BookingDAO {
         List<Booking> list = new ArrayList<>();
         try {
             Connection con = DBConnection.getConnection();
-            String query = "SELECT * FROM booking WHERE customerId=?";
+            String query = "SELECT * FROM booking WHERE customer_id=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
