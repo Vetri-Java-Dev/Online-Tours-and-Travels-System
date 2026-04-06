@@ -203,43 +203,43 @@ public class AdminController {
 
                 case 1:
                     List<String> messages = messageService.viewMessages();
-                    System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.bold("            INBOX — CUSTOMER MESSAGES             ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════╣"));
-                    if (messages.isEmpty()) {
-                        System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No unread messages.                             ") + ColorText.warning("║"));
+                    System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
+                    System.out.println(ColorText.warning("  ║") + ColorText.bold("              INBOX — CUSTOMER MESSAGES              ") + ColorText.warning("║"));
+                    System.out.println(ColorText.warning("  ╠═════════════════════════════════════════════════════╣"));
+                    if (messages == null || messages.isEmpty()) {
+                        System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No unread messages.                                ") + ColorText.warning("║"));
                     } else {
                         int idx = 1;
                         for (String msg : messages) {
                             String[] parts = msg.split(" : ", 2);
-                            String sender  = parts.length > 0 ? parts[0].trim() : "";
+                            String sender  = parts.length > 0 ? parts[0].trim() : "Unknown";
                             String content = parts.length > 1 ? parts[1].trim() : msg;
-                            System.out.printf(ColorText.warning("  ║") + "  " + ColorText.cyan(String.format("[%2d]", idx)) + "  " + ColorText.bold("From :") + " %-33s" + ColorText.warning("║") + "%n", sender);
-                            while (content.length() > 48) {
-                                System.out.printf(ColorText.warning("  ║") + "         %-48s" + ColorText.warning("║") + "%n", content.substring(0, 48));
-                                content = content.substring(48);
+                            System.out.printf(ColorText.warning("  ║") + " " + ColorText.cyan(String.format("[%2d]", idx)) + " " + ColorText.bold("From :") + " %-39s" + ColorText.warning("║") + "%n", truncate(sender, 39));
+                            while (content.length() > 51) {
+                                System.out.printf(ColorText.warning("  ║") + "        %-51s" + ColorText.warning("║") + "%n", content.substring(0, 51));
+                                content = content.substring(51);
                             }
-                            System.out.printf(ColorText.warning("  ║") + "         %-48s" + ColorText.warning("║") + "%n", content);
+                            System.out.printf(ColorText.warning("  ║") + "        %-51s" + ColorText.warning("║") + "%n", content);
                             if (idx < messages.size())
-                                System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════╣"));
+                                System.out.println(ColorText.warning("  ╠═════════════════════════════════════════════════════╣"));
                             idx++;
                         }
                     }
-                    System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+                    System.out.println(ColorText.warning("  ╚═════════════════════════════════════════════════════╝"));
                     break;
 
                 case 2:
                     List<User> users = userService.getAllUsers();
-                    System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
+                    System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("  ║") + ColorText.bold("              REGISTERED CUSTOMERS                ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╠════════╦═════════════════════════════════════════╣"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID    ") + ColorText.warning("║") + ColorText.cyan("  Name                                    ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╠════════╬═════════════════════════════════════════╣"));
+                    System.out.println(ColorText.warning("  ╠════════╦════════════════════════════════════════════╣"));
+                    System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID    ") + ColorText.warning("║") + ColorText.cyan("  Name                                     ") + ColorText.warning("║"));
+                    System.out.println(ColorText.warning("  ╠════════╬════════════════════════════════════════════╣"));
                     for (User u : users) {
-                        System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-41s" + ColorText.warning("║") + "%n",
-                            u.getUserId(), u.getName());
+                        System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-40s" + ColorText.warning("║") + "%n",
+                            u.getUserId(), truncate(u.getName(), 40));
                     }
-                    System.out.println(ColorText.warning("  ╚════════╩═════════════════════════════════════════╝"));
+                    System.out.println(ColorText.warning("  ╚════════╩════════════════════════════════════════════╝"));
 
                     System.out.print(ColorText.bold("\n  Enter Customer ID : "));
                     int cid = Integer.parseInt(sc.nextLine());
@@ -273,7 +273,22 @@ public class AdminController {
 
             if(c==1) {
                 System.out.print(ColorText.bold("  Booking ID: "));
-                bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
+                int bookingId = Integer.parseInt(sc.nextLine());
+
+                Booking booking = bookingService.viewBooking(bookingId);
+
+                if (booking != null) {
+                    System.out.println("\n  ─────────────────────────────────────");
+                    System.out.println("  Booking ID   : " + booking.getBookingId());
+                    System.out.println("  Package ID   : " + booking.getPackageId());
+                    System.out.println("  Travelers    : " + booking.getTravelers());
+                    System.out.println("  Booking Date : " + booking.getBookingDate());
+                    System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
+                    System.out.println("  Status       : " + booking.getStatus());
+                    System.out.println("  ─────────────────────────────────────");
+                } else {
+                    System.out.println("Booking not found!");
+                }
             }
             else if(c==2) {
                 System.out.print(ColorText.bold("  Booking ID: "));
@@ -392,5 +407,9 @@ public class AdminController {
                 default: System.out.println(ColorText.error("  Invalid choice."));
             }
         }
+    }
+    private String truncate(String s, int len) {
+        if (s == null) return "";
+        return s.length() > len ? s.substring(0, len - 1) + "…" : s;
     }
 }

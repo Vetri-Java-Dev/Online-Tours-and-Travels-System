@@ -5,8 +5,10 @@ import util.ColorText;
 import util.DBConnection;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 public class PaymentDAO {
 
@@ -16,12 +18,23 @@ public class PaymentDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO payment(amount,paymentDate,status,bookingId,paymentMethod) VALUES(?,?,?,?,?)";
+            String query = "INSERT INTO payment(amount, paymentDate, status, bookingId, paymentMethod) VALUES(?,?,?,?,?)";
 
             PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
+            // Safely resolve paymentDate — fall back to today if null or unparseable
+            java.sql.Date sqlDate;
+            try {
+                String dateStr = payment.getPaymentDate();
+                sqlDate = (dateStr != null && !dateStr.isEmpty())
+                        ? java.sql.Date.valueOf(LocalDate.parse(dateStr))
+                        : java.sql.Date.valueOf(LocalDate.now());
+            } catch (Exception dateEx) {
+                sqlDate = java.sql.Date.valueOf(LocalDate.now());
+            }
+
             ps.setDouble(1, payment.getAmount());
-            ps.setString(2, payment.getPaymentDate());
+            ps.setDate(2, sqlDate);
             ps.setString(3, payment.getStatus());
             ps.setInt(4, payment.getBookingId());
             ps.setString(5, payment.getPaymentMethod());
