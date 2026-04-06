@@ -115,27 +115,30 @@ public class FeedbackService {
     public void viewAllFeedback() {
         List<Feedback> list = dao.getAllFeedback();
 
-        System.out.println(ColorText.warning("\n╔══════════════════════════════════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("║") + ColorText.bold("                     ALL CUSTOMER FEEDBACK                        ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╠══════╦══════════════════╦═══════════════════╦════════╦══════════╣"));
-        System.out.println(ColorText.warning("║") + ColorText.cyan("  ID  ") + ColorText.warning("║") + ColorText.cyan(" Customer         ") + ColorText.warning("║") + ColorText.cyan(" Destination       ") + ColorText.warning("║") + ColorText.cyan(" Rating ") + ColorText.warning("║") + ColorText.cyan(" Status   ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╠══════╬══════════════════╬═══════════════════╬════════╬══════════╣"));
+        System.out.println(ColorText.warning("\n  ╔═══════════════════════════════════════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("                           ALL CUSTOMER FEEDBACK                           ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠══════╦══════════════════╦══════════════════╦══════════════╦═══════════════╦═══════╣"));
+        System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID  ") + ColorText.warning("║") + ColorText.cyan(" Customer         ") + ColorText.warning("║") + ColorText.cyan(" Destination    ") + ColorText.warning("║") + ColorText.cyan(" Rating       ") + ColorText.warning("║") + ColorText.cyan(" Status        ") + ColorText.warning("║") + ColorText.cyan(" PkgID ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠══════╬══════════════════╬══════════════════╬══════════════╬═══════════════╬═══════╣"));
 
         if (list.isEmpty()) {
-            System.out.println(ColorText.warning("║") + ColorText.yellow("              No feedback records found.                          ") + ColorText.warning("║"));
+            System.out.println(ColorText.warning("  ║") + ColorText.yellow("                    No feedback records found.                       ") + ColorText.warning("║"));
+        } else {
+            for (Feedback f : list) {
+                System.out.printf(ColorText.warning("  ║") + " %-4d " + ColorText.warning("║") + " %-16s " + ColorText.warning("║") + " %-16s " + ColorText.warning("║") + " %-12s " + ColorText.warning("║") + " %-13s " + ColorText.warning("║") + " %-5d " + ColorText.warning("║") + "%n",
+                    f.getFeedbackId(),
+                    truncate(f.getCustomerName(), 16),
+                    truncate(f.getDestination(), 16),
+                    f.getStarDisplay().length() > 12 ? f.getStarDisplay().substring(0, 11) + "…" : f.getStarDisplay(),
+                    f.getStatus().toUpperCase(),
+                    f.getPackageId());
+                
+                System.out.printf(ColorText.warning("  ║") + "      " + ColorText.warning("╠") + "══════════════════╩══════════════════╩══════════════╩═══════════════╩═══════╣" + "%n");
+                System.out.printf(ColorText.warning("  ║") + "      " + ColorText.warning("║") + " " + ColorText.cyan("Title:") + " %-66s " + ColorText.warning("║") + "%n", truncate(f.getTitle(), 66));
+                System.out.println(ColorText.warning("  ╠══════╩═══════════════════════════════════════════════════════════════════════════╣"));
+            }
         }
-
-        for (Feedback f : list) {
-            System.out.printf(ColorText.warning("║") + " %-4d " + ColorText.warning("║") + " %-16s " + ColorText.warning("║") + " %-17s " + ColorText.warning("║") + " %-6s " + ColorText.warning("║") + " %-8s " + ColorText.warning("║") + "%n",
-                f.getFeedbackId(),
-                truncate(f.getCustomerName(), 16),
-                truncate(f.getDestination(),  17),
-                f.getStarDisplay().substring(0, 5),
-                f.getStatus());
-            System.out.printf(ColorText.warning("║") + "      " + ColorText.warning("║") + " " + ColorText.cyan("Title:") + " %-56s " + ColorText.warning("║") + "%n", truncate(f.getTitle(), 56));
-            System.out.println(ColorText.warning("╠══════╬══════════════════╬═══════════════════╬════════╬══════════╣"));
-        }
-        System.out.println(ColorText.warning("╚══════╩══════════════════╩═══════════════════╩════════╩══════════╝"));
+        System.out.println(ColorText.warning("  ╚═══════════════════════════════════════════════════════════════════════════════════╝"));
     }
 
     public void viewPendingFeedback() {
