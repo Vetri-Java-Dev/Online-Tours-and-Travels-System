@@ -301,33 +301,32 @@ public class AdminController {
     // ================= TRACK BOOKINGS =================
     private void trackAllBookings() {
 
-        System.out.println(ColorText.warning("\n╔══════════════════════════════════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("║") + ColorText.bold("                   TRACK PACKAGE BOOKINGS                       ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╠══════════════════════════════════════════════════════════════════╣"));
+        System.out.println("\n" + ColorText.bold("========== TRACK PACKAGE BOOKINGS ==========\n"));
 
         List<Booking> list = bookingService.getAllBookings();
 
         if (list.isEmpty()) {
-            System.out.println(ColorText.warning("║") + ColorText.error("  No bookings found.                                              ") + ColorText.warning("║"));
-            System.out.println(ColorText.warning("╚══════════════════════════════════════════════════════════════════╝"));
+            System.out.println(ColorText.error("No bookings found.\n"));
             return;
         }
 
-        System.out.println(ColorText.warning("║") + ColorText.cyan("  ID   │ Customer           │ Package            │ Date       │ Status    ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╠══════════════════════════════════════════════════════════════════╣"));
+        // Header
+        System.out.printf(ColorText.cyan("%-6s | %-20s | %-20s | %-12s | %-10s%n"),
+                "ID", "Customer", "Package", "Date", "Status");
 
+        System.out.println("----------------------------------------------------------------------");
+
+        // Rows
         for (Booking b : list) {
-            System.out.printf(ColorText.warning("║") + "  %-5d│ %-18s │ %-18s │ %-10s │ %-9s" + ColorText.warning("║") + "%n",
-                b.getBookingId(),
-                b.getCustomerName().length() > 18 ? b.getCustomerName().substring(0,17)+"…" : b.getCustomerName(),
-                b.getPackageName().length() > 18 ? b.getPackageName().substring(0,17)+"…" : b.getPackageName(),
-                b.getBookingDate(),
-                b.getStatus());
+            System.out.printf("%-6d | %-20s | %-20s | %-12s | %-10s%n",
+                    b.getBookingId(),
+                    truncate(b.getCustomerName(), 20),
+                    truncate(b.getPackageName(), 20),
+                    b.getBookingDate(),
+                    b.getStatus());
         }
-        System.out.println(ColorText.warning("╚══════════════════════════════════════════════════════════════════╝"));
 
-        System.out.print(ColorText.bold("\n  Enter Booking ID to view details: "));
-        bookingService.viewBooking(Integer.parseInt(sc.nextLine()));
+        System.out.println("\n" + ColorText.bold("===========================================\n"));
     }
 
     // ================= ITINERARY =================
@@ -382,7 +381,6 @@ public class AdminController {
     private void reportsMenu() {
 
         while(true) {
-            System.out.println("\n1.All\n2.Confirmed\n3.Cancelled\n4.Payment\n5.Availability\n6.Back");
             
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
             System.out.println(ColorText.warning("║") + ColorText.bold("               REPORTS                ") + ColorText.warning("║"));
@@ -395,6 +393,7 @@ public class AdminController {
             System.out.println(ColorText.warning("║") + "  6. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
+            System.out.print("Enter your choice : ");
             int c = Integer.parseInt(sc.nextLine());
 
             switch(c) {

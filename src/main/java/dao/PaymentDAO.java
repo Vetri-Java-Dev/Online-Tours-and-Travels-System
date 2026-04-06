@@ -99,43 +99,32 @@ public class PaymentDAO {
 
 
     public void viewPaymentHistory(int bookingId) {
-
         try {
-
             Connection con = DBConnection.getConnection();
-
             String query = "SELECT * FROM payment WHERE bookingId=?";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookingId);
-
             ResultSet rs = ps.executeQuery();
 
             boolean found = false;
 
-            while(rs.next()) {
-
+            while (rs.next()) {
                 found = true;
 
-                System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
-                System.out.println(ColorText.warning("  ║") + ColorText.bold("                PAYMENT DETAILS                   ") + ColorText.warning("║"));
-                System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════╣"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Payment ID   ") + ": %-32d" + ColorText.warning("║") + "%n", rs.getInt("paymentId"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Amount       ") + ": Rs. %-28.2f" + ColorText.warning("║") + "%n", rs.getDouble("amount"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Payment Date ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("paymentDate"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Method       ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("paymentMethod"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Status       ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("status"));
-                System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+                System.out.println(ColorText.bold("\n  PAYMENT DETAILS"));
+                System.out.println(ColorText.warning("  ─────────────────────────────────────"));
+                System.out.println("  " + ColorText.cyan("Payment ID   ") + ": " + rs.getInt("paymentId"));
+                System.out.println("  " + ColorText.cyan("Amount       ") + ": Rs. " + String.format("%.2f", rs.getDouble("amount")));
+                System.out.println("  " + ColorText.cyan("Payment Date ") + ": " + rs.getString("paymentDate"));
+                System.out.println("  " + ColorText.cyan("Method       ") + ": " + rs.getString("paymentMethod"));
+                System.out.println("  " + ColorText.cyan("Status       ") + ": " + rs.getString("status"));
+                System.out.println(ColorText.warning("  ─────────────────────────────────────"));
             }
 
-            if(!found) {
-                System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
-                System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No payment records found for this booking.      ") + ColorText.warning("║"));
-                System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+            if (!found) {
+                System.out.println(ColorText.yellow("\n  No payment records found for this booking."));
             }
-
         }
-        
         catch (Exception e) {
             e.printStackTrace();
         }

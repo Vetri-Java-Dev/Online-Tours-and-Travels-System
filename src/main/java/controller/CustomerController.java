@@ -46,7 +46,7 @@ public class CustomerController {
           System.out.println(ColorText.warning("║") + "  8.  Feedback & Ratings              " + ColorText.warning("║"));
 
         	System.out.println(ColorText.warning("║") + "  9.  Delete Account                  " + ColorText.warning("║"));
-        	System.out.println(ColorText.warning("║") + "  10.  Exit                           " + ColorText.warning("║"));
+        	System.out.println(ColorText.warning("║") + " 10.  Exit                            " + ColorText.warning("║"));
 
         	System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
@@ -225,7 +225,7 @@ private void manageBookingMenu() {
         int rating = 0;
         while (rating < 1 || rating > 5) {
             System.out.println(ColorText.warning("\n  Rate your experience:"));
-            System.out.println(ColorText.yellow("  1 ★ Poor  |  2 ★★ Fair  |  3 ★★★ Good  |  4 ★★★★ Very Good  |  5 ★★★★★ Excellent"));
+            System.out.println(ColorText.yellow("1 ★ Poor\n2 ★★ Fair\n3 ★★★ Good\n4 ★★★★ Very Good\n5 ★★★★★ Excellent"));
             System.out.print(ColorText.bold("  Your rating (1-5): "));
             try {
                 rating = Integer.parseInt(sc.nextLine());
@@ -590,30 +590,15 @@ private void manageBookingMenu() {
             return;
         }
 
-        System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("║") + ColorText.bold("          PACKAGE ITINERARY           ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+        System.out.println(ColorText.bold("\n  PACKAGE ITINERARY"));
+        System.out.println(ColorText.warning("  ─────────────────────────────────────"));
 
         for (ItineraryItem item : itinerary.getItems()) {
-            // Split long activity into chunks of 30 chars
-            String activity = item.getActivity();
-            String firstLine  = activity.length() > 30 ? activity.substring(0, 30) : activity;
-            String secondLine = activity.length() > 30 ? activity.substring(30)    : "";
-
-            System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Day %-2d") + "  %-30s" + ColorText.warning("║") + "%n",
-                item.getDayNumber(), firstLine);
-
-            if (!secondLine.isEmpty()) {
-                System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", "        " + secondLine);
-            }
-
-            System.out.printf(ColorText.warning("║") + "  " + ColorText.yellow("📍 %-34s") + ColorText.warning("║") + "%n",
-                item.getLocation());
-
-            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+            System.out.println(ColorText.cyan("  Day " + item.getDayNumber()));
+            System.out.println("    Activity : " + item.getActivity());
+            System.out.println("    Location : " + ColorText.yellow("📍 " + item.getLocation()));
+            System.out.println(ColorText.warning("  ─────────────────────────────────────"));
         }
-
-        System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
     }
 
     // ── Message ───────────────────────────────────────────────────────────────
@@ -635,10 +620,11 @@ private void manageBookingMenu() {
                     System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
                     System.out.print(ColorText.bold("  Your Message : "));
                     messageService.sendToAdmin(customerId, sc.nextLine());
-                    System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-                    System.out.println(ColorText.warning("║") + ColorText.success("  Message sent to Admin!           ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+                    
+                    System.out.println(ColorText.success(" Message sent to Admin!"));
+                   
                     break;
+                    
                 case 2:
                     List<String> replies = messageService.viewReplies(customerId);
                     System.out.println(ColorText.warning("\n╔══════════════════════════════════════════════════╗"));
@@ -646,7 +632,8 @@ private void manageBookingMenu() {
                     System.out.println(ColorText.warning("╠══════════════════════════════════════════════════╣"));
                     if (replies == null || replies.isEmpty()) {
                         System.out.println(ColorText.warning("║") + ColorText.yellow("  No replies from admin yet.                      ") + ColorText.warning("║"));
-                    } else {
+                    }
+                    else {
                         int idx = 1;
                         for (String r : replies) {
                             System.out.printf(ColorText.warning("║") + " " + ColorText.cyan(String.format("[%2d]", idx)) + " %-44s" + ColorText.warning("║") + "%n",
