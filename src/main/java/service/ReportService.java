@@ -4,6 +4,7 @@ import dao.ReportDAO;
 import model.ReportData.BookingReportRow;
 import model.ReportData.PackageAvailabilityRow;
 import model.ReportData.PaymentReportRow;
+import util.ColorText;
 
 import java.util.List;
 
@@ -26,21 +27,22 @@ public class ReportService {
     }
 
     private void printBookingReportHeader(String title) {
-        System.out.println("\n┌────────────────────────────────────────────────────────────────────────────┐");
-        System.out.printf ("│  %-74s│%n", title);
-        System.out.println("└────────────────────────────────────────────────────────────────────────────┘");
-        System.out.printf("  %-6s  %-12s  %-18s  %-16s  %-10s  %-12s  %-12s%n",
+        System.out.println(ColorText.warning("\n  ╔════════════════════════════════════════════════════════════════════════════════════════════════════╗"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.bold("  %-96s") + ColorText.warning("║") + "%n", title);
+        System.out.println(ColorText.warning("  ╠════════╦══════════════╦════════════════════╦══════════════════╦═══════════╦═════════════╦═════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  %-6s") + ColorText.warning("║") + ColorText.cyan("  %-12s") + ColorText.warning("║") + ColorText.cyan("  %-18s") + ColorText.warning("║") + ColorText.cyan("  %-16s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-11s") + ColorText.warning("║") + ColorText.cyan("  %-11s") + ColorText.warning("║") + "%n",
             "BkgID", "Date", "Customer", "Destination", "Travelers", "Amount(Rs.)", "Status");
-        System.out.println("  " + "─".repeat(96));
+        System.out.println(ColorText.warning("  ╠════════╬══════════════╬════════════════════╬══════════════════╬═══════════╬═════════════╬═════════════╣"));
     }
 
     private void printBookingRows(List<BookingReportRow> rows) {
         if (rows.isEmpty()) {
-            System.out.println("  No records found.");
+            System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No records found.                                                                                 ") + ColorText.warning("║"));
+            System.out.println(ColorText.warning("  ╚════════╩══════════════╩════════════════════╩══════════════════╩═══════════╩═════════════╩═════════════╝"));
             return;
         }
         for (BookingReportRow r : rows) {
-            System.out.printf("  %-6d  %-12s  %-18s  %-16s  %-10d  %-12.2f  %-12s%n",
+            System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-12s" + ColorText.warning("║") + "  %-18s" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "  %-11.2f" + ColorText.warning("║") + "  %-11s" + ColorText.warning("║") + "%n",
                 r.getBookingId(),
                 r.getBookingDate(),
                 truncate(r.getCustomerName(), 18),
@@ -56,101 +58,94 @@ public class ReportService {
         long cancelled  = rows.stream().filter(r -> "Cancelled".equalsIgnoreCase(r.getStatus())).count();
         double total    = rows.stream().mapToDouble(BookingReportRow::getTotalAmount).sum();
 
-        System.out.println("  " + "─".repeat(96));
-        System.out.printf("  Total Bookings : %d   |   Confirmed : %d   |   Cancelled : %d   |   Total Amount : Rs. %.2f%n",
+        System.out.println(ColorText.warning("  ╠════════════════════════════════════════════════════════════════════════════════════════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Total: %-4d  │  Confirmed: %-4d  │  Cancelled: %-4d  │  Total Amount: Rs. %-19.2f  ") + ColorText.warning("║") + "%n",
             rows.size(), confirmed, cancelled, total);
+        System.out.println(ColorText.warning("  ╚════════════════════════════════════════════════════════════════════════════════════════════════════╝"));
         System.out.println();
     }
 
-   
-
     public void showPaymentReport() {
-        System.out.println("\n┌────────────────────────────────────────────────────────────┐");
-        System.out.println("│                    PAYMENT REPORT                         │");
-        System.out.println("└────────────────────────────────────────────────────────────┘");
+        System.out.println(ColorText.warning("\n  ╔════════════════════════════════════════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("                              PAYMENT REPORT                                        ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠══════════╦══════════╦══════════════╦════════════════╦══════════════════╦══════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-12s") + ColorText.warning("║") + ColorText.cyan("  %-14s") + ColorText.warning("║") + ColorText.cyan("  %-16s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + "%n",
+            "PmtID", "BkgID", "Date", "Amount(Rs.)", "Method", "Status");
+        System.out.println(ColorText.warning("  ╠══════════╬══════════╬══════════════╬════════════════╬══════════════════╬══════════╣"));
 
         List<PaymentReportRow> rows = reportDAO.getAllPayments();
 
-        System.out.printf("  %-8s  %-8s  %-12s  %-14s  %-16s  %-10s%n",
-            "PmtID", "BkgID", "Date", "Amount(Rs.)", "Method", "Status");
-        System.out.println("  " + "─".repeat(80));
-
         if (rows.isEmpty()) {
-            System.out.println("  No payment records found.");
+            System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No payment records found.                                                          ") + ColorText.warning("║"));
         } else {
             for (PaymentReportRow r : rows) {
-                System.out.printf("  %-8d  %-8d  %-12s  %-14.2f  %-16s  %-10s%n",
-                    r.getPaymentId(),
-                    r.getBookingId(),
-                    r.getPaymentDate(),
-                    r.getAmount(),
-                    r.getPaymentMethod(),
-                    r.getPaymentStatus());
+                System.out.printf(ColorText.warning("  ║") + "  %-8d" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-12s" + ColorText.warning("║") + "  %-14.2f" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║") + "  %-8s" + ColorText.warning("║") + "%n",
+                    r.getPaymentId(), r.getBookingId(), r.getPaymentDate(),
+                    r.getAmount(), r.getPaymentMethod(), r.getPaymentStatus());
             }
         }
 
-        System.out.println("  " + "─".repeat(80));
         double totalRevenue = reportDAO.getTotalRevenue();
-        System.out.printf("  Total Transactions : %d   |   Total Revenue (SUCCESS) : Rs. %.2f%n",
+        System.out.println(ColorText.warning("  ╠════════════════════════════════════════════════════════════════════════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Total Transactions : %-5d   │   Total Revenue (SUCCESS) : Rs. %-19.2f") + ColorText.warning("║") + "%n",
             rows.size(), totalRevenue);
+        System.out.println(ColorText.warning("  ╚════════════════════════════════════════════════════════════════════════════════════╝"));
 
-        System.out.println("\n  ── Revenue by Payment Method ──");
+        System.out.println(ColorText.warning("\n  ╔════════════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("           Revenue Breakdown by Payment Method          ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╚════════════════════════════════════════════════════════╝"));
         reportDAO.printRevenueByMethod();
         System.out.println();
     }
 
-   
-
     public void showPackageAvailabilityReport() {
-        System.out.println("\n┌────────────────────────────────────────────────────────────────────────┐");
-        System.out.println("│                   PACKAGE AVAILABILITY REPORT                         │");
-        System.out.println("└────────────────────────────────────────────────────────────────────────┘");
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("                                          PACKAGE AVAILABILITY REPORT                                                  ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╠════════╦════════════════════╦══════════╦══════════╦════════════╦══════════╦═══════════╦═══════════╦══════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  %-6s") + ColorText.warning("║") + ColorText.cyan("  %-18s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-10s") + ColorText.warning("║") + ColorText.cyan("  %-8s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-9s") + ColorText.warning("║") + ColorText.cyan("  %-16s") + ColorText.warning("║") + "%n",
+            "PkgID", "Destination", "Price", "Days", "TotalSeats", "Booked", "Available", "Cancelled", "Occupancy");
+        System.out.println(ColorText.warning("  ╠════════╬════════════════════╬══════════╬══════════╬════════════╬══════════╬═══════════╬═══════════╬══════════════════╣"));
 
         List<PackageAvailabilityRow> rows = reportDAO.getPackageAvailabilityReport();
 
-        System.out.printf("  %-6s  %-18s  %-8s  %-8s  %-10s  %-8s  %-9s  %-9s%n",
-            "PkgID", "Destination", "Price", "Days", "TotalSeats", "Booked", "Available", "Cancelled");
-        System.out.println("  " + "─".repeat(92));
-
         if (rows.isEmpty()) {
-            System.out.println("  No packages found.");
+            System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No packages found.                                                                                                  ") + ColorText.warning("║"));
         } else {
             for (PackageAvailabilityRow r : rows) {
-                // Occupancy indicator
                 String occupancy = occupancyBar(r.getBookedSeats(), r.getTotalSeats());
-
-                System.out.printf("  %-6d  %-18s  %-8.0f  %-8d  %-10d  %-8d  %-9d  %-9d  %s%n",
-                    r.getPackageId(),
-                    truncate(r.getDestination(), 18),
-                    r.getPrice(),
-                    r.getDuration(),
-                    r.getTotalSeats(),
-                    r.getBookedSeats(),
-                    r.getAvailableSeats(),
-                    r.getCancelledBookings(),
+                System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-18s" + ColorText.warning("║") + "  %-8.0f" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-10d" + ColorText.warning("║") + "  %-8d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "  %-9d" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║") + "%n",
+                    r.getPackageId(), truncate(r.getDestination(), 18), r.getPrice(), r.getDuration(),
+                    r.getTotalSeats(), r.getBookedSeats(), r.getAvailableSeats(), r.getCancelledBookings(),
                     occupancy);
             }
         }
 
-        System.out.println("  " + "─".repeat(92));
-
-        // Summary
         int totalSeats     = rows.stream().mapToInt(PackageAvailabilityRow::getTotalSeats).sum();
         int totalBooked    = rows.stream().mapToInt(PackageAvailabilityRow::getBookedSeats).sum();
         int totalAvailable = rows.stream().mapToInt(PackageAvailabilityRow::getAvailableSeats).sum();
 
-        System.out.printf("  Packages : %d   |   Total Seats : %d   |   Booked : %d   |   Available : %d%n",
+        System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣"));
+        System.out.printf (ColorText.warning("  ║") + ColorText.cyan("  Packages: %-4d  │  Total Seats: %-5d  │  Booked: %-5d  │  Available: %-5d                                         ") + ColorText.warning("║") + "%n",
             rows.size(), totalSeats, totalBooked, totalAvailable);
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝"));
         System.out.println();
     }
 
-    
-
-    /** Builds a simple ASCII occupancy bar: e.g. [████░░░░] */
+  
     private String occupancyBar(int booked, int total) {
+
         if (total <= 0) return "[N/A]";
-        int pct   = (int) ((booked * 10.0) / total);
+
+        booked = Math.max(0, booked);
+        booked = Math.min(booked, total);
+
+        int pct = (int) ((booked * 10.0) / total);
+
+   
+        pct = Math.max(0, Math.min(10, pct));
+
         int empty = 10 - pct;
+
         return "[" + "█".repeat(pct) + "░".repeat(empty) + "] " +
                String.format("%d%%", (int)((booked * 100.0) / total));
     }
