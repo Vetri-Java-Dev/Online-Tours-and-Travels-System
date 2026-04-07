@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import exception.*;
 import model.Booking;
 import model.Itinerary;
 import model.ItineraryItem;
@@ -54,7 +55,12 @@ public class AdminController {
                     System.out.println(ColorText.warning("  ║") + ColorText.bold("          VIEW PAYMENT HISTORY        ") + ColorText.warning("║"));
                     System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
                     System.out.print(ColorText.bold("  Enter Booking ID : "));
-                    paymentService.viewPaymentHistory(Integer.parseInt(sc.nextLine()));
+                    try {
+                        int bookingId = Integer.parseInt(sc.nextLine());
+                        paymentService.viewPaymentHistory(bookingId);
+                    } catch (BookingNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
 
                 case 5: trackAllBookings(); break;
@@ -94,20 +100,36 @@ public class AdminController {
                 case 1: feedbackService.viewPendingFeedback(); break;
                 case 2:
                     System.out.print(ColorText.bold("  Feedback ID : "));
-                    feedbackService.approveFeedback(Integer.parseInt(sc.nextLine()));
+                    try {
+                        feedbackService.approveFeedback(Integer.parseInt(sc.nextLine()));
+                    } catch (BookingNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
                 case 3:
                     System.out.print(ColorText.bold("  Feedback ID : "));
-                    feedbackService.rejectFeedback(Integer.parseInt(sc.nextLine()));
+                    try {
+                        feedbackService.rejectFeedback(Integer.parseInt(sc.nextLine()));
+                    } catch (BookingNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
                 case 4: feedbackService.viewAllFeedback(); break;
                 case 5:
                     System.out.print(ColorText.bold("  Package ID  : "));
-                    feedbackService.viewPackageReviews(Integer.parseInt(sc.nextLine()));
+                    try {
+                        feedbackService.viewPackageReviews(Integer.parseInt(sc.nextLine()));
+                    } catch (PackageNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
                 case 6:
                     System.out.print(ColorText.bold("  Feedback ID : "));
-                    feedbackService.deleteFeedback(Integer.parseInt(sc.nextLine()));
+                    try {
+                        feedbackService.deleteFeedback(Integer.parseInt(sc.nextLine()));
+                    } catch (BookingNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
                 case 7: return;
                 default: System.out.println(ColorText.error("  Invalid choice."));
@@ -146,23 +168,53 @@ public class AdminController {
                     int duration = Integer.parseInt(sc.nextLine());
                     System.out.print(ColorText.bold("  Seats        : "));
                     int seats = Integer.parseInt(sc.nextLine());
-                    service.createPackage(id, dest, price, duration, seats);
-                    System.out.println(ColorText.success("  Package added successfully!"));
+                    try {
+                        service.createPackage(id, dest, price, duration, seats);
+                        System.out.println(ColorText.success("  Package added successfully!"));
+                    } catch (PackageAlreadyExistsException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
 
                 case 2: service.displayPackages(); break;
 
                 case 3:
+
                     System.out.print(ColorText.bold("  Package ID      : "));
-                    int uid = Integer.parseInt(sc.nextLine());
+
+                    int uid;
+
+                    try{
+                        uid=Integer.parseInt(sc.nextLine());
+                    }
+                    catch(Exception e){
+                        while(true){
+                            if(sc.hasNextInt()){
+                                uid=sc.nextInt();
+                                break;
+                            }
+                            else{
+                                System.out.print("Enter Valid Package Id : ");
+                            }
+                        }
+                    }
+
                     System.out.print(ColorText.bold("  New Destination : "));
                     String nd = sc.nextLine();
+
                     System.out.print(ColorText.bold("  New Price       : "));
                     double np = Double.parseDouble(sc.nextLine());
+
                     System.out.print(ColorText.bold("  New Duration    : "));
                     int ndur = Integer.parseInt(sc.nextLine());
-                    service.updatePackage(uid, nd, np, ndur);
-                    System.out.println(ColorText.success("  Package updated successfully!"));
+
+                    try {
+                        service.updatePackage(uid, nd, np, ndur);
+                        System.out.println(ColorText.success("  Package updated successfully!"));
+                    }
+                    catch (PackageNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
 
                 case 4:
@@ -170,8 +222,12 @@ public class AdminController {
                     int deleteId = Integer.parseInt(sc.nextLine());
                     System.out.print(ColorText.bold("  Confirm delete? (yes/no): "));
                     if(sc.nextLine().equalsIgnoreCase("yes")) {
-                        service.deletePackage(deleteId);
-                        System.out.println(ColorText.success("  Package deleted successfully!"));
+                        try {
+                            service.deletePackage(deleteId);
+                            System.out.println(ColorText.success("  Package deleted successfully!"));
+                        } catch (PackageNotFoundException e) {
+                            System.out.println(ColorText.error("  " + e.getMessage()));
+                        }
                     } else {
                         System.out.println(ColorText.yellow("  Deletion cancelled."));
                     }
@@ -229,25 +285,29 @@ public class AdminController {
                     break;
 
                 case 2:
-                    List<User> users = userService.getAllUsers();
-                    System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.bold("              REGISTERED CUSTOMERS                ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╠════════╦════════════════════════════════════════════╣"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID    ") + ColorText.warning("║") + ColorText.cyan("  Name                                     ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╠════════╬════════════════════════════════════════════╣"));
-                    for (User u : users) {
-                        System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-40s" + ColorText.warning("║") + "%n",
-                            u.getUserId(), truncate(u.getName(), 40));
-                    }
-                    System.out.println(ColorText.warning("  ╚════════╩════════════════════════════════════════════╝"));
+                    try {
+                        List<User> users = userService.getAllUsers();
+                        System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
+                        System.out.println(ColorText.warning("  ║") + ColorText.bold("              REGISTERED CUSTOMERS                ") + ColorText.warning("║"));
+                        System.out.println(ColorText.warning("  ╠════════╦════════════════════════════════════════════╣"));
+                        System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID    ") + ColorText.warning("║") + ColorText.cyan("  Name                                     ") + ColorText.warning("║"));
+                        System.out.println(ColorText.warning("  ╠════════╬════════════════════════════════════════════╣"));
+                        for (User u : users) {
+                            System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-40s" + ColorText.warning("║") + "%n",
+                                    u.getUserId(), truncate(u.getName(), 40));
+                        }
+                        System.out.println(ColorText.warning("  ╚════════╩════════════════════════════════════════════╝"));
 
-                    System.out.print(ColorText.bold("\n  Enter Customer ID : "));
-                    int cid = Integer.parseInt(sc.nextLine());
-                    System.out.print(ColorText.bold("  Message           : "));
-                    messageService.replyToCustomer(cid, sc.nextLine());
-                    System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.success("  ✔  Reply sent successfully!          ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
+                        System.out.print(ColorText.bold("\n  Enter Customer ID : "));
+                        int cid = Integer.parseInt(sc.nextLine());
+                        System.out.print(ColorText.bold("  Message           : "));
+                        messageService.replyToCustomer(cid, sc.nextLine());
+                        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
+                        System.out.println(ColorText.warning("  ║") + ColorText.success("  ✔  Reply sent successfully!          ") + ColorText.warning("║"));
+                        System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
+                    } catch (UserNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
 
                 case 3: return;
@@ -275,24 +335,32 @@ public class AdminController {
                 System.out.print(ColorText.bold("  Booking ID: "));
                 int bookingId = Integer.parseInt(sc.nextLine());
 
-                Booking booking = bookingService.viewBooking(bookingId);
+                try {
+                    Booking booking = bookingService.viewBooking(bookingId);
 
-                if (booking != null) {
-                    System.out.println("\n  ─────────────────────────────────────");
-                    System.out.println("  Booking ID   : " + booking.getBookingId());
-                    System.out.println("  Package ID   : " + booking.getPackageId());
-                    System.out.println("  Travelers    : " + booking.getTravelers());
-                    System.out.println("  Booking Date : " + booking.getBookingDate());
-                    System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
-                    System.out.println("  Status       : " + booking.getStatus());
-                    System.out.println("  ─────────────────────────────────────");
-                } else {
-                    System.out.println("Booking not found!");
+                    if (booking != null) {
+                        System.out.println("\n  ─────────────────────────────────────");
+                        System.out.println("  Booking ID   : " + booking.getBookingId());
+                        System.out.println("  Package ID   : " + booking.getPackageId());
+                        System.out.println("  Travelers    : " + booking.getTravelers());
+                        System.out.println("  Booking Date : " + booking.getBookingDate());
+                        System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
+                        System.out.println("  Status       : " + booking.getStatus());
+                        System.out.println("  ─────────────────────────────────────");
+                    } else {
+                        System.out.println("Booking not found!");
+                    }
+                } catch (BookingNotFoundException e) {
+                    System.out.println(ColorText.error("  " + e.getMessage()));
                 }
             }
             else if(c==2) {
                 System.out.print(ColorText.bold("  Booking ID: "));
-                bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
+                try {
+                    bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
+                } catch (BookingNotFoundException | InvalidBookingException e) {
+                    System.out.println(ColorText.error("  " + e.getMessage()));
+                }
             }
             else return;
         }
@@ -352,7 +420,11 @@ public class AdminController {
                 case 3: addItinerary(); break;
                 case 4:
                     System.out.print(ColorText.bold("  Itinerary ID: "));
-                    itineraryService.deleteItinerary(Integer.parseInt(sc.nextLine()));
+                    try {
+                        itineraryService.deleteItinerary(Integer.parseInt(sc.nextLine()));
+                    } catch (PackageNotFoundException e) {
+                        System.out.println(ColorText.error("  " + e.getMessage()));
+                    }
                     break;
                 case 5: return;
             }
@@ -360,28 +432,35 @@ public class AdminController {
     }
 
     private void addItinerary() {
-    	
-        int pid = Integer.parseInt(sc.nextLine());
-        int days = Integer.parseInt(sc.nextLine());
-        
-        List<ItineraryItem> items = new ArrayList<>();
-        for(int i=1;i<=days;i++) {
-            items.add(new ItineraryItem(0,i,sc.nextLine(),sc.nextLine()));
+        try {
+            int pid = Integer.parseInt(sc.nextLine());
+            int days = Integer.parseInt(sc.nextLine());
+
+            List<ItineraryItem> items = new ArrayList<>();
+            for(int i=1;i<=days;i++) {
+                items.add(new ItineraryItem(0,i,sc.nextLine(),sc.nextLine()));
+            }
+            itineraryService.createItinerary(new Itinerary(0,pid,1,items));
+        } catch (PackageNotFoundException e) {
+            System.out.println(ColorText.error("  " + e.getMessage()));
         }
-        itineraryService.createItinerary(new Itinerary(0,pid,1,items));
     }
 
     private void viewItinerary() {
-        Itinerary it = itineraryService.viewItinerary(Integer.parseInt(sc.nextLine()));
-        if(it!=null) it.getItems().forEach(i->System.out.println(
-            ColorText.cyan("  Day " + i.getDayNumber()) + " : " + i.getLocation()));
+        try {
+            Itinerary it = itineraryService.viewItinerary(Integer.parseInt(sc.nextLine()));
+            if(it!=null) it.getItems().forEach(i->System.out.println(
+                    ColorText.cyan("  Day " + i.getDayNumber()) + " : " + i.getLocation()));
+        } catch (PackageNotFoundException e) {
+            System.out.println(ColorText.error("  " + e.getMessage()));
+        }
     }
 
     // ================= REPORT =================
     private void reportsMenu() {
 
         while(true) {
-            
+
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
             System.out.println(ColorText.warning("║") + ColorText.bold("               REPORTS                ") + ColorText.warning("║"));
             System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));

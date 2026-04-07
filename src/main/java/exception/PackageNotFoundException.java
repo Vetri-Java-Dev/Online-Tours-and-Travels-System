@@ -1,5 +1,7 @@
 package exception;
 
-public class PackageNotFoundException {
-
+public class PackageNotFoundException extends TourAppException {
+    public PackageNotFoundException(String message) {
+        super(message);
+    }
 }

@@ -1,5 +1,7 @@
 package exception;
 
-public class NotAvailableSeatsException {
-
+public class NotAvailableSeatsException extends TourAppException {
+    public NotAvailableSeatsException(String message) {
+        super(message);
+    }
 }

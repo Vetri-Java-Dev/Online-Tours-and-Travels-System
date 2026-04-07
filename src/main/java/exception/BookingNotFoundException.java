@@ -1,5 +1,7 @@
 package exception;
 
-public class BookingNotFoundException {
-
+public class BookingNotFoundException extends TourAppException {
+    public BookingNotFoundException(String message) {
+        super(message);
+    }
 }
