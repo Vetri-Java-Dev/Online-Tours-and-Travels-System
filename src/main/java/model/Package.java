@@ -6,7 +6,6 @@ public class Package {
 	private String title;
 	private String location;
 	private double price;
-	private int availableSeats;
 	private String startDate;
 	private String endDate;
 	
@@ -15,10 +14,10 @@ public class Package {
         this.title = title;
         this.location = location;
         this.price = price;
-        this.availableSeats = availableSeats;
         this.startDate = startDate;
         this.endDate = endDate;
     }
+	
     public int getPackageId() {
         return packageId;
     }
@@ -42,12 +41,6 @@ public class Package {
     }
     public void setPrice(double price) {
         this.price = price;
-    }
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
     }
     public String getStartDate() {
         return startDate;

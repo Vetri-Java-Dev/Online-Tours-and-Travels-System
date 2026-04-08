@@ -64,6 +64,7 @@ public class EmailUtil {
 
     public static void sendWelcomeEmail(String toEmail, String userName) {
         try {
+        	
             String html = loadTemplate("welcome_email.html", userName);
             if (html == null) return;
 
@@ -135,6 +136,7 @@ public class EmailUtil {
 
     public static void sendOTPEmail(String toEmail, String userName, String otp) {
         try {
+        	
             String html = loadTemplate("otp_email.html", userName);
             if (html == null) return;
 
@@ -161,6 +163,7 @@ public class EmailUtil {
             int bookingId, int packageId,
             int travelers, double totalAmount,
             String bookingDate) {
+    	
         try {
             String html = loadTemplate("admin_booking_alert.html", "Admin");
             if (html == null) return;
