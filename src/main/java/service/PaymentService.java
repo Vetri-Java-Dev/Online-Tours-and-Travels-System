@@ -1,3 +1,5 @@
+// Author: Subhashree R
+// PaymentService.java - Business logic for processing payments and history
 package service;
 
 import dao.PaymentDAO;
@@ -209,6 +211,22 @@ public class PaymentService {
         }
 
         paymentDAO.viewPaymentHistory(bookingId);
+    }
+
+    public void viewPaymentHistoryByCustomerId(int customerId) {
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("            MY PAYMENT HISTORY                    ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+
+        paymentDAO.viewPaymentHistoryByCustomerId(customerId);
+    }
+
+    public void viewAllPaymentHistory() {
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("            ALL SYSTEM PAYMENTS                   ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+
+        paymentDAO.viewAllPaymentHistory();
     }
 
     // Verify if a payment is valid before processing

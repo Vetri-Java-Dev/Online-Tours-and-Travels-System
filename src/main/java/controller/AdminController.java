@@ -1,3 +1,4 @@
+
 package controller;
 
 import java.util.ArrayList;
@@ -51,16 +52,7 @@ public class AdminController {
                 case 2: messageMenu(); break;
                 case 3: bookingMenu(); break;
                 case 4:
-                    System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
-                    System.out.println(ColorText.warning("  ║") + ColorText.bold("          VIEW PAYMENT HISTORY        ") + ColorText.warning("║"));
-                    System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
-                    System.out.print(ColorText.bold("  Enter Booking ID : "));
-                    try {
-                        int bookingId = Integer.parseInt(sc.nextLine());
-                        paymentService.viewPaymentHistory(bookingId);
-                    } catch (BookingNotFoundException e) {
-                        System.out.println(ColorText.error("  " + e.getMessage()));
-                    }
+                    paymentService.viewAllPaymentHistory();
                     break;
 
                 case 5: trackAllBookings(); break;
@@ -116,7 +108,8 @@ public class AdminController {
                     break;
                 case 4: feedbackService.viewAllFeedback(); break;
                 case 5:
-                    System.out.print(ColorText.bold("  Package ID  : "));
+                    service.displayPackages();
+                    System.out.print(ColorText.bold("\n  Enter Package ID to view feedback: "));
                     try {
                         feedbackService.viewPackageReviews(Integer.parseInt(sc.nextLine()));
                     } catch (PackageNotFoundException e) {
@@ -124,7 +117,8 @@ public class AdminController {
                     }
                     break;
                 case 6:
-                    System.out.print(ColorText.bold("  Feedback ID : "));
+                    feedbackService.viewAllFeedback();
+                    System.out.print(ColorText.bold("\n  Enter Feedback ID to delete: "));
                     try {
                         feedbackService.deleteFeedback(Integer.parseInt(sc.nextLine()));
                     } catch (BookingNotFoundException e) {

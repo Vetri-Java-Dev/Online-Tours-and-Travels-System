@@ -5,7 +5,6 @@ import model.ReportData.BookingReportRow;
 import model.ReportData.PackageAvailabilityRow;
 import model.ReportData.PaymentReportRow;
 import util.ColorText;
-
 import java.util.List;
 
 public class ReportService {
@@ -26,13 +25,10 @@ public class ReportService {
         double total   = rows.stream().mapToDouble(BookingReportRow::getTotalAmount).sum();
 
         System.out.println("\n  " + ColorText.bold(title));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────────────"));
-        System.out.printf("  %-6s  %-20s  %-18s  %-12s  %-10s  %-12s  %s%n",
-                ColorText.cyan("BkgID"), ColorText.cyan("Customer"),
-                ColorText.cyan("Destination"), ColorText.cyan("Date"),
-                ColorText.cyan("Travelers"), ColorText.cyan("Amount(Rs.)"),
-                ColorText.cyan("Status"));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.cyan(String.format("  %-6s  %-20s  %-18s  %-12s  %-10s  %-12s  %s",
+                "BkgID", "Customer", "Destination", "Date", "Travelers", "Amount(Rs.)", "Status")));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────────────────"));
 
         if (rows.isEmpty()) {
             System.out.println(ColorText.yellow("  No records found."));
@@ -49,12 +45,12 @@ public class ReportService {
             }
         }
 
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────────────────────"));
         System.out.println("  Total: " + rows.size()
                 + "   Confirmed: " + ColorText.success(String.valueOf(confirmed))
                 + "   Cancelled: " + ColorText.error(String.valueOf(cancelled))
                 + "   Revenue: " + ColorText.cyan("Rs. " + String.format("%.2f", total)));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────────────────────"));
     }
 
     public void showPaymentReport() {
@@ -62,12 +58,10 @@ public class ReportService {
         double totalRevenue = reportDAO.getTotalRevenue();
 
         System.out.println("\n  " + ColorText.bold("Payment Report"));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
-        System.out.printf("  %-8s  %-8s  %-14s  %-14s  %-18s  %s%n",
-                ColorText.cyan("PmtID"), ColorText.cyan("BkgID"),
-                ColorText.cyan("Date"), ColorText.cyan("Amount(Rs.)"),
-                ColorText.cyan("Method"), ColorText.cyan("Status"));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.cyan(String.format("  %-8s  %-8s  %-14s  %-14s  %-18s  %s",
+                "PmtID", "BkgID", "Date", "Amount(Rs.)", "Method", "Status")));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
 
         if (rows.isEmpty()) {
             System.out.println(ColorText.yellow("  No payment records found."));
@@ -83,15 +77,15 @@ public class ReportService {
             }
         }
 
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
         System.out.println("  Total Transactions: " + rows.size()
                 + "   Total Revenue: " + ColorText.cyan("Rs. " + String.format("%.2f", totalRevenue)));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
 
         System.out.println("\n  " + ColorText.bold("Revenue by Payment Method"));
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
         reportDAO.printRevenueByMethod();
-        System.out.println(ColorText.warning("  ─────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ───────────────────────────────────────────────────────────────────────────────────────────────"));
     }
 
     public void showPackageAvailabilityReport() {
@@ -102,14 +96,10 @@ public class ReportService {
         int totalAvailable = rows.stream().mapToInt(PackageAvailabilityRow::getAvailableSeats).sum();
 
         System.out.println("\n  " + ColorText.bold("Package Availability & Occupancy Report"));
-        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────"));
-        System.out.printf("  %-6s  %-20s  %-10s  %-6s  %-10s  %-8s  %-10s  %-10s  %s%n",
-                ColorText.cyan("PkgID"), ColorText.cyan("Destination"),
-                ColorText.cyan("Price"), ColorText.cyan("Days"),
-                ColorText.cyan("TotalSeats"), ColorText.cyan("Booked"),
-                ColorText.cyan("Available"), ColorText.cyan("Cancelled"),
-                ColorText.cyan("Occupancy"));
-        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.cyan(String.format("  %-6s  %-20s  %-10s  %-6s  %-10s  %-8s  %-10s  %-10s  %s",
+                "PkgID", "Destination", "Price", "Days", "TotalSeats", "Booked", "Available", "Cancelled", "Occupancy")));
+        System.out.println(ColorText.warning("  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"));
 
         if (rows.isEmpty()) {
             System.out.println(ColorText.yellow("  No packages found in the system."));
@@ -128,12 +118,12 @@ public class ReportService {
             }
         }
 
-        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"));
         System.out.println("  Packages: " + rows.size()
                 + "   Total Seats: " + totalSeats
                 + "   Booked: " + ColorText.cyan(String.valueOf(totalBooked))
                 + "   Available: " + ColorText.success(String.valueOf(totalAvailable)));
-        System.out.println(ColorText.warning("  ──────────────────────────────────────────────────────────────────────────────────────────"));
+        System.out.println(ColorText.warning("  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"));
     }
 
     private String occupancyBar(int booked, int total) {
