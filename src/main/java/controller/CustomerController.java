@@ -579,24 +579,40 @@ private void manageBookingMenu() {
         }
 
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("║") + ColorText.bold("          PACKAGE ITINERARY           ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("║") + ColorText.bold("        PACKAGE ITINERARY             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
 
         for (ItineraryItem item : itinerary.getItems()) {
-            // Split long activity into chunks of 30 chars
-            String activity = item.getActivity();
-            String firstLine  = activity.length() > 30 ? activity.substring(0, 30) : activity;
-            String secondLine = activity.length() > 30 ? activity.substring(30)    : "";
 
-            System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Day %-2d") + "  %-30s" + ColorText.warning("║") + "%n",
-                item.getDayNumber(), firstLine);
+            String text = item.getDayNumber() + ". " + item.getActivity();
+            int width = 36;
 
-            if (!secondLine.isEmpty()) {
-                System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", "        " + secondLine);
+            String indent = "     "; // aligns under "1. "
+            boolean firstLine = true;
+
+            while (text.length() > width) {
+                String line = text.substring(0, width);
+
+                if (firstLine) {
+                    System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", line);
+                    firstLine = false;
+                } else {
+                    System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", indent + line.trim());
+                }
+
+                text = text.substring(width);
             }
 
-            System.out.printf(ColorText.warning("║") + "  " + ColorText.yellow("📍 %-34s") + ColorText.warning("║") + "%n",
-                item.getLocation());
+            // last line
+            if (firstLine) {
+                System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", text);
+            } else {
+                System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n", indent + text.trim());
+            }
+
+            // 🔥 PERFECT LOCATION ALIGNMENT
+            System.out.printf(ColorText.warning("║") + "  %-36s" + ColorText.warning("║") + "%n",
+                    "     📍 " + item.getLocation());
 
             System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
         }
