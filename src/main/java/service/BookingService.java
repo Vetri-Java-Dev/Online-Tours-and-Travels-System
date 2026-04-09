@@ -57,13 +57,7 @@ public class BookingService {
 		booking.setStatus("CONFIRMED");
 
 		User user = new UserDAO().getUserById(booking.getCustomerId());
-		TourPackage tourPackageDetails = tourPackageDAO.getPackageById(booking.getPackageId());
-
-		/*
-		 * if (user != null && tourPackageDetails != null) {
-		 * booking.setCustomerName(user.getName());
-		 * booking.setPackageName(tourPackageDetails.getDestination()); }
-		 */
+		
 		bookingDAO.createBooking(booking);
 		int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
 		tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
@@ -88,6 +82,23 @@ public class BookingService {
 
 		return bookingDAO.viewBooking(bookingId);
 	}
+	 public Booking viewBookingByCustomer(int bookingId, int customerId) {
+
+	        Booking booking = bookingDAO.viewBooking(bookingId);
+
+	        if (booking == null) {
+	            System.out.println("Booking not found!");
+	            return null;
+	        }
+
+	        if (booking.getCustomerId() != customerId) {
+	            System.out.println("Access Denied! This booking does not belong to you.");
+	            return null;
+	        }
+
+	        return booking;
+	    }
+
 
 	public void modifyBooking(Booking booking) {
 
