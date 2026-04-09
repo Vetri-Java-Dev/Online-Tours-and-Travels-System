@@ -147,7 +147,7 @@ public class PackageController {
                 System.out.println(ColorText.error("  No packages found"));
                 return;
             }
-        } else {   // ✅ only ONE closing brace before else
+        } else {   
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
             System.out.println(ColorText.warning("║") + ColorText.bold("            SORT PACKAGES             ") + ColorText.warning("║"));
             System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
@@ -170,6 +170,6 @@ public class PackageController {
         }
 
         for (TourPackage t : list)
-            System.out.println("  " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
+            System.out.println("  ID: " + t.getPackageId() + " - " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
     }
 }
