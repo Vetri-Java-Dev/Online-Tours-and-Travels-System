@@ -26,7 +26,6 @@ public class TourPackageDAO {
             ps.setInt(5, tourPackage.getAvailableSeats());
 
             ps.executeUpdate();
-            System.out.println("Package saved to database");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,10 +245,8 @@ public class TourPackageDAO {
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Package updated successfully!");
                 return true;
             } else {
-                System.out.println("Package ID not found!");
                 return false;
             }
 
@@ -272,10 +269,8 @@ public class TourPackageDAO {
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Package deleted successfully!");
                 return true;
             } else {
-                System.out.println("Package ID not found!");
                 return false;
             }
         } catch (Exception e) {

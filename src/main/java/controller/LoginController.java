@@ -2,6 +2,8 @@ package controller;
 
 import java.util.Scanner;
 import exception.*;
+import model.Admin;
+import model.Customer;
 import model.User;
 import service.UserService;
 import util.ColorText;
@@ -50,10 +52,10 @@ public class LoginController {
             if(user != null) {
                 System.out.println(ColorText.success("\n  Login Successful! Welcome, " + user.getName()));
 
-                if(user.getRole().equalsIgnoreCase("ADMIN")) {
+                if(user instanceof Admin) {
                     System.out.println(ColorText.yellow("  Redirecting to Admin Dashboard..."));
                     new AdminController().adminMenu();
-                } else if(user.getRole().equalsIgnoreCase("CUSTOMER")) {
+                } else if(user instanceof Customer) {
                     System.out.println(ColorText.yellow("  Redirecting to Customer Dashboard..."));
                     new CustomerController(user.getUserId()).customerMenu();
                 }

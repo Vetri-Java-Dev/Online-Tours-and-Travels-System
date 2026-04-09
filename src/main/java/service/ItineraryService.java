@@ -18,14 +18,12 @@ public class ItineraryService {
             return;
         }
         dao.deleteItineraryByPackageId(packageId);
-        System.out.println(ColorText.success("  Itinerary deleted successfully!"));
     }
 
     public void createItinerary(Itinerary itinerary) {
         int itineraryId = dao.createItinerary(itinerary);
         if(itineraryId > 0) {
             dao.addItineraryItems(itineraryId, itinerary.getItems());
-            System.out.println(ColorText.success("\n  Itinerary saved successfully!"));
         } else {
             System.out.println(ColorText.error("\n  Failed to save itinerary."));
         }

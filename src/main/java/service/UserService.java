@@ -33,7 +33,7 @@ public class UserService {
         }
 
         if(user.getRole().equalsIgnoreCase("ADMIN")) {
-            boolean verified = verifyAdminOTP();
+            boolean verified = verifyAdminOTP(user);
             if(!verified) {
                 System.out.println(ColorText.error("\n  Admin verification failed. Registration cancelled."));
                 return;
@@ -44,7 +44,7 @@ public class UserService {
         userDAO.registerUser(user);
     }
 
-    private boolean verifyAdminOTP() {
+    private boolean verifyAdminOTP(User requester) {
         Scanner sc = new Scanner(System.in);
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
         long generatedTime = System.currentTimeMillis();
@@ -54,9 +54,9 @@ public class UserService {
         System.out.println(ColorText.cyan("└─────────────────────────────────────┘"));
         System.out.println(ColorText.warning("  Sending OTP to admin email..."));
 
-        EmailUtil.sendOTPEmail(ADMIN_EMAIL, "Admin", otp);
+        EmailUtil.sendOTPEmailForAdminCredential(ADMIN_EMAIL, requester.getName(), requester.getEmail(), otp);
 
-        System.out.println("  OTP sent to : " + ColorText.cyan(ADMIN_EMAIL));
+        //System.out.println("  OTP sent to : " + ColorText.cyan(ADMIN_EMAIL));
         System.out.println(ColorText.warning("  Note        : OTP is valid for 5 minutes only."));
         System.out.print(ColorText.bold("\n  Enter OTP   : "));
 

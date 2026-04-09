@@ -67,13 +67,17 @@ public class PaymentService {
 
     // Validates payment based on its type (UPI, Credit Card, or Debit Card)
     private String validatePaymentByType(Payment payment) {
+    	
         if (payment instanceof UPIPayment) {
             return validateUPIPayment((UPIPayment) payment);
-        } else if (payment instanceof CreditCardPayment) {
+        }
+        else if (payment instanceof CreditCardPayment) {
             return validateCreditCardPayment((CreditCardPayment) payment);
-        } else if (payment instanceof DebitCardPayment) {
+        }
+        else if (payment instanceof DebitCardPayment) {
             return validateDebitCardPayment((DebitCardPayment) payment);
-        } else {
+        }
+        else {
             return "Unknown payment type.";
         }
     }
@@ -137,6 +141,7 @@ public class PaymentService {
         System.out.println(ColorText.success("    ✔  Bank Name validated   : ") + ColorText.cyan(bankName));
         System.out.println(ColorText.success("    ✔  Expiry Date validated"));
         System.out.println(ColorText.success("    ✔  CVV validated"));
+        
         return null;
     }
 

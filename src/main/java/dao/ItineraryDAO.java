@@ -121,11 +121,9 @@ public class ItineraryDAO {
                 PreparedStatement ps3 = con.prepareStatement(deleteItinerary);
                 ps3.setInt(1, itineraryId);
                 ps3.executeUpdate();
-
-                System.out.println("Itinerary deleted successfully!");
             }
             else {
-                System.out.println("No itinerary found for this package.");
+                throw new exception.PackageNotFoundException("No itinerary found for this package.");
             }
 
         } catch (Exception e) {

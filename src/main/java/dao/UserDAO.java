@@ -1,5 +1,7 @@
 package dao;
 
+import model.Admin;
+import model.Customer;
 import model.User;
 import util.DBConnection;
 import util.EmailUtil;
@@ -60,7 +62,6 @@ public class UserDAO {
 	        int rows = ps.executeUpdate();
 
 	        if (rows > 0) {
-	            System.out.println("User registered successfully!");
 	            EmailUtil.sendWelcomeEmail(user.getEmail(), user.getName()); // ← fires only on actual insert
 	        }
 
@@ -92,14 +93,27 @@ public class UserDAO {
 
                 if (PasswordUtil.verifyPassword(password, storedPassword)) {
 
-                    user = new User(
-                            rs.getInt("userId"),
-                            rs.getString("name"),
-                            rs.getString("email"),
-                            storedPassword,
-                            rs.getString("phone"),
-                            rs.getString("role")
-                    );
+                    String dbRole = rs.getString("role");
+                    if (dbRole.equalsIgnoreCase("ADMIN")) {
+                        user = new Admin(
+                                rs.getInt("userId"),
+                                rs.getString("name"),
+                                rs.getString("email"),
+                                storedPassword,
+                                rs.getString("phone"),
+                                dbRole
+                        );
+                    } else {
+                        user = new Customer(
+                                rs.getInt("userId"),
+                                rs.getString("name"),
+                                rs.getString("email"),
+                                storedPassword,
+                                rs.getString("phone"),
+                                dbRole,
+                                null, null, null
+                        );
+                    }
                 }
             }
 
@@ -192,9 +206,7 @@ public class UserDAO {
 
             int rows = ps.executeUpdate();
 
-            if(rows > 0) {
-                System.out.println("Password Updated Successfully!");
-            } else {
+            if(rows <= 0) {
                 System.out.println("Email not found!");
             }
 
