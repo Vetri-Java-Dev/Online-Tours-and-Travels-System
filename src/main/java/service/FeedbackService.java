@@ -1,3 +1,5 @@
+// Author: Subhashree R
+// FeedbackService.java - Management logic for customer reviews and admin moderation
 package service;
 
 import dao.FeedbackDAO;

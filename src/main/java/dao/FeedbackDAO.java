@@ -1,3 +1,5 @@
+// Author: Subhashree R
+// FeedbackDAO.java - Database operations for customer feedback and reviews
 package dao;
 
 import model.Feedback;

@@ -1,3 +1,4 @@
+
 package controller;
 
 import model.ItineraryItem;
@@ -556,15 +557,7 @@ public class CustomerController {
 
 
     private void viewPaymentHistory() {
-        System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
-        System.out.println(ColorText.warning("║") + ColorText.bold("         VIEW PAYMENT HISTORY         ") + ColorText.warning("║"));
-        System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  Enter Booking ID : "));
-        try {
-            new PaymentService().viewPaymentHistory(sc.nextInt());
-        } catch (BookingNotFoundException e) {
-            System.out.println(ColorText.error("  " + e.getMessage()));
-        }
+        new PaymentService().viewPaymentHistoryByCustomerId(customerId);
     }
 
     // ── Profile ───────────────────────────────────────────────────────────────
