@@ -152,20 +152,27 @@ public class AdminController {
             switch(choice) {
 
                 case 1:
+                	
                     System.out.print(ColorText.bold("  Package ID   : "));
                     int id = Integer.parseInt(sc.nextLine());
+                    
                     System.out.print(ColorText.bold("  Destination  : "));
                     String dest = sc.nextLine();
+                    
                     System.out.print(ColorText.bold("  Price (INR)  : "));
                     int price = Integer.parseInt(sc.nextLine());
+                    
                     System.out.print(ColorText.bold("  Duration     : "));
                     int duration = Integer.parseInt(sc.nextLine());
+                    
                     System.out.print(ColorText.bold("  Seats        : "));
                     int seats = Integer.parseInt(sc.nextLine());
+                    
                     try {
                         service.createPackage(id, dest, price, duration, seats);
                         System.out.println(ColorText.success("  Package added successfully!"));
-                    } catch (PackageAlreadyExistsException e) {
+                    }
+                    catch (PackageAlreadyExistsException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
@@ -214,15 +221,18 @@ public class AdminController {
                 case 4:
                     System.out.print(ColorText.bold("  Package ID : "));
                     int deleteId = Integer.parseInt(sc.nextLine());
+                    
                     System.out.print(ColorText.bold("  Confirm delete? (yes/no): "));
                     if(sc.nextLine().equalsIgnoreCase("yes")) {
                         try {
                             service.deletePackage(deleteId);
                             System.out.println(ColorText.success("  Package deleted successfully!"));
-                        } catch (PackageNotFoundException e) {
+                        }
+                        catch (PackageNotFoundException e) {
                             System.out.println(ColorText.error("  " + e.getMessage()));
                         }
-                    } else {
+                    }
+                    else {
                         System.out.println(ColorText.yellow("  Deletion cancelled."));
                     }
                     break;
@@ -252,6 +262,7 @@ public class AdminController {
             switch(choice) {
 
                 case 1:
+                	
                     List<String> messages = messageService.viewMessages();
                     System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("  ║") + ColorText.bold("              INBOX — CUSTOMER MESSAGES              ") + ColorText.warning("║"));
@@ -281,11 +292,13 @@ public class AdminController {
                 case 2:
                     try {
                         List<User> users = userService.getAllUsers();
+                        
                         System.out.println(ColorText.warning("\n  ╔═════════════════════════════════════════════════════╗"));
                         System.out.println(ColorText.warning("  ║") + ColorText.bold("              REGISTERED CUSTOMERS                ") + ColorText.warning("║"));
                         System.out.println(ColorText.warning("  ╠════════╦════════════════════════════════════════════╣"));
                         System.out.println(ColorText.warning("  ║") + ColorText.cyan("  ID    ") + ColorText.warning("║") + ColorText.cyan("  Name                                     ") + ColorText.warning("║"));
                         System.out.println(ColorText.warning("  ╠════════╬════════════════════════════════════════════╣"));
+                        
                         for (User u : users) {
                             System.out.printf(ColorText.warning("  ║") + "  %-6d" + ColorText.warning("║") + "  %-40s" + ColorText.warning("║") + "%n",
                                     u.getUserId(), truncate(u.getName(), 40));
@@ -294,12 +307,15 @@ public class AdminController {
 
                         System.out.print(ColorText.bold("\n  Enter Customer ID : "));
                         int cid = Integer.parseInt(sc.nextLine());
+                        
                         System.out.print(ColorText.bold("  Message           : "));
                         messageService.replyToCustomer(cid, sc.nextLine());
+                        
                         System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
                         System.out.println(ColorText.warning("  ║") + ColorText.success("  ✔  Reply sent successfully!          ") + ColorText.warning("║"));
                         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
-                    } catch (UserNotFoundException e) {
+                    }
+                    catch (UserNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;

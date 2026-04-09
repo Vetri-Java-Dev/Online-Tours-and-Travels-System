@@ -178,8 +178,6 @@ public class CustomerController {
             }
         }
     }
-
-    // ── Submit feedback ───────────────────────────────────────────────────────
     private void submitFeedback() {
 
         // Get only this logged-in user's bookings
@@ -288,10 +286,12 @@ public class CustomerController {
 
     // ── View package reviews ──────────────────────────────────────────────────
     private void viewPackageReviews() {
+
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("       VIEW PACKAGE REVIEWS           ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
         System.out.print(ColorText.bold("  Enter Package ID : "));
+
         try {
             int packageId = Integer.parseInt(sc.nextLine());
             feedbackService.viewPackageReviews(packageId);
@@ -312,9 +312,12 @@ public class CustomerController {
 
         System.out.print(ColorText.bold("  Travelers  : "));
         int travelers = sc.nextInt();
-        sc.nextLine();
+
+        sc.nextLine(); //buffer
+
         LocalDate date = null;
         String bookingDate;
+
         while (true) {
             System.out.print(ColorText.bold("  Booking Date (YYYY-MM-DD): "));
             bookingDate = sc.nextLine();
@@ -340,13 +343,16 @@ public class CustomerController {
 
         try {
             bookingService.createBooking(booking);
-        } catch (PackageNotFoundException e) {
+        }
+        catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
             return;
-        } catch (NotAvailableSeatsException e) {
+        }
+        catch (NotAvailableSeatsException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
             return;
-        } catch (BookingFailedException e) {
+        }
+        catch (BookingFailedException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
             return;
         }
@@ -379,29 +385,38 @@ public class CustomerController {
         System.out.println(ColorText.warning("║") + "  2.  Credit Card                     " + ColorText.warning("║"));
         System.out.println(ColorText.warning("║") + "  3.  Debit Card                      " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+
         System.out.print(ColorText.bold("  Enter choice: "));
         int choice = sc.nextInt();
+
         sc.nextLine();
 
         Payment payment = null;
         String today = LocalDate.now().toString();
 
         switch (choice) {
+
             case 1:
                 System.out.print(ColorText.bold("  UPI ID         : "));
                 payment = new UPIPayment(amount, today, "SUCCESS", bookingId, sc.nextLine());
                 break;
+
             case 2:
                 System.out.print(ColorText.bold("  Credit Card No : "));
                 String cc = sc.nextLine();
+
                 System.out.print(ColorText.bold("  Holder         : "));
                 payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, sc.nextLine());
+
                 break;
+
             case 3:
                 System.out.print(ColorText.bold("  Debit Card No  : "));
                 String dc = sc.nextLine();
+
                 System.out.print(ColorText.bold("  Bank           : "));
                 payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, sc.nextLine());
+
                 break;
             default:
                 System.out.println(ColorText.error("  ✘  Invalid payment choice."));
@@ -413,7 +428,8 @@ public class CustomerController {
         }
         try {
             new PaymentService().processPayment(payment);
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }

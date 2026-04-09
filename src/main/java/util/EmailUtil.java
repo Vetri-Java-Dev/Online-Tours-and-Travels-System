@@ -22,6 +22,7 @@ public class EmailUtil {
     private static Session createSession() {
 
         Properties props = new Properties();
+
         props.put("mail.smtp.auth","true");
         props.put("mail.smtp.starttls.enable","true");
         props.put("mail.smtp.host","smtp.gmail.com");
@@ -47,7 +48,7 @@ public class EmailUtil {
             }
 
             String html = new BufferedReader(
-                    new InputStreamReader(is, StandardCharsets.UTF_8))
+                    new InputStreamReader(is,StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
 

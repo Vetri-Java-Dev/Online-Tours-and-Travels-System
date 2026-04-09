@@ -15,7 +15,6 @@ public class BookingDAO {
 
 	        Connection con = DBConnection.getConnection();
 
-	       
 	        String query = "INSERT INTO booking(bookingDate, travelers, totalAmount, status, customerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
 	        ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate())); ps.setInt(2, booking.getTravelers());
@@ -23,6 +22,7 @@ public class BookingDAO {
 	        ps.setString(4, booking.getStatus());
 	        ps.setInt(5, booking.getCustomerId());
 	        ps.setInt(6, booking.getPackageId());
+
 	        int rowsAffected = ps.executeUpdate();
 
 	        if (rowsAffected > 0) {
