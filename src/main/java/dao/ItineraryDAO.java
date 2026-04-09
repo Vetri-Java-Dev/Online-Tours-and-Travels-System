@@ -27,11 +27,10 @@ public class ItineraryDAO {
             if (rs.next()) {
 
                 int itineraryId = rs.getInt("itineraryId");
-                int userId      = rs.getInt("userId");
 
                 List<ItineraryItem> items = getItemsByItineraryId(itineraryId);
 
-                itinerary = new Itinerary(itineraryId, packageId, userId, items);
+                itinerary = new Itinerary(itineraryId, packageId, items);
             }
 
         } catch (Exception e) {
@@ -77,11 +76,10 @@ public class ItineraryDAO {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO itinerary(packageId, userId) VALUES(?, ?)";
+            String query = "INSERT INTO itinerary(packageId) VALUES(?)";
             PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, itinerary.getPackageId());
-            ps.setInt(2, itinerary.getUserId());
 
             ps.executeUpdate();
 
@@ -123,11 +121,9 @@ public class ItineraryDAO {
                 PreparedStatement ps3 = con.prepareStatement(deleteItinerary);
                 ps3.setInt(1, itineraryId);
                 ps3.executeUpdate();
-
-                System.out.println("Itinerary deleted successfully!");
             }
             else {
-                System.out.println("No itinerary found for this package.");
+                throw new exception.PackageNotFoundException("No itinerary found for this package.");
             }
 
         } catch (Exception e) {
@@ -135,7 +131,6 @@ public class ItineraryDAO {
         }
     }
 
-    // ✅ ADD ITEMS
     public void addItineraryItems(int itineraryId, List<ItineraryItem> items) {
 
         try {
@@ -154,7 +149,8 @@ public class ItineraryDAO {
 
             ps.executeBatch();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

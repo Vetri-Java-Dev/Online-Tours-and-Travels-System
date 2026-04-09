@@ -1,3 +1,5 @@
+// Author: Subhashree R
+// PaymentDAO.java - Handles database logic for user and admin payments
 package dao;
 
 import model.Payment;
@@ -5,8 +7,10 @@ import util.ColorText;
 import util.DBConnection;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 
 public class PaymentDAO {
 
@@ -16,12 +20,23 @@ public class PaymentDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO payment(amount,paymentDate,status,bookingId,paymentMethod) VALUES(?,?,?,?,?)";
+            String query = "INSERT INTO payment(amount, paymentDate, status, bookingId, paymentMethod) VALUES(?,?,?,?,?)";
 
             PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
+            // Safely resolve paymentDate — fall back to today if null or unparseable
+            java.sql.Date sqlDate;
+            try {
+                String dateStr = payment.getPaymentDate();
+                sqlDate = (dateStr != null && !dateStr.isEmpty())
+                        ? java.sql.Date.valueOf(LocalDate.parse(dateStr))
+                        : java.sql.Date.valueOf(LocalDate.now());
+            } catch (Exception dateEx) {
+                sqlDate = java.sql.Date.valueOf(LocalDate.now());
+            }
+
             ps.setDouble(1, payment.getAmount());
-            ps.setString(2, payment.getPaymentDate());
+            ps.setDate(2, sqlDate);
             ps.setString(3, payment.getStatus());
             ps.setInt(4, payment.getBookingId());
             ps.setString(5, payment.getPaymentMethod());
@@ -86,43 +101,115 @@ public class PaymentDAO {
 
 
     public void viewPaymentHistory(int bookingId) {
-
         try {
-
             Connection con = DBConnection.getConnection();
-
             String query = "SELECT * FROM payment WHERE bookingId=?";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookingId);
-
             ResultSet rs = ps.executeQuery();
 
             boolean found = false;
 
-            while(rs.next()) {
-
+            while (rs.next()) {
                 found = true;
 
-                System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
-                System.out.println(ColorText.warning("  ║") + ColorText.bold("                PAYMENT DETAILS                   ") + ColorText.warning("║"));
-                System.out.println(ColorText.warning("  ╠══════════════════════════════════════════════════╣"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Payment ID   ") + ": %-32d" + ColorText.warning("║") + "%n", rs.getInt("paymentId"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Amount       ") + ": Rs. %-28.2f" + ColorText.warning("║") + "%n", rs.getDouble("amount"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Payment Date ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("paymentDate"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Method       ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("paymentMethod"));
-                System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Status       ") + ": %-32s" + ColorText.warning("║") + "%n", rs.getString("status"));
-                System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+                System.out.println(ColorText.bold("\n  PAYMENT DETAILS"));
+                System.out.println(ColorText.warning("  ─────────────────────────────────────"));
+                System.out.println("  " + ColorText.cyan("Payment ID   ") + ": " + rs.getInt("paymentId"));
+                System.out.println("  " + ColorText.cyan("Amount       ") + ": Rs. " + String.format("%.2f", rs.getDouble("amount")));
+                System.out.println("  " + ColorText.cyan("Payment Date ") + ": " + rs.getString("paymentDate"));
+                System.out.println("  " + ColorText.cyan("Method       ") + ": " + rs.getString("paymentMethod"));
+                System.out.println("  " + ColorText.cyan("Status       ") + ": " + rs.getString("status"));
+                System.out.println(ColorText.warning("  ─────────────────────────────────────"));
             }
 
-            if(!found) {
-                System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
-                System.out.println(ColorText.warning("  ║") + ColorText.yellow("  No payment records found for this booking.      ") + ColorText.warning("║"));
-                System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+            if (!found) {
+                System.out.println(ColorText.yellow("\n  No payment records found for this booking."));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void viewPaymentHistoryByCustomerId(int customerId) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT pay.*, p.destination FROM payment pay " +
+                           "JOIN booking b ON pay.bookingId = b.bookingId " +
+                           "JOIN tour_package p ON b.packageId = p.packageId " +
+                           "WHERE b.customerId = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                if (!found) {
+                    System.out.println(ColorText.warning("\n  ╔════════════╦══════════════════════╦═════════════╦══════════════╦════════════╗"));
+                    System.out.println(ColorText.warning("  ║") + ColorText.cyan(" Payment ID ") + ColorText.warning("║") + ColorText.cyan(" Package Name         ") + ColorText.warning("║") + ColorText.cyan(" Amount      ") + ColorText.warning("║") + ColorText.cyan(" Method       ") + ColorText.warning("║") + ColorText.cyan(" Status     ") + ColorText.warning("║"));
+                    System.out.println(ColorText.warning("  ╠════════════╬══════════════════════╬═════════════╬══════════════╬════════════╣"));
+                    found = true;
+                }
+                String packageName = rs.getString("destination");
+                if (packageName.length() > 20) packageName = packageName.substring(0, 17) + "...";
+
+                System.out.printf(ColorText.warning("  ║") + "  %-10d" + ColorText.warning("║") + "  %-20s" + ColorText.warning("║") + " Rs. %-8.2f" + ColorText.warning("║") + "  %-12s" + ColorText.warning("║") + "  %-10s" + ColorText.warning("║") + "%n",
+                        rs.getInt("paymentId"),
+                        packageName,
+                        rs.getDouble("amount"),
+                        rs.getString("paymentMethod"),
+                        rs.getString("status"));
             }
 
+            if (found) {
+                System.out.println(ColorText.warning("  ╚════════════╩══════════════════════╩═════════════╩══════════════╩════════════╝"));
+            } else {
+                System.out.println(ColorText.yellow("\n  No payment history found for your account."));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
+
+    public void viewAllPaymentHistory() {
+        try {
+            Connection con = DBConnection.getConnection();
+            String query = "SELECT pay.*, u.name, p.destination FROM payment pay " +
+                           "JOIN booking b ON pay.bookingId = b.bookingId " +
+                           "JOIN users u ON b.customerId = u.userId " +
+                           "JOIN tour_package p ON b.packageId = p.packageId";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                if (!found) {
+                    System.out.println(ColorText.warning("\n  ╔════════════╦══════════════════════╦══════════════════════╦═════════════╦════════════╗"));
+                    System.out.println(ColorText.warning("  ║") + ColorText.cyan(" Payment ID ") + ColorText.warning("║") + ColorText.cyan(" Customer Name        ") + ColorText.warning("║") + ColorText.cyan(" Package Name         ") + ColorText.warning("║") + ColorText.cyan(" Amount      ") + ColorText.warning("║") + ColorText.cyan(" Status     ") + ColorText.warning("║"));
+                    System.out.println(ColorText.warning("  ╠════════════╬══════════════════════╬══════════════════════╬═════════════╬════════════╣"));
+                    found = true;
+                }
+                String customerName = rs.getString("name");
+                if (customerName.length() > 20) customerName = customerName.substring(0, 17) + "...";
+                String packageName = rs.getString("destination");
+                if (packageName.length() > 20) packageName = packageName.substring(0, 17) + "...";
+
+                System.out.printf(ColorText.warning("  ║") + "  %-10d" + ColorText.warning("║") + "  %-20s" + ColorText.warning("║") + "  %-20s" + ColorText.warning("║") + " Rs. %-8.2f" + ColorText.warning("║") + "  %-10s" + ColorText.warning("║") + "%n",
+                        rs.getInt("paymentId"),
+                        customerName,
+                        packageName,
+                        rs.getDouble("amount"),
+                        rs.getString("status"));
+            }
+
+            if (found) {
+                System.out.println(ColorText.warning("  ╚════════════╩══════════════════════╩══════════════════════╩═════════════╩════════════╝"));
+            } else {
+                System.out.println(ColorText.yellow("\n  No payment records found in the system."));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

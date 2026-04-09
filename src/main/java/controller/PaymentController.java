@@ -1,5 +1,6 @@
 package controller;
 
+import exception.*;
 import model.*;
 import service.PaymentService;
 import util.ColorText;
@@ -25,7 +26,11 @@ public class PaymentController {
             return;
         }
 
-        paymentService.processPayment(payment);
+        try {
+            paymentService.processPayment(payment);
+        } catch (PaymentFailedException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+        }
     }
 
     public void processUPIPayment(double amount, String date, int bookingId, String upiId) {
@@ -49,7 +54,11 @@ public class PaymentController {
         System.out.println(ColorText.success("  ✔  Amount is valid: ") + ColorText.cyan("Rs. " + amount));
 
         UPIPayment upiPayment = new UPIPayment(amount, date, "PENDING", bookingId, upiId);
-        paymentService.processPayment(upiPayment);
+        try {
+            paymentService.processPayment(upiPayment);
+        } catch (PaymentFailedException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+        }
     }
 
     public void processCreditCardPayment(double amount, String date, int bookingId,
@@ -61,7 +70,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
         String cardError = PaymentValidationUtil.validateCreditCard(
-            cardNumber, holderName, expiry, cvv
+                cardNumber, holderName, expiry, cvv
         );
         if (cardError != null) {
             System.out.println(ColorText.error("  ✘  Credit Card Validation Failed: " + cardError));
@@ -82,9 +91,13 @@ public class PaymentController {
         System.out.println(ColorText.success("  ✔  Amount is valid: ") + ColorText.cyan("Rs. " + amount));
 
         CreditCardPayment ccPayment = new CreditCardPayment(
-            amount, date, "PENDING", bookingId, cardNumber, holderName
+                amount, date, "PENDING", bookingId, cardNumber, holderName
         );
-        paymentService.processPayment(ccPayment);
+        try {
+            paymentService.processPayment(ccPayment);
+        } catch (PaymentFailedException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+        }
     }
 
     public void processDebitCardPayment(double amount, String date, int bookingId,
@@ -96,7 +109,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
         String cardError = PaymentValidationUtil.validateDebitCard(
-            cardNumber, bankName, expiry, cvv
+                cardNumber, bankName, expiry, cvv
         );
         if (cardError != null) {
             System.out.println(ColorText.error("  ✘  Debit Card Validation Failed: " + cardError));
@@ -117,9 +130,13 @@ public class PaymentController {
         System.out.println(ColorText.success("  ✔  Amount is valid: ") + ColorText.cyan("Rs. " + amount));
 
         DebitCardPayment dcPayment = new DebitCardPayment(
-            amount, date, "PENDING", bookingId, cardNumber, bankName
+                amount, date, "PENDING", bookingId, cardNumber, bankName
         );
-        paymentService.processPayment(dcPayment);
+        try {
+            paymentService.processPayment(dcPayment);
+        } catch (PaymentFailedException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+        }
     }
 
     public boolean verifyUPIId(String upiId) {
@@ -146,7 +163,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
         String error = PaymentValidationUtil.validateCreditCard(
-            cardNumber, holderName, expiry, cvv
+                cardNumber, holderName, expiry, cvv
         );
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
@@ -169,7 +186,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
         String error = PaymentValidationUtil.validateDebitCard(
-            cardNumber, bankName, expiry, cvv
+                cardNumber, bankName, expiry, cvv
         );
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
@@ -200,12 +217,15 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("           PAYMENT — VIEW             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        Payment payment = paymentService.viewPayment(paymentId);
-
-        if (payment != null) {
-            System.out.println(ColorText.success("  ✔  Payment retrieved successfully."));
-        } else {
-            System.out.println(ColorText.error("  ✘  Failed to retrieve payment."));
+        try {
+            Payment payment = paymentService.viewPayment(paymentId);
+            if (payment != null) {
+                System.out.println(ColorText.success("  ✔  Payment retrieved successfully."));
+            } else {
+                System.out.println(ColorText.error("  ✘  Failed to retrieve payment."));
+            }
+        } catch (PaymentFailedException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
 
@@ -215,7 +235,11 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("         PAYMENT — HISTORY            ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        paymentService.viewPaymentHistory(bookingId);
+        try {
+            paymentService.viewPaymentHistory(bookingId);
+        } catch (BookingNotFoundException e) {
+            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+        }
     }
 
     // =========================================================================

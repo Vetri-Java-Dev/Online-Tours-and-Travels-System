@@ -15,8 +15,21 @@ public class Customer extends User{
 		this.contactDetail = contactDetail;
 		this.bookingHistory = bookingHistory;
 	}
-	
-	
-	
+
+	public Customer() {
+		super();
+	}
+
+	public String getPreference() {
+		return preference;
+	}
+
+	public String getContactDetail() {
+		return contactDetail;
+	}
+
+	public List<Integer> getBookingHistory() {
+		return bookingHistory;
+	}
 
 }

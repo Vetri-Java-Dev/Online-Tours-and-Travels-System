@@ -25,7 +25,6 @@ public class TourPackageDAO {
             ps.setInt(5, tourPackage.getAvailableSeats());
 
             ps.executeUpdate();
-            System.out.println("Package saved to database");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,10 +72,10 @@ public class TourPackageDAO {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
 
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------------------");
             System.out.printf("| %-10s | %-35s | %-10s | %-15s | %-10s |\n",
                     "PackageID", "Destination", "Price", "Duration", "Seats");
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------------------");
 
             while (rs.next()) {
                 System.out.printf("| %-10d | %-35s | %-10.2f | %-15d | %-10d |\n",
@@ -87,7 +86,7 @@ public class TourPackageDAO {
                         rs.getInt("availableSeats"));
             }
 
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("------------------------------------------------------------------------------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,10 +224,8 @@ public class TourPackageDAO {
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Package updated successfully!");
                 return true;
             } else {
-                System.out.println("Package ID not found!");
                 return false;
             }
 
@@ -251,10 +248,8 @@ public class TourPackageDAO {
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Package deleted successfully!");
                 return true;
             } else {
-                System.out.println("Package ID not found!");
                 return false;
             }
         } catch (Exception e) {

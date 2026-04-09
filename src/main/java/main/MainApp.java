@@ -2,6 +2,8 @@ package main;
 
 import java.util.Scanner;
 import controller.LoginController;
+import model.Admin;
+import model.Customer;
 import model.User;
 import service.UserService;
 import util.ColorText;
@@ -13,7 +15,7 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
         LoginController loginController = new LoginController();
-
+      
         while(true) {
 
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
@@ -23,8 +25,8 @@ public class MainApp {
             System.out.println(ColorText.warning("║") + "  2.  Login                           " + ColorText.warning("║"));
             System.out.println(ColorText.warning("║") + "  3.  Exit                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+            
             System.out.print(ColorText.bold("  Enter choice: "));
-
             int choice = sc.nextInt();
             sc.nextLine();
 
@@ -57,12 +59,13 @@ public class MainApp {
 
                     String role = (roleChoice == 2) ? "ADMIN" : "CUSTOMER";
 
-                    User user = new User();
-                    user.setName(name);
-                    user.setEmail(email);
-                    user.setPassword(password);
-                    user.setPhone(phone);
-                    user.setRole(role);
+                    User user;
+                    if (role.equals("ADMIN")) {
+                        user = new Admin(0, name, email, password, phone, role);
+                    }
+                    else {
+                        user = new Customer(0, name, email, password, phone, role, null, null, null);
+                    }
 
                     userService.registerUser(user);
                     break;
@@ -72,14 +75,16 @@ public class MainApp {
                     break;
 
                 case 3:
+                	
                     System.out.println(ColorText.success("\n  Thank you for using Tour & Travel System!"));
                     System.out.println(ColorText.success("  Goodbye!\n"));
                     sc.close();
+                    
                     System.exit(0);
 
                 default:
                     System.out.println(ColorText.error("\n  Invalid choice. Please enter 1, 2 or 3."));
             }
+          }
         }
-    }
 }

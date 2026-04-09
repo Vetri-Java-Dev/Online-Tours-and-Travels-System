@@ -41,8 +41,6 @@ public class BookingDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
 	public Booking viewBooking(int bookingId) {
 
 		Booking booking = null;
@@ -114,8 +112,6 @@ public class BookingDAO {
 				Booking b = new Booking();
 
 				b.setBookingId(rs.getInt("bookingId"));
-				// b.setCustomerName(rs.getString("name"));
-				// b.setPackageName(rs.getString("destination"));
 				LocalDate date = rs.getObject("bookingDate", LocalDate.class);
 				if (date != null) {
 					b.setBookingDate(date);

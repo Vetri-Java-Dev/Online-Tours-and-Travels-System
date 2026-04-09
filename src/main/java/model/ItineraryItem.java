@@ -13,6 +13,7 @@ public class ItineraryItem {
         this.activity = activity;
         this.location = location;
     }
+    
     public int getItemId() {
         return itemId;
     }

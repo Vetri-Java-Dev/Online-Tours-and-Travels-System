@@ -1,3 +1,5 @@
+// Author: Subhashree R
+// PaymentService.java - Business logic for processing payments and history
 package service;
 
 import dao.PaymentDAO;
@@ -65,13 +67,17 @@ public class PaymentService {
 
     // Validates payment based on its type (UPI, Credit Card, or Debit Card)
     private String validatePaymentByType(Payment payment) {
+    	
         if (payment instanceof UPIPayment) {
             return validateUPIPayment((UPIPayment) payment);
-        } else if (payment instanceof CreditCardPayment) {
+        }
+        else if (payment instanceof CreditCardPayment) {
             return validateCreditCardPayment((CreditCardPayment) payment);
-        } else if (payment instanceof DebitCardPayment) {
+        }
+        else if (payment instanceof DebitCardPayment) {
             return validateDebitCardPayment((DebitCardPayment) payment);
-        } else {
+        }
+        else {
             return "Unknown payment type.";
         }
     }
@@ -135,6 +141,7 @@ public class PaymentService {
         System.out.println(ColorText.success("    ✔  Bank Name validated   : ") + ColorText.cyan(bankName));
         System.out.println(ColorText.success("    ✔  Expiry Date validated"));
         System.out.println(ColorText.success("    ✔  CVV validated"));
+        
         return null;
     }
 
@@ -209,6 +216,22 @@ public class PaymentService {
         }
 
         paymentDAO.viewPaymentHistory(bookingId);
+    }
+
+    public void viewPaymentHistoryByCustomerId(int customerId) {
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("            MY PAYMENT HISTORY                    ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+
+        paymentDAO.viewPaymentHistoryByCustomerId(customerId);
+    }
+
+    public void viewAllPaymentHistory() {
+        System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════════════════╗"));
+        System.out.println(ColorText.warning("  ║") + ColorText.bold("            ALL SYSTEM PAYMENTS                   ") + ColorText.warning("║"));
+        System.out.println(ColorText.warning("  ╚══════════════════════════════════════════════════╝"));
+
+        paymentDAO.viewAllPaymentHistory();
     }
 
     // Verify if a payment is valid before processing
