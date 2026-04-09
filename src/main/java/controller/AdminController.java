@@ -411,7 +411,7 @@ public class AdminController {
             switch(c) {
                 case 1: addItinerary(); break;
                 case 2: viewItinerary(); break;
-                case 3: addItinerary(); break;
+                case 3: modifyItinerary(); break;
                 case 4:
                     System.out.print(ColorText.bold("  Itinerary ID: "));
                     try {
@@ -427,12 +427,17 @@ public class AdminController {
 
     private void addItinerary() {
         try {
+            System.out.print(ColorText.bold("  Package ID     : "));
             int pid = Integer.parseInt(sc.nextLine());
+            System.out.print(ColorText.bold("  Number of Days : "));
             int days = Integer.parseInt(sc.nextLine());
-
             List<ItineraryItem> items = new ArrayList<>();
-            for(int i=1;i<=days;i++) {
-                items.add(new ItineraryItem(0,i,sc.nextLine(),sc.nextLine()));
+            for (int i = 1; i <= days; i++) {
+                System.out.print(ColorText.bold("  Day " + i + " Activity : "));
+                String activity = sc.nextLine();
+                System.out.print(ColorText.bold("  Day " + i + " Location : "));
+                String location = sc.nextLine();
+                items.add(new ItineraryItem(0, i, activity, location));
             }
             itineraryService.createItinerary(new Itinerary(0, pid, items));
         } catch (PackageNotFoundException e) {
@@ -442,12 +447,37 @@ public class AdminController {
 
     private void viewItinerary() {
         try {
+            System.out.print(ColorText.bold("  Package ID: "));
             Itinerary it = itineraryService.viewItinerary(Integer.parseInt(sc.nextLine()));
-            if(it!=null) it.getItems().forEach(i->System.out.println(
-                    ColorText.cyan("  Day " + i.getDayNumber()) + " : " + i.getLocation()));
+            if (it == null || it.getItems().isEmpty()) {
+                System.out.println(ColorText.error("  No itinerary found for this package."));
+                return;
+            }
+            it.getItems().forEach(i -> System.out.println(
+                ColorText.cyan("  Day " + i.getDayNumber()) +
+                " | Activity: " + i.getActivity() +
+                " | Location: " + i.getLocation()
+            ));
         } catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
+    }
+    
+    private void modifyItinerary() {
+        System.out.print(ColorText.bold("  Package ID: "));
+        int pid = Integer.parseInt(sc.nextLine());
+        itineraryService.deleteItinerary(pid);   // delete old items
+        System.out.print(ColorText.bold("  Number of Days: "));
+        int days = Integer.parseInt(sc.nextLine());
+        List<ItineraryItem> items = new ArrayList<>();
+        for (int i = 1; i <= days; i++) {
+            System.out.print(ColorText.bold("  Day " + i + " Activity : "));
+            String activity = sc.nextLine();
+            System.out.print(ColorText.bold("  Day " + i + " Location : "));
+            String location = sc.nextLine();
+            items.add(new ItineraryItem(0, i, activity, location));
+        }
+        itineraryService.createItinerary(new Itinerary(0, pid, items));
     }
 
     // ================= REPORT =================
