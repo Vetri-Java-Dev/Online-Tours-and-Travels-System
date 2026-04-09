@@ -41,6 +41,8 @@ public class BookingDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
 	public Booking viewBooking(int bookingId) {
 
 		Booking booking = null;
