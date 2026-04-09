@@ -16,6 +16,7 @@ public class ItineraryService {
         if(packageId <= 0) {
             System.out.println(ColorText.error("  Invalid Package ID."));
             return;
+        }
         dao.deleteItineraryByPackageId(packageId);
     }
 

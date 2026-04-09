@@ -1,6 +1,7 @@
 package dao;
 
 import model.TourPackage;
+import util.ColorText;
 import util.DBConnection;
 
 import java.sql.*;
@@ -72,22 +73,42 @@ public class TourPackageDAO {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
 
-            System.out.println("------------------------------------------------------------------------------------------------");
-            System.out.printf("| %-10s | %-35s | %-10s | %-15s | %-10s |\n",
-                    "PackageID", "Destination", "Price", "Duration", "Seats");
-            System.out.println("------------------------------------------------------------------------------------------------");
+            System.out.println(ColorText.warning("\n┌──────────┬─────────────────────────────────────┬────────────┬───────────────┬──────────┐"));
+
+            System.out.println(
+                ColorText.warning("│") +
+                String.format(" %-8s ", "ID") +
+                ColorText.warning("│") +
+                String.format(" %-35s ", "Destination") +
+                ColorText.warning("│") +
+                String.format(" %-10s ", "Price") +
+                ColorText.warning("│") +
+                String.format(" %-13s ", "Duration") +
+                ColorText.warning("│") +
+                String.format(" %-8s ", "Seats") +
+                ColorText.warning("│")
+            );
+
+            System.out.println(ColorText.warning("├──────────┼─────────────────────────────────────┼────────────┼───────────────┼──────────┤"));
 
             while (rs.next()) {
-                System.out.printf("| %-10d | %-35s | %-10.2f | %-15d | %-10d |\n",
-                        rs.getInt("packageId"),
-                        rs.getString("destination"),
-                        rs.getDouble("price"),
-                        rs.getInt("duration"),
-                        rs.getInt("availableSeats"));
+
+                System.out.println(
+                    ColorText.warning("│") +
+                    String.format(" %-8d ", rs.getInt("packageId")) +
+                    ColorText.warning("│") +
+                    String.format(" %-35s ", rs.getString("destination")) +
+                    ColorText.warning("│") +
+                    String.format(" %-10.2f ", rs.getDouble("price")) +
+                    ColorText.warning("│") +
+                    String.format(" %-13d ", rs.getInt("duration")) +
+                    ColorText.warning("│") +
+                    String.format(" %-8d ", rs.getInt("availableSeats")) +
+                    ColorText.warning("│")
+                );
             }
 
-            System.out.println("------------------------------------------------------------------------------------------------");
-
+            System.out.println(ColorText.warning("└──────────┴─────────────────────────────────────┴────────────┴───────────────┴──────────┘"));
         } catch (Exception e) {
             e.printStackTrace();
         }

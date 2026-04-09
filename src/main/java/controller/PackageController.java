@@ -129,39 +129,47 @@ public class PackageController {
 
     // ================= CUSTOMER: SEARCH PACKAGE =================
     public void customerSearchPackage() {
-        System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
+    	System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           SEARCH PACKAGE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
         System.out.println(ColorText.warning("║") + "  1.  Search by Destination           " + ColorText.warning("║"));
         System.out.println(ColorText.warning("║") + "  2.  Sort Packages                   " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        
         System.out.print(ColorText.bold("  Enter choice: "));
-        int opt = sc.nextInt();
-        sc.nextLine(); // clear buffer
-        
+        int opt = Integer.parseInt(sc.nextLine());  // ✅ fixed
+
         List<TourPackage> list = service.getAllPackages();
-        
+
         if (opt == 1) {
             System.out.print(ColorText.bold("  Destination: "));
-            try {
-                list = service.searchByDestination(sc.nextLine());
-            } catch (PackageNotFoundException e) {
-                System.out.println(ColorText.error("  " + e.getMessage()));
+            list = service.searchByDestination(sc.nextLine());
+            if (list.isEmpty()) {
+                System.out.println(ColorText.error("  No packages found"));
                 return;
             }
-        } else {
-            System.out.println(ColorText.warning("\n  1. Sort by Price   2. Sort by Duration"));
+        } else {   
+            System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
+            System.out.println(ColorText.warning("║") + ColorText.bold("            SORT PACKAGES             ") + ColorText.warning("║"));
+            System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
+            System.out.println(ColorText.warning("║") + "  1. Price    - Low to High           " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  2. Price    - High to Low           " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  3. Duration - Low to High           " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("║") + "  4. Duration - High to Low           " + ColorText.warning("║"));
+            System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
             System.out.print(ColorText.bold("  Enter choice: "));
-            if (sc.nextInt() == 1) {
-                Collections.sort(list, new PriceComparator());
-            } else {
-                Collections.sort(list, new DurationComparator());
+
+            int sortChoice = Integer.parseInt(sc.nextLine());
+
+            switch (sortChoice) {
+                case 1: Collections.sort(list, new PriceComparator(true));     break;
+                case 2: Collections.sort(list, new PriceComparator(false));    break;
+                case 3: Collections.sort(list, new DurationComparator(true));  break;
+                case 4: Collections.sort(list, new DurationComparator(false)); break;
+                default: System.out.println(ColorText.error("  Invalid choice.")); return;
             }
         }
-        
-        for (TourPackage t : list) {
-            System.out.println("  " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
-        }
+
+        for (TourPackage t : list)
+            System.out.println("  ID: " + t.getPackageId() + " - " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
     }
 }
