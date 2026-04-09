@@ -9,24 +9,14 @@ public class Booking {
 	private int travelers;
 	private double totalAmount;
 	private String status;
+	private String packageName;
 	private int customerId;
 	private int packageId;
 
 	public Booking() {
 	}
 
-	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount, String status,
-			int customerId, int packageId, String customerName, String packageName) {
-		super();
-		this.bookingId = bookingId;
-		this.bookingDate = bookingDate;
-		this.travelers = travelers;
-		this.totalAmount = totalAmount;
-		this.status = status;
-		this.customerId = customerId;
-		this.packageId = packageId;
-	}
-
+	
 	public int getBookingId() {
 		return bookingId;
 	}
@@ -45,14 +35,6 @@ public class Booking {
 
 	public String getStatus() {
 		return status;
-	}
-
-	public int getCustomerId() {
-		return customerId;
-	}
-
-	public int getPackageId() {
-		return packageId;
 	}
 
 	public void setStatus(String status) {
@@ -74,13 +56,29 @@ public class Booking {
 	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
+	public String getPackageName() {
+	    return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+	    this.packageName = packageName;
+	}
+	public int getCustomerId() {
+	    return customerId;
+	}
 
 	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	    this.customerId = customerId;
+	}
+
+	public int getPackageId() {
+	    return packageId;
 	}
 
 	public void setPackageId(int packageId) {
-		this.packageId = packageId;
+	    this.packageId = packageId;
 	}
+
+
 
 }

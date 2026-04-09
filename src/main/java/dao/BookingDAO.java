@@ -153,9 +153,8 @@ public class BookingDAO {
 
 		try {
 			Connection con = DBConnection.getConnection();
-			String query = "SELECT b.*, u.name AS customerName, p.destination AS packageName FROM booking b "
-					+ "JOIN users u ON b.customerId = u.userId "
-					+ "JOIN tour_package p ON b.packageId = p.packageId WHERE b.customerId=?";
+			String query = "SELECT b.*, p.destination FROM booking b "
+			        + "JOIN tour_package p ON b.packageId = p.packageId WHERE b.customerId=?";
 			PreparedStatement ps = con.prepareStatement(query);
 
 			ps.setInt(1, customerId);
@@ -163,10 +162,16 @@ public class BookingDAO {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
-				Booking b = new Booking(rs.getInt("bookingId"), rs.getObject("bookingDate", LocalDate.class),
-						rs.getInt("travelers"), rs.getDouble("totalAmount"), rs.getString("status"),
-						rs.getInt("customerId"), rs.getInt("packageId"), rs.getString("customerName"),
-						rs.getString("packageName"));
+				Booking b = new Booking();
+				b.setBookingId(rs.getInt("bookingId"));
+				b.setBookingDate(rs.getObject("bookingDate", LocalDate.class));
+				b.setTravelers(rs.getInt("travelers"));
+				b.setTotalAmount(rs.getDouble("totalAmount"));
+				b.setStatus(rs.getString("status"));
+				b.setCustomerId(rs.getInt("customerId"));
+				b.setPackageId(rs.getInt("packageId"));
+				b.setPackageName(rs.getString("destination"));
+
 				list.add(b);
 			}
 		} catch (Exception e) {
