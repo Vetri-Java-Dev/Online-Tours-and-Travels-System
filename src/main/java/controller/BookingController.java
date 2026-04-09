@@ -93,12 +93,11 @@ public class BookingController {
 
         // Rows
         for (Booking b : list) {
-            System.out.printf("%-6d | %-20s | %-20s | %-12s | %-10s%n",
-                    b.getBookingId(),
-                    truncate(b.getCustomerName(), 20),
-                    truncate(b.getPackageName(), 20),
-                    b.getBookingDate(),
-                    b.getStatus());
+           
+        	System.out.printf("%-6d | %-12s | %-10s%n",
+        	        b.getBookingId(),
+        	        b.getBookingDate(),
+        	        b.getStatus());
         }
 
         System.out.println("\n" + ColorText.bold("===========================================\n"));
