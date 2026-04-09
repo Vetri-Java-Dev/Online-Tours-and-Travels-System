@@ -434,7 +434,7 @@ public class AdminController {
             for(int i=1;i<=days;i++) {
                 items.add(new ItineraryItem(0,i,sc.nextLine(),sc.nextLine()));
             }
-            itineraryService.createItinerary(new Itinerary(0,pid,1,items));
+            itineraryService.createItinerary(new Itinerary(0, pid, items));
         } catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }

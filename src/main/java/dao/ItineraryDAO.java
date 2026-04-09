@@ -27,11 +27,10 @@ public class ItineraryDAO {
             if (rs.next()) {
 
                 int itineraryId = rs.getInt("itineraryId");
-                int userId      = rs.getInt("userId");
 
                 List<ItineraryItem> items = getItemsByItineraryId(itineraryId);
 
-                itinerary = new Itinerary(itineraryId, packageId, userId, items);
+                itinerary = new Itinerary(itineraryId, packageId, items);
             }
 
         } catch (Exception e) {
@@ -77,11 +76,10 @@ public class ItineraryDAO {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "INSERT INTO itinerary(packageId, userId) VALUES(?, ?)";
+            String query = "INSERT INTO itinerary(packageId) VALUES(?)";
             PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setInt(1, itinerary.getPackageId());
-            ps.setInt(2, itinerary.getUserId());
 
             ps.executeUpdate();
 
