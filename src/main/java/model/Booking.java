@@ -9,12 +9,12 @@ public class Booking {
     private String status;
     private int customerId;
     private int packageId;
-    private String customerName;
-    private String packageName;
+   /* private String customerName;
+    private String packageName;*/
 
     public Booking() {}
    
-    public String getCustomerName() {
+  /*  public String getCustomerName() {
 		return customerName;
 	}
 
@@ -28,7 +28,7 @@ public class Booking {
 
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
-	}
+	}*/
 
 	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount, String status, int customerId,
 			int packageId, String customerName, String packageName) {
@@ -40,8 +40,8 @@ public class Booking {
 		this.status = status;
 		this.customerId = customerId;
 		this.packageId = packageId;
-		this.customerName = customerName;
-		this.packageName = packageName;
+		//this.customerName = customerName;
+		//this.packageName = packageName;
 	}
 
 	public int getBookingId() {

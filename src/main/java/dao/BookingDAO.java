@@ -14,15 +14,15 @@ public class BookingDAO {
 	    try {
 
 	        Connection con = DBConnection.getConnection();
-
-	       
-	        String query = "INSERT INTO booking(bookingDate, travelers, totalAmount, status, customerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-
+	        String query = "INSERT INTO booking(bookingDate, travelers, totalAmount, status, customerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";	     
+	        PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+	        
 	        ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate())); ps.setInt(2, booking.getTravelers());
 	        ps.setDouble(3, booking.getTotalAmount());
 	        ps.setString(4, booking.getStatus());
 	        ps.setInt(5, booking.getCustomerId());
 	        ps.setInt(6, booking.getPackageId());
+	        
 	        int rowsAffected = ps.executeUpdate();
 
 	        if (rowsAffected > 0) {
@@ -49,9 +49,7 @@ public class BookingDAO {
         try {
 
             Connection con = DBConnection.getConnection();
-
             String query = "SELECT * FROM booking WHERE bookingId=?";
-
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, bookingId);
@@ -71,7 +69,8 @@ public class BookingDAO {
             	booking.setPackageId(rs.getInt("packageId"));
             }
 
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -80,19 +79,19 @@ public class BookingDAO {
     public void updateBooking(Booking booking) {
 
         try {
+        	
             Connection con = DBConnection.getConnection();
-
             String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
-
             PreparedStatement ps = con.prepareStatement(query);
+            
             ps.setDate(1, java.sql.Date.valueOf(booking.getBookingDate()));
             ps.setInt(2, booking.getTravelers());
             ps.setDouble(3, booking.getTotalAmount());
             ps.setInt(4, booking.getBookingId());
+            ps.executeUpdate();
 
-            int rows = ps.executeUpdate();
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -101,8 +100,8 @@ public class BookingDAO {
         List<Booking> list = new ArrayList<>();
 
         try {
+        	
             Connection con = DBConnection.getConnection();
-
             String query = "SELECT b.bookingId, u.name, p.destination, b.bookingDate, b.status " +
                            "FROM booking b " +
                            "JOIN users u ON b.customerId = u.userId " +
@@ -116,8 +115,8 @@ public class BookingDAO {
                 Booking b = new Booking();
 
                 b.setBookingId(rs.getInt("bookingId"));
-                b.setCustomerName(rs.getString("name"));        
-                b.setPackageName(rs.getString("destination")); 
+              //  b.setCustomerName(rs.getString("name"));        
+               // b.setPackageName(rs.getString("destination")); 
                 LocalDate date = rs.getObject("bookingDate", LocalDate.class);
                 if (date != null) {
                     b.setBookingDate(date);
@@ -128,7 +127,8 @@ public class BookingDAO {
                 
             }
 
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -140,13 +140,10 @@ public class BookingDAO {
         try {
 
             Connection con = DBConnection.getConnection();
-
             String query = "UPDATE booking SET status='Cancelled' WHERE bookingId=?";
-
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, bookingId);
-
             ps.executeUpdate();
 
            
@@ -156,13 +153,20 @@ public class BookingDAO {
         }
     }
     public List<Booking> getBookingsByCustomerId(int customerId) {
+    	
         List<Booking> list = new ArrayList<>();
+        
         try {
             Connection con = DBConnection.getConnection();
-            String query = "SELECT b.*, u.name AS customerName, p.destination AS packageName FROM booking b JOIN users u ON b.customerId = u.userId JOIN tour_package p ON b.packageId = p.packageId WHERE b.customerId=?";
+            String query = "SELECT b.*, u.name AS customerName, p.destination AS packageName FROM booking b "
+            		+ "JOIN users u ON b.customerId = u.userId "
+            		+ "JOIN tour_package p ON b.packageId = p.packageId WHERE b.customerId=?";
             PreparedStatement ps = con.prepareStatement(query);
+            
             ps.setInt(1, customerId);
+            
             ResultSet rs = ps.executeQuery();
+            
             while (rs.next()) {
             	Booking b = new Booking(
             		    rs.getInt("bookingId"),
@@ -177,7 +181,10 @@ public class BookingDAO {
             		); 
                 list.add(b);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } 
+        catch (Exception e) { 
+        	e.printStackTrace(); 
+        }
         return list;
     }
 }

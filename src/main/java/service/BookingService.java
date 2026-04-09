@@ -1,6 +1,4 @@
 package service;
-
-
 import dao.BookingDAO;
 import dao.TourPackageDAO;
 import dao.UserDAO;
@@ -16,11 +14,11 @@ public class BookingService {
     private BookingDAO bookingDAO         = new BookingDAO();
     private TourPackageDAO tourPackageDAO = new TourPackageDAO();
 
-    public void createBooking(Booking booking) {
+    public boolean createBooking(Booking booking) {
 
         if (booking.getBookingDate() == null) {
             System.out.println("  Booking date cannot be empty.");
-            return;
+            return false;
         }
         try {
         	LocalDate bookingDate = booking.getBookingDate();
@@ -28,39 +26,43 @@ public class BookingService {
 
             if (bookingDate.isBefore(today)) {
                 System.out.println("  Booking date cannot be in the past.");
-                return;
+                return false;
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("  Invalid date format! Use YYYY-MM-DD.");
-            return;
+            return false;
         }
 
         if (booking.getTravelers() <= 0) {
             System.out.println("  Travelers must be greater than 0.");
-            return;
+            return false;
         }
+        
         TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
+        
         if (tourPackage == null) {
-            System.out.println("Invalid Package ID");
-            return;
+            System.out.println("  Invalid Package ID");
+            return false;
         }
   
         if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
-            System.out.println("Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
-            return;
+            System.out.println("  Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
+            return false;
         }
 
         double totalAmount = tourPackage.getPrice() * booking.getTravelers();
         booking.setTotalAmount(totalAmount);
         booking.setStatus("CONFIRMED");
+        
         User user = new UserDAO().getUserById(booking.getCustomerId());
         TourPackage tourPackageDetails = tourPackageDAO.getPackageById(booking.getPackageId());
 
-        if (user != null && tourPackageDetails != null) {
+       /* if (user != null && tourPackageDetails != null) {
             booking.setCustomerName(user.getName());
             booking.setPackageName(tourPackageDetails.getDestination());
-        }
+        }*/
         bookingDAO.createBooking(booking);
         int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
         tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
@@ -78,11 +80,13 @@ public class BookingService {
                 booking.getTravelers(), booking.getTotalAmount(),
                 booking.getBookingDate().toString()  );
         }
+        return true;
+       
     }
 
     public Booking viewBooking(int bookingId) {
         if (bookingId <= 0) {
-            System.out.println("Invalid Booking ID");
+            System.out.println("  Invalid Booking ID");
             return null;
         }
 
@@ -91,7 +95,7 @@ public class BookingService {
     public void modifyBooking(Booking booking) {
 
         if (booking.getBookingId() <= 0) {
-            System.out.println("Invalid Booking ID");
+            System.out.println("  Invalid Booking ID");
             return;
         }
 
@@ -119,11 +123,10 @@ public class BookingService {
             return;
         }
 
-      
         TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
 
         if (tourPackage == null) {
-            System.out.println("Invalid Package ID");
+            System.out.println("  Invalid Package ID");
             return;
         }
 
@@ -137,7 +140,6 @@ public class BookingService {
         return bookingDAO.getAllBookings();
     }
    
-
     public boolean cancelBooking(int bookingId) {
 
         if (bookingId <= 0) {
