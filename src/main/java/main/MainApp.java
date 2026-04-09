@@ -13,6 +13,11 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
         LoginController loginController = new LoginController();
+        
+        if (args.length > 0) {
+            runAutomationMode(args);
+            return;
+        }
 
         while(true) {
 
@@ -80,6 +85,43 @@ public class MainApp {
                 default:
                     System.out.println(ColorText.error("\n  Invalid choice. Please enter 1, 2 or 3."));
             }
+          }
         }
-    }
+        
+
+	private static void runAutomationMode(String[] args) {
+		UserService userService = new UserService();
+        LoginController loginController = new LoginController();
+
+        try {
+            String operation = args[0];
+
+            switch (operation.toLowerCase()) {
+
+                case "register":
+                    User user = new User();
+                    user.setName(args[1]);
+                    user.setEmail(args[2]);
+                    user.setPassword(args[3]);
+                    user.setPhone(args[4]);
+                    user.setRole(args[5]);
+
+                    userService.registerUser(user);
+                    System.out.println("✅ Registered via Jenkins");
+                    break;
+
+                case "login":
+                    // small overload method needed
+                    //loginController.login(args[1], args[2]);
+                    break;
+
+                default:
+                    System.out.println("❌ Unknown command");
+            }
+
+        } catch (Exception e) {
+            System.out.println("⚠️ " + e.getMessage());
+        }
+		
+	}
 }

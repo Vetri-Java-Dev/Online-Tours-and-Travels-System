@@ -23,8 +23,8 @@ public class FeedbackDAO {
                 return false;
             }
 
-            String sql = "INSERT INTO feedback (bookingId, customerId, packageId, rating, title, description) " +
-                         "VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO feedback (bookingId, customerId, packageId, rating, title, description, status, feedbackDate) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, 'pending', CURRENT_DATE())";
             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, feedback.getBookingId());
             ps.setInt(2, feedback.getCustomerId());

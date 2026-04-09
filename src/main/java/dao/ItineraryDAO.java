@@ -135,7 +135,6 @@ public class ItineraryDAO {
         }
     }
 
-    // ✅ ADD ITEMS
     public void addItineraryItems(int itineraryId, List<ItineraryItem> items) {
 
         try {
@@ -154,7 +153,8 @@ public class ItineraryDAO {
 
             ps.executeBatch();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
