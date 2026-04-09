@@ -150,7 +150,7 @@ public class EmailUtil {
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("OTP email sent to " + toEmail);
+            //System.out.println("OTP email sent to " + toEmail);
 
         }
         catch (Exception e) {
