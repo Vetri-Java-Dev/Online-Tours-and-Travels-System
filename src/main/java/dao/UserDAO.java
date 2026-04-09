@@ -193,7 +193,7 @@ public class UserDAO {
             int rows = ps.executeUpdate();
 
             if(rows > 0) {
-                System.out.println("Password Updated Successfully!");
+                //System.out.println("Password Updated Successfully!");
             } else {
                 System.out.println("Email not found!");
             }

@@ -319,8 +319,8 @@ public class AdminController {
         for (Booking b : list) {
             System.out.printf(ColorText.warning("║") + "  %-5d│ %-18s │ %-18s │ %-10s │ %-9s" + ColorText.warning("║") + "%n",
                 b.getBookingId(),
-                b.getCustomerName().length() > 18 ? b.getCustomerName().substring(0,17)+"…" : b.getCustomerName(),
-                b.getPackageName().length() > 18 ? b.getPackageName().substring(0,17)+"…" : b.getPackageName(),
+                //b.getCustomerName().length() > 18 ? b.getCustomerName().substring(0,17)+"…" : b.getCustomerName(),
+                //b.getPackageName().length() > 18 ? b.getPackageName().substring(0,17)+"…" : b.getPackageName(),
                 b.getBookingDate(),
                 b.getStatus());
         }
