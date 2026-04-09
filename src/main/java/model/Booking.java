@@ -1,37 +1,22 @@
 package model;
-import java.time.LocalDate; 
+
+import java.time.LocalDate;
+
 public class Booking {
 
-    private int bookingId;
-    private LocalDate bookingDate;
-    private int travelers;
-    private double totalAmount;
-    private String status;
-    private int customerId;
-    private int packageId;
-   /* private String customerName;
-    private String packageName;*/
+	private int bookingId;
+	private LocalDate bookingDate;
+	private int travelers;
+	private double totalAmount;
+	private String status;
+	private int customerId;
+	private int packageId;
 
-    public Booking() {}
-   
-  /*  public String getCustomerName() {
-		return customerName;
+	public Booking() {
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}*/
-
-	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount, String status, int customerId,
-			int packageId, String customerName, String packageName) {
+	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount, String status,
+			int customerId, int packageId, String customerName, String packageName) {
 		super();
 		this.bookingId = bookingId;
 		this.bookingDate = bookingDate;
@@ -40,48 +25,48 @@ public class Booking {
 		this.status = status;
 		this.customerId = customerId;
 		this.packageId = packageId;
-		//this.customerName = customerName;
-		//this.packageName = packageName;
 	}
 
 	public int getBookingId() {
-        return bookingId;
-    }
+		return bookingId;
+	}
 
 	public LocalDate getBookingDate() {
-	    return bookingDate;
+		return bookingDate;
 	}
-    public int getTravelers() {
-        return travelers;
-    }
 
-    public double getTotalAmount() {
-        return totalAmount;
-    }
+	public int getTravelers() {
+		return travelers;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public double getTotalAmount() {
+		return totalAmount;
+	}
 
-    public int getCustomerId() {
-        return customerId;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public int getPackageId() {
-        return packageId;
-    }
+	public int getCustomerId() {
+		return customerId;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public int getPackageId() {
+		return packageId;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public void setBookingId(int bookingId) {
 		this.bookingId = bookingId;
 	}
 
 	public void setBookingDate(LocalDate bookingDate) {
-	    this.bookingDate = bookingDate;
+		this.bookingDate = bookingDate;
 	}
+
 	public void setTravelers(int travelers) {
 		this.travelers = travelers;
 	}
@@ -97,6 +82,5 @@ public class Booking {
 	public void setPackageId(int packageId) {
 		this.packageId = packageId;
 	}
-    
-    
+
 }
