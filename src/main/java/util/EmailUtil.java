@@ -158,6 +158,33 @@ public class EmailUtil {
             e.printStackTrace();
         }
     }
+    
+    public static void sendOTPEmailForAdminCredential(String toEmail, String requesterName, String requesterEmail, String otp) {
+        try {
+            // Using empty string for userName since template has {{requesterName}}
+            String html = loadTemplate("admin_credential_otp.html", "");
+            if (html == null) return;
+
+            html = html.replace("{{otp}}", otp);
+            html = html.replace("{{requesterName}}", requesterName);
+            html = html.replace("{{requesterEmail}}", requesterEmail);
+
+            MimeMessage message = new MimeMessage(createSession());
+            
+            message.setFrom(new InternetAddress(FROM_EMAIL));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Admin Credential Request OTP");
+            message.setContent(html, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("OTP email sent to " + toEmail);
+
+        }
+        catch (Exception e) {
+            System.out.println("OTP EMAIL FAILED: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public static void sendAdminBookingAlertEmail(String adminEmail,
             String customerName, int customerId,
