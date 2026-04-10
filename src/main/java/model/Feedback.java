@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 25-March-2026
+ * Description    : Entity model class representing a customer's package rating, review content, and administrative approval status.
+ * Module         : Feedback Module
+ * Java version   : 24
+ */
 package model;
 
 public class Feedback {

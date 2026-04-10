@@ -1,5 +1,10 @@
-// Author: Subhashree R
-// ReportDAO.java - Data extraction for administrative reports
+/*
+ * Author         : Subhashree R
+ * Created Date   : 2-Apr-2026
+ * Description    : Data Access Object for executing complex SQL aggregations to retrieve holistic system metrics and administrative report data.
+ * Module         : Admin Report Module
+ * Java version   : 24
+ */
 package dao;
 
 import model.ReportData.BookingReportRow;
@@ -166,14 +171,15 @@ public class ReportDAO {
 
     /**
      * Returns seat occupancy per package.
-     * bookedSeats = SUM of travelers for CONFIRMED bookings.
-     * availableSeats = tp.availableSeats - bookedSeats (cannot go below 0).
+     * bookedSeats  = SUM of travelers for CONFIRMED bookings.
+     * totalSeats   = Current available seats in DB + bookedSeats (Reconstructs original capacity).
+     * available    = totalSeats - bookedSeats (Matches current available seats in DB).
      */
     public List<PackageAvailabilityRow> getPackageAvailabilityReport() {
         List<PackageAvailabilityRow> list = new ArrayList<>();
         String sql =
             "SELECT tp.packageId, tp.destination, tp.price, tp.duration, " +
-            "       tp.availableSeats AS totalSeats, " +
+            "       (tp.availableSeats + COALESCE(SUM(CASE WHEN b.status = 'CONFIRMED' THEN b.travelers ELSE 0 END), 0)) AS totalSeats, " +
             "       COALESCE(SUM(CASE WHEN b.status = 'CONFIRMED' THEN b.travelers ELSE 0 END), 0) AS bookedSeats, " +
             "       COUNT(CASE WHEN b.status = 'Cancelled' THEN 1 END) AS cancelledBookings " +
             "FROM tour_package tp " +

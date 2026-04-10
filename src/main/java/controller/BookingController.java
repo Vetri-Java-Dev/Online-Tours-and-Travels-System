@@ -254,7 +254,15 @@ public class BookingController {
                 String cc = sc.nextLine();
 
                 System.out.print(ColorText.bold("  Holder         : "));
-                payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, sc.nextLine());
+                String holder = sc.nextLine();
+
+                System.out.print(ColorText.bold("  Expiry (MM/YY) : "));
+                String ccExpiry = sc.nextLine();
+
+                System.out.print(ColorText.bold("  CVV            : "));
+                String ccCvv = sc.nextLine();
+
+                payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, holder, ccExpiry, ccCvv);
 
                 break;
 
@@ -263,7 +271,15 @@ public class BookingController {
                 String dc = sc.nextLine();
 
                 System.out.print(ColorText.bold("  Bank           : "));
-                payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, sc.nextLine());
+                String bank = sc.nextLine();
+
+                System.out.print(ColorText.bold("  Expiry (MM/YY) : "));
+                String dcExpiry = sc.nextLine();
+
+                System.out.print(ColorText.bold("  CVV            : "));
+                String dcCvv = sc.nextLine();
+
+                payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, bank, dcExpiry, dcCvv);
 
                 break;
             default:
