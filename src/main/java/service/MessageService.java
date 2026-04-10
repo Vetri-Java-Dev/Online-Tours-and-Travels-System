@@ -1,5 +1,12 @@
+/*
+ * Author         : Harini R G
+ * Description    : MessageService acts as a service layer that handles business 
+ *                  logic for messaging operations such as sending messages to admin, 
+ *                  replying to customers, viewing unread messages, and retrieving replies.
+ * Module         : Message Module (Service Layer)
+ * Java version   : 25
+ */
 package service;
-
 import dao.MessageDAO;
 import model.Message;
 

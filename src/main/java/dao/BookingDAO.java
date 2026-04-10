@@ -1,3 +1,11 @@
+/*
+ * Author         : Harini R G
+ * Description    : BookingDAO handles all database operations related to booking 
+ *                  such as creating, viewing, updating, cancelling bookings, and 
+ *                  retrieving booking details from the database.
+ * Module         : Booking Module (DAO Layer)
+ * Java version   : 25
+ */
 package dao;
 
 import model.Booking;
@@ -14,7 +22,6 @@ public class BookingDAO {
 	public void createBooking(Booking booking) {
 
 		try {
-
 			Connection con = DBConnection.getConnection();
 			String query = "INSERT INTO booking(bookingDate, travelers, totalAmount, status, customerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -27,9 +34,8 @@ public class BookingDAO {
 			ps.setInt(6, booking.getPackageId());
 
 			int rowsAffected = ps.executeUpdate();
-
+			
 			if (rowsAffected > 0) {
-
 				ResultSet rs = ps.getGeneratedKeys();
 				if (rs.next()) {
 					int bookingId = rs.getInt(1);
@@ -38,7 +44,8 @@ public class BookingDAO {
 
 			}
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -48,17 +55,13 @@ public class BookingDAO {
 		Booking booking = null;
 
 		try {
-
 			Connection con = DBConnection.getConnection();
 			String query = "SELECT * FROM booking WHERE bookingId=?";
 			PreparedStatement ps = con.prepareStatement(query);
 
 			ps.setInt(1, bookingId);
-
 			ResultSet rs = ps.executeQuery();
-
 			if (rs.next()) {
-
 				booking = new Booking();
 
 				booking.setBookingId(rs.getInt("bookingId"));
@@ -70,17 +73,16 @@ public class BookingDAO {
 				booking.setPackageId(rs.getInt("packageId"));
 			}
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return booking;
 	}
 
 	public void updateBooking(Booking booking) {
 
 		try {
-
 			Connection con = DBConnection.getConnection();
 			String query = "UPDATE booking SET bookingDate=?, travelers=?, totalAmount=? WHERE bookingId=?";
 			PreparedStatement ps = con.prepareStatement(query);
@@ -91,7 +93,8 @@ public class BookingDAO {
 			ps.setInt(4, booking.getBookingId());
 			ps.executeUpdate();
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -101,7 +104,6 @@ public class BookingDAO {
 		List<Booking> list = new ArrayList<>();
 
 		try {
-
 			Connection con = DBConnection.getConnection();
 			String query = "SELECT b.bookingId, u.name, p.destination, b.bookingDate, b.status " + "FROM booking b "
 					+ "JOIN users u ON b.customerId = u.userId " + "JOIN tour_package p ON b.packageId = p.packageId";
@@ -110,7 +112,6 @@ public class BookingDAO {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
-
 				Booking b = new Booking();
 
 				b.setBookingId(rs.getInt("bookingId"));
@@ -124,7 +125,8 @@ public class BookingDAO {
 
 			}
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -142,7 +144,8 @@ public class BookingDAO {
 			ps.setInt(1, bookingId);
 			ps.executeUpdate();
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -158,7 +161,6 @@ public class BookingDAO {
 			PreparedStatement ps = con.prepareStatement(query);
 
 			ps.setInt(1, customerId);
-
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -174,7 +176,8 @@ public class BookingDAO {
 
 				list.add(b);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
