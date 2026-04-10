@@ -1,3 +1,11 @@
+/*
+ * Author         : Harini R G
+ * Description    : MessageController handles communication between admin and customers 
+ *                  including viewing messages, replying to customers, sending messages 
+ *                  to admin, and viewing replies.
+ * Module         : Message Module
+ * Java version   : 25
+ */
 package controller;
 
 import java.util.List;
@@ -158,7 +166,8 @@ public class MessageController {
                             }
                         }
                         System.out.println(ColorText.warning("╚══════════════════════════════════════════════════╝"));
-                    } catch (UserNotFoundException e) {
+                    } 
+                    catch (UserNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
