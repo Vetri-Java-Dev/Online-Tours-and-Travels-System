@@ -52,29 +52,22 @@ public class ItineraryController {
     }
 
     private void addItinerary() {
-        System.out.print(ColorText.bold("  Package ID: "));
         try {
+            System.out.print(ColorText.bold("  Package ID     : "));
             int pid = Integer.parseInt(sc.nextLine());
-            System.out.print(ColorText.bold("  Number of Days: "));
+            System.out.print(ColorText.bold("  Number of Days : "));
             int days = Integer.parseInt(sc.nextLine());
-
             List<ItineraryItem> items = new ArrayList<>();
-            for(int i=1; i<=days; i++) {
+            for (int i = 1; i <= days; i++) {
                 System.out.print(ColorText.bold("  Day " + i + " Activity : "));
                 String activity = sc.nextLine();
                 System.out.print(ColorText.bold("  Day " + i + " Location : "));
                 String location = sc.nextLine();
                 items.add(new ItineraryItem(0, i, activity, location));
             }
-            
-            itineraryService.createItinerary(new Itinerary(0, pid,  items));
-            System.out.println(ColorText.success("  Itinerary added successfully!"));
-        }
-        catch (PackageNotFoundException e) {
+            itineraryService.createItinerary(new Itinerary(0, pid, items));
+        } catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
-        }
-        catch (Exception e) {
-            System.out.println(ColorText.error("  Invalid input."));
         }
     }
     

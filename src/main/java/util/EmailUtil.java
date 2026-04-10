@@ -17,7 +17,7 @@ import javax.mail.internet.MimeMessage;
 public class EmailUtil {
 
     private static final String FROM_EMAIL = "onlinetats@gmail.com";
-    private static final String PASSWORD   = "jlxpbnlcpqekpxcj";
+    private static final String PASSWORD   = "yzajrfiiubvirpzq";
 
     private static Session createSession() {
 
@@ -150,7 +150,7 @@ public class EmailUtil {
             message.setContent(html, "text/html; charset=utf-8");
 
             Transport.send(message);
-            System.out.println("OTP email sent to " + toEmail);
+            //System.out.println("OTP email sent to " + toEmail);
 
         }
         catch (Exception e) {

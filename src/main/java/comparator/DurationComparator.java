@@ -1,9 +1,21 @@
 package comparator;
 
-import java.util.Comparator;
 import model.TourPackage;
+import java.util.Comparator;
 
 public class DurationComparator implements Comparator<TourPackage> {
-    public int compare(TourPackage p1, TourPackage p2) {
-    	return Integer.compare(p1.getDuration(), p2.getDuration());    }
+
+    private boolean ascending;
+
+    public DurationComparator(boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    @Override
+    public int compare(TourPackage a, TourPackage b) {
+        if (ascending)
+            return Integer.compare(a.getDuration(), b.getDuration());
+        else
+            return Integer.compare(b.getDuration(), a.getDuration());
+    }
 }

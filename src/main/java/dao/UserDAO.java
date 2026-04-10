@@ -206,6 +206,7 @@ public class UserDAO {
 
             int rows = ps.executeUpdate();
 
+
             if(rows <= 0) {
                 System.out.println("Email not found!");
             }
@@ -220,7 +221,7 @@ public class UserDAO {
         	
             Connection con = DBConnection.getConnection();
             String query = "UPDATE users SET name=?, phone=? WHERE userId=?";
-            
+
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, name);
             ps.setString(2, phone);

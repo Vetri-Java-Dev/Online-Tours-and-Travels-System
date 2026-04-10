@@ -1,6 +1,13 @@
+/*
+ * Author         : Harini R G
+ * Description    : BookingService acts as a service layer that handles business 
+ *                  logic for booking operations such as creating, viewing, modifying, 
+ *                  cancelling bookings, validating inputs, calculating total amount, 
+ *                  updating seat availability, and sending email notifications.
+ * Module         : Booking Module (Service Layer)
+ * Java version   : 25
+ */
 package service;
-
-
 import dao.BookingDAO;
 import dao.TourPackageDAO;
 import dao.UserDAO;
@@ -13,159 +20,161 @@ import model.Booking;
 
 public class BookingService {
 
-    private BookingDAO bookingDAO         = new BookingDAO();
-    private TourPackageDAO tourPackageDAO = new TourPackageDAO();
+	private BookingDAO bookingDAO = new BookingDAO();
+	private TourPackageDAO tourPackageDAO = new TourPackageDAO();
 
-    public void createBooking(Booking booking) {
+	public boolean createBooking(Booking booking) {
 
-        if (booking.getBookingDate() == null) {
-            System.out.println("  Booking date cannot be empty.");
-            return;
-        }
-        try {
-        	LocalDate bookingDate = booking.getBookingDate();
-        	LocalDate today = LocalDate.now();
+		if (booking.getBookingDate() == null) {
+			System.out.println("  Booking date cannot be empty.");
+			return false;
+		}
+		try {
+			LocalDate bookingDate = booking.getBookingDate();
+			LocalDate today = LocalDate.now();
+			if (bookingDate.isBefore(today)) {
+				System.out.println("  Booking date cannot be in the past.");
+				return false;
+			}
 
-            if (bookingDate.isBefore(today)) {
-                System.out.println("  Booking date cannot be in the past.");
-                return;
-            }
+		} 
+		catch (Exception e) {
+			System.out.println("  Invalid date format! Use YYYY-MM-DD.");
+			return false;
+		}
 
-        } catch (Exception e) {
-            System.out.println("  Invalid date format! Use YYYY-MM-DD.");
-            return;
-        }
+		if (booking.getTravelers() <= 0) {
+			System.out.println("  Travelers must be greater than 0.");
+			return false;
+		}
 
-        if (booking.getTravelers() <= 0) {
-            System.out.println("  Travelers must be greater than 0.");
-            return;
-        }
-        TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
-        if (tourPackage == null) {
-            System.out.println("Invalid Package ID");
-            return;
-        }
-  
-        if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
-            System.out.println("Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
-            return;
-        }
+		TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
 
-        double totalAmount = tourPackage.getPrice() * booking.getTravelers();
-        booking.setTotalAmount(totalAmount);
-        booking.setStatus("CONFIRMED");
-        User user = new UserDAO().getUserById(booking.getCustomerId());
-        TourPackage tourPackageDetails = tourPackageDAO.getPackageById(booking.getPackageId());
+		if (tourPackage == null) {
+			System.out.println("  Invalid Package ID");
+			return false;
+		}
 
-        if (user != null && tourPackageDetails != null) {
-            booking.setCustomerName(user.getName());
-            booking.setPackageName(tourPackageDetails.getDestination());
-        }
-        bookingDAO.createBooking(booking);
-        int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
-        tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
-       
-        if (user != null) {
-            EmailUtil.sendBookingConfirmationEmail(
-                user.getEmail(), user.getName(),
-                booking.getBookingId(), booking.getPackageId(),
-                booking.getTravelers(), booking.getTotalAmount(),
-                booking.getBookingDate().toString()
-            );   
-            EmailUtil.sendAdminBookingAlertEmail(
-                "onlinetats@gmail.com", user.getName(), user.getUserId(),
-                booking.getBookingId(), booking.getPackageId(),
-                booking.getTravelers(), booking.getTotalAmount(),
-                booking.getBookingDate().toString()  );
-        }
-    }
+		if (booking.getTravelers() > tourPackage.getAvailableSeats()) {
+			System.out.println("  Seats exceeded! Available seats: " + tourPackage.getAvailableSeats());
+			return false;
+		}
 
-    public Booking viewBooking(int bookingId) {
-        if (bookingId <= 0) {
-            System.out.println("Invalid Booking ID");
-            return null;
-        }
+		double totalAmount = tourPackage.getPrice() * booking.getTravelers();
+		booking.setTotalAmount(totalAmount);
+		booking.setStatus("CONFIRMED");
 
-        return bookingDAO.viewBooking(bookingId);
-    }
-    public void modifyBooking(Booking booking) {
+		User user = new UserDAO().getUserById(booking.getCustomerId());
+		
+		bookingDAO.createBooking(booking);
+		
+		int remainingSeats = tourPackage.getAvailableSeats() - booking.getTravelers();
+		tourPackageDAO.updateAvailableSeats(booking.getPackageId(), remainingSeats);
 
-        if (booking.getBookingId() <= 0) {
-            System.out.println("Invalid Booking ID");
-            return;
-        }
+		if (user != null) {
+			EmailUtil.sendBookingConfirmationEmail(user.getEmail(), user.getName(), booking.getBookingId(),
+					booking.getPackageId(), booking.getTravelers(), booking.getTotalAmount(),
+					booking.getBookingDate().toString());
+			
+			EmailUtil.sendAdminBookingAlertEmail("onlinetats@gmail.com", user.getName(), user.getUserId(),
+					booking.getBookingId(), booking.getPackageId(), booking.getTravelers(), booking.getTotalAmount(),
+					booking.getBookingDate().toString());
+		}
+		return true;
 
-        if (booking.getBookingDate() == null ) {
-            System.out.println("  Booking date cannot be empty.");
-            return;
-        }
+	}
 
-        try {
-        	LocalDate bookingDate = booking.getBookingDate();
-        	LocalDate today = LocalDate.now();
+	public Booking viewBooking(int bookingId) {
+		if (bookingId <= 0) {
+			System.out.println("  Invalid Booking ID");
+			return null;
+		}
 
-            if (bookingDate.isBefore(today)) {
-                System.out.println("  Booking date cannot be in the past.");
-                return;
-            }
+		return bookingDAO.viewBooking(bookingId);
+	}
+	 public Booking viewBookingByCustomer(int bookingId, int customerId) {
+		 
+	        Booking booking = bookingDAO.viewBooking(bookingId);
+	        if (booking == null) {
+	            System.out.println("Booking not found!");
+	            return null;
+	        }
+	        if (booking.getCustomerId() != customerId) {
+	            System.out.println("Access Denied! This booking does not belong to you.");
+	            return null;
+	        }
 
-        } catch (Exception e) {
-            System.out.println("  Invalid date format! Use YYYY-MM-DD.");
-            return;
-        }
+	        return booking;
+	    }
 
-        if (booking.getTravelers() <= 0) {
-            System.out.println("  Travelers must be greater than 0.");
-            return;
-        }
 
-      
-        TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
+	public void modifyBooking(Booking booking) {
 
-        if (tourPackage == null) {
-            System.out.println("Invalid Package ID");
-            return;
-        }
+		if (booking.getBookingId() <= 0) {
+			System.out.println("  Invalid Booking ID");
+			return;
+		}
+		if (booking.getBookingDate() == null) {
+			System.out.println("  Booking date cannot be empty.");
+			return;
+		}
 
-        double totalAmount = tourPackage.getPrice() * booking.getTravelers();
-        booking.setTotalAmount(totalAmount);
+		try {
+			LocalDate bookingDate = booking.getBookingDate();
+			LocalDate today = LocalDate.now();
+			if (bookingDate.isBefore(today)) {
+				System.out.println("  Booking date cannot be in the past.");
+				return;
+			}
 
-        bookingDAO.updateBooking(booking);
+		}
+		catch (Exception e) {
+			System.out.println("  Invalid date format! Use YYYY-MM-DD.");
+			return;
+		}
+		if (booking.getTravelers() <= 0) {
+			System.out.println("  Travelers must be greater than 0.");
+			return;
+		}
 
-    }
-    public List<Booking> getAllBookings() {
-        return bookingDAO.getAllBookings();
-    }
-   
+		TourPackage tourPackage = tourPackageDAO.getPackageById(booking.getPackageId());
 
-    public boolean cancelBooking(int bookingId) {
+		if (tourPackage == null) {
+			System.out.println("  Invalid Package ID");
+			return;
+		}
 
-        if (bookingId <= 0) {
-            return false;
-        }
+		double totalAmount = tourPackage.getPrice() * booking.getTravelers();
+		booking.setTotalAmount(totalAmount);
+		bookingDAO.updateBooking(booking);
 
-        bookingDAO.cancelBooking(bookingId);
+	}
 
-        Booking booking = bookingDAO.viewBooking(bookingId);
+	public List<Booking> getAllBookings() {
+		return bookingDAO.getAllBookings();
+	}
 
-        if (booking != null) {
-            User user = new UserDAO().getUserById(booking.getCustomerId());
+	public boolean cancelBooking(int bookingId) {
 
-            if (user != null) {
-                EmailUtil.sendCancellationEmail(user.getEmail(), user.getName(), bookingId);
+		if (bookingId <= 0) {
+			return false;
+		}
+		bookingDAO.cancelBooking(bookingId);
+		Booking booking = bookingDAO.viewBooking(bookingId);
 
-                EmailUtil.sendAdminCancellationAlertEmail(
-                    "onlinetats@gmail.com",
-                    user.getName(),
-                    user.getUserId(),
-                    bookingId
-                );
-            }
-        }
+		if (booking != null) {
+			User user = new UserDAO().getUserById(booking.getCustomerId());
+			if (user != null) {
+				EmailUtil.sendCancellationEmail(user.getEmail(), user.getName(), bookingId);
+				EmailUtil.sendAdminCancellationAlertEmail("onlinetats@gmail.com", user.getName(), user.getUserId(),
+						bookingId);
+			}
+		}
 
-        return true;
-    }
-    public List<Booking> getBookingsByCustomerId(int customerId) {
-        return bookingDAO.getBookingsByCustomerId(customerId);
-    }
+		return true;
+	}
+
+	public List<Booking> getBookingsByCustomerId(int customerId) {
+		return bookingDAO.getBookingsByCustomerId(customerId);
+	}
 }
