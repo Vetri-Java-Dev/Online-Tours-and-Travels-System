@@ -17,7 +17,7 @@ import javax.mail.internet.MimeMessage;
 public class EmailUtil {
 
     private static final String FROM_EMAIL = "onlinetats@gmail.com";
-    private static final String PASSWORD   = "jlxpbnlcpqekpxcj";
+    private static final String PASSWORD   = "yzajrfiiubvirpzq";
 
     private static Session createSession() {
 

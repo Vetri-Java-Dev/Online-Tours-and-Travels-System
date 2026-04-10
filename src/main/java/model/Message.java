@@ -1,5 +1,13 @@
+/*
+ * Author         : Harini R G
+ * Description    : Message is a model class that represents communication details 
+ *                  between users such as sender ID, receiver ID, message content, 
+ *                  and sender role. It is used to transfer message data between 
+ *                  different layers of the application.
+ * Module         : Message Module (Model Layer)
+ * Java version   : 25
+ */
 package model;
-
 public class Message {
 
     private int senderId;

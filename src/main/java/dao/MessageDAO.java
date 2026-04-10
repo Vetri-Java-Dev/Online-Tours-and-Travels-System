@@ -1,5 +1,12 @@
+/*
+ * Author         : Harini R G
+ * Description    : MessageDAO handles all database operations related to messages 
+ *                  such as sending messages, retrieving unread customer messages, 
+ *                  and fetching admin replies for customers.
+ * Module         : Message Module (DAO Layer)
+ * Java version   : 25
+ */
 package dao;
-
 import model.Message;
 import util.ColorText;
 import util.DBConnection;
@@ -11,7 +18,6 @@ public class MessageDAO {
 
     public void sendMessage(Message msg) {
         try (Connection con = DBConnection.getConnection()) {
-
             String sql = "INSERT INTO messages (sender_id, receiver_id, content, sender_role) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -22,7 +28,8 @@ public class MessageDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -31,7 +38,6 @@ public class MessageDAO {
         List<String> list = new ArrayList<>();
 
         try (Connection con = DBConnection.getConnection()) {
-
             String sql = "SELECT m.message_id, m.sender_id, m.content, u.name " +
                          "FROM messages m " +
                          "JOIN users u ON m.sender_id = u.userId " +
@@ -54,7 +60,8 @@ public class MessageDAO {
                 ps.executeUpdate();
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -65,7 +72,6 @@ public class MessageDAO {
         List<String> list = new ArrayList<>();
 
         try (Connection con = DBConnection.getConnection()) {
-
             String sql = "SELECT * FROM messages WHERE receiver_id=? AND sender_role='ADMIN'";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, customerId);

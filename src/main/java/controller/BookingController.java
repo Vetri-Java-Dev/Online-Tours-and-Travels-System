@@ -1,9 +1,16 @@
+/*
+ * Author         : Harini R G
+ * Description    : BookingController handles all booking-related operations 
+ *                  for both admin and customer such as creating, viewing, 
+ *                  modifying, cancelling bookings, tracking bookings, and 
+ *                  managing payments.
+ * Module         : Booking Module
+ * Java version   : 25
+ */
 package controller;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
-
 import exception.*;
 import model.Booking;
 import model.Payment;
