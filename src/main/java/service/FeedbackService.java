@@ -1,5 +1,10 @@
-// Author: Subhashree R
-// FeedbackService.java - Management logic for customer reviews and admin moderation
+/*
+ * Author         : Subhashree R
+ * Created Date   : 10-Apr-2026
+ * Description    : Service layer responsible for handling customer package reviews, rating submissions, and administrator moderation workflows.
+ * Module         : Feedback Module
+ * Java version   : 24
+ */
 package service;
 
 import dao.FeedbackDAO;

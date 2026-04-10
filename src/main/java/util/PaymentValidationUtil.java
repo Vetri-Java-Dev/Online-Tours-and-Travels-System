@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 10-Apr-2026
+ * Description    : Utility class for validating payment formats (UPI, Card) and providing secure data masking.
+ * Module         : Payment Module
+ * Java version   : 24
+ */
 package util;
 
 import java.util.regex.Pattern;
@@ -92,7 +99,7 @@ public class PaymentValidationUtil {
 
         // 2. Luhn check (industry standard for card validation)
         if (!luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
-            return "Card number is invalid (failed Luhn check). Please verify and re-enter your card number.";
+            return "Please verify and re-enter your card number";
 
         // 3. Validate cardholder name
         if (holderName == null || holderName.trim().isEmpty())
@@ -132,7 +139,7 @@ public class PaymentValidationUtil {
 
         // 2. Luhn check (industry standard for card validation)
         if (!luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
-            return "Card number is invalid. Please verify and re-enter your card number.";
+            return "Please verify and re-enter your card number";
 
         // 3. Validate bank name
         if (bankName == null || bankName.trim().isEmpty())
@@ -165,21 +172,13 @@ public class PaymentValidationUtil {
     // =========================================================================
     private static String validateCardNumber(String cardNumber) {
         if (cardNumber == null || cardNumber.trim().isEmpty())
-            return "Card number cannot be empty.";
+            return "Please verify and re-enter your card number";
 
         cardNumber = cardNumber.trim();
-
-        // Remove spaces and hyphens for checking
         String cleanCardNumber = cardNumber.replaceAll("[\\s-]", "");
 
-        if (cleanCardNumber.length() != 16)
-            return "Card number must be exactly 16 digits.";
-
-        if (!cleanCardNumber.matches("[0-9]+"))
-            return "Card number must contain only digits.";
-
-        if (!CARD_NUMBER_PATTERN.matcher(cardNumber).matches())
-            return "Card number must be exactly 16 digits. (e.g., 4111 1111 1111 1111)";
+        if (cleanCardNumber.length() != 16 || !cleanCardNumber.matches("[0-9]+") || !CARD_NUMBER_PATTERN.matcher(cardNumber).matches())
+            return "Please verify and re-enter your card number";
 
         return null;
     }
@@ -277,7 +276,28 @@ public class PaymentValidationUtil {
         String status = isValid ? "✓ VALID" : "✗ INVALID";
         return String.format("[%s] %s Payment Validation: %s", 
                            java.time.LocalDateTime.now().format(
-                               java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                            type, status);
+    }
+
+    // =========================================================================
+    // MASKING UTILITIES
+    // =========================================================================
+
+    public static String maskCardNumber(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 4) return "INVALID";
+        String cleaned  = cardNumber.replaceAll("[\\s-]", "");
+        if (cleaned.length() < 4) return "INVALID";
+        String lastFour = cleaned.substring(cleaned.length() - 4);
+        return "XXXX XXXX XXXX " + lastFour;
+    }
+
+    public static String maskUPIId(String upiId) {
+        if (upiId == null || !upiId.contains("@")) return "INVALID";
+        String[] parts  = upiId.split("@");
+        String handle   = parts[0];
+        String bank     = parts[1];
+        if (handle.length() <= 3) return "***@" + bank;
+        return handle.substring(0, 3) + "***@" + bank;
     }
 }

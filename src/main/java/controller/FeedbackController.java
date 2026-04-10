@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 25-March-2026
+ * Description    : Controller for handling feedback-related user requests and administrative review management.
+ * Module         : Feedback Module
+ * Java version   : 24
+ */
 package controller;
 
 import java.util.List;

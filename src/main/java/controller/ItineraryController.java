@@ -67,7 +67,7 @@ public class ItineraryController {
                 items.add(new ItineraryItem(0, i, activity, location));
             }
             
-            itineraryService.createItinerary(new Itinerary(0, pid, days, items));
+            itineraryService.createItinerary(new Itinerary(0, pid,  items));
             System.out.println(ColorText.success("  Itinerary added successfully!"));
         }
         catch (PackageNotFoundException e) {

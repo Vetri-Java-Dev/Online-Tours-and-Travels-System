@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 18-March-2026
+ * Description    : Controller handling incoming payment requests and coordinating with the service layer for processing.
+ * Module         : Payment Module
+ * Java version   : 24
+ */
 package controller;
 
 import exception.*;
@@ -79,7 +86,7 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Credit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Holder") + " : %-30s" + ColorText.warning("║") + "%n", holderName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
 
@@ -91,7 +98,7 @@ public class PaymentController {
         System.out.println(ColorText.success("  ✔  Amount is valid: ") + ColorText.cyan("Rs. " + amount));
 
         CreditCardPayment ccPayment = new CreditCardPayment(
-                amount, date, "PENDING", bookingId, cardNumber, holderName
+                amount, date, "PENDING", bookingId, cardNumber, holderName, expiry, cvv
         );
         try {
             paymentService.processPayment(ccPayment);
@@ -118,7 +125,7 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Debit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Bank") + " : %-32s" + ColorText.warning("║") + "%n", bankName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
 
@@ -130,7 +137,7 @@ public class PaymentController {
         System.out.println(ColorText.success("  ✔  Amount is valid: ") + ColorText.cyan("Rs. " + amount));
 
         DebitCardPayment dcPayment = new DebitCardPayment(
-                amount, date, "PENDING", bookingId, cardNumber, bankName
+                amount, date, "PENDING", bookingId, cardNumber, bankName, expiry, cvv
         );
         try {
             paymentService.processPayment(dcPayment);
@@ -151,7 +158,7 @@ public class PaymentController {
             return false;
         }
 
-        System.out.println(ColorText.success("  ✔  UPI ID is valid: ") + ColorText.cyan(maskUPIId(upiId)));
+        System.out.println(ColorText.success("  ✔  UPI ID is valid: ") + ColorText.cyan(PaymentValidationUtil.maskUPIId(upiId)));
         return true;
     }
 
@@ -172,7 +179,7 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Credit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Holder") + " : %-30s" + ColorText.warning("║") + "%n", holderName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
         return true;
@@ -195,7 +202,7 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Debit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Bank") + " : %-32s" + ColorText.warning("║") + "%n", bankName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
         return true;
@@ -242,32 +249,5 @@ public class PaymentController {
         }
     }
 
-    // =========================================================================
-    // PRIVATE HELPER METHODS
-    // =========================================================================
 
-    private String maskCardNumber(String cardNumber) {
-        if (cardNumber == null || cardNumber.length() < 4) {
-            return "INVALID";
-        }
-        String cleaned = cardNumber.replaceAll("[\\s-]", "");
-        String lastFour = cleaned.substring(cleaned.length() - 4);
-        return "XXXX XXXX XXXX " + lastFour;
-    }
-
-    private String maskUPIId(String upiId) {
-        if (upiId == null || !upiId.contains("@")) {
-            return "INVALID";
-        }
-        String[] parts = upiId.split("@");
-        if (parts.length != 2) {
-            return "INVALID";
-        }
-        String handle = parts[0];
-        String bank   = parts[1];
-        if (handle.length() <= 3) {
-            return "***@" + bank;
-        }
-        return handle.substring(0, 3) + "***@" + bank;
-    }
 }
