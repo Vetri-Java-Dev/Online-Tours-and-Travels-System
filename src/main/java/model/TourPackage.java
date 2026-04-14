@@ -1,3 +1,10 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Entity class representing a tour package with destination, price, duration and available seats.
+ * Module         : TourPackage Module
+ * Java Version   : 24
+ */
+
 package model;
 
 public class TourPackage {

@@ -1,3 +1,10 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Database operations for creating, viewing and deleting itinerary and itinerary items.
+ * Module         : Itinerary Module
+ * Java Version   : 24
+ */
+
 package dao;
 
 import model.Itinerary;

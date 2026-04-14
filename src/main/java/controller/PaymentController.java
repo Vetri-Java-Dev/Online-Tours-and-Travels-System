@@ -35,7 +35,8 @@ public class PaymentController {
 
         try {
             paymentService.processPayment(payment);
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
@@ -63,7 +64,8 @@ public class PaymentController {
         UPIPayment upiPayment = new UPIPayment(amount, date, "PENDING", bookingId, upiId);
         try {
             paymentService.processPayment(upiPayment);
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
@@ -79,6 +81,7 @@ public class PaymentController {
         String cardError = PaymentValidationUtil.validateCreditCard(
                 cardNumber, holderName, expiry, cvv
         );
+        
         if (cardError != null) {
             System.out.println(ColorText.error("  ✘  Credit Card Validation Failed: " + cardError));
             return;
@@ -100,9 +103,11 @@ public class PaymentController {
         CreditCardPayment ccPayment = new CreditCardPayment(
                 amount, date, "PENDING", bookingId, cardNumber, holderName, expiry, cvv
         );
+        
         try {
             paymentService.processPayment(ccPayment);
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
@@ -141,7 +146,8 @@ public class PaymentController {
         );
         try {
             paymentService.processPayment(dcPayment);
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
@@ -209,7 +215,9 @@ public class PaymentController {
     }
 
     public boolean verifyAmount(double amount) {
+    	
         String error = PaymentValidationUtil.validateAmount(amount);
+        
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
             return false;
@@ -228,10 +236,12 @@ public class PaymentController {
             Payment payment = paymentService.viewPayment(paymentId);
             if (payment != null) {
                 System.out.println(ColorText.success("  ✔  Payment retrieved successfully."));
-            } else {
+            }
+            else {
                 System.out.println(ColorText.error("  ✘  Failed to retrieve payment."));
             }
-        } catch (PaymentFailedException e) {
+        }
+        catch (PaymentFailedException e) {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }

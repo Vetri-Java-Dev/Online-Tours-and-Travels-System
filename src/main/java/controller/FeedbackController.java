@@ -81,9 +81,11 @@ public class FeedbackController {
                 case 5:
                     tourService.displayPackages();
                     System.out.print(ColorText.bold("\n  Enter Package ID to view feedback: "));
+                    
                     try {
                         feedbackService.viewPackageReviews(Integer.parseInt(sc.nextLine()));
-                    } catch (PackageNotFoundException e) {
+                    }
+                    catch (PackageNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
@@ -93,7 +95,8 @@ public class FeedbackController {
 
                     try {
                         feedbackService.deleteFeedback(Integer.parseInt(sc.nextLine()));
-                    } catch (BookingNotFoundException e) {
+                    }
+                    catch (BookingNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
@@ -132,17 +135,21 @@ public class FeedbackController {
                 case 1:
                     submitFeedback(customerId);
                     break;
+                    
                 case 2:
                     System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("║") + ColorText.bold("           MY FEEDBACK HISTORY        ")
                             + ColorText.warning("║"));
                     System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+                    
                     try {
                         feedbackService.viewMyFeedback(customerId);
-                    } catch (UserNotFoundException e) {
+                    }
+                    catch (UserNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
+                    
                 case 3:
                     viewPackageReviews();
                     break;
@@ -172,6 +179,7 @@ public class FeedbackController {
                 + ColorText.cyan("  Date            ") + ColorText.warning("║") + ColorText.cyan("  Package ID  ")
                 + ColorText.warning("║"));
         System.out.println(ColorText.warning("  ╠══════════════╬══════════════════╬══════════════╣"));
+        
         for (Booking b : myBookings) {
             System.out.printf(
                     ColorText.warning("  ║") + "  %-12d" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║")
@@ -183,6 +191,7 @@ public class FeedbackController {
         // Ask user to select a booking
         System.out.print(ColorText.bold("\n  Enter Booking ID: "));
         int bookingId;
+        
         try {
             bookingId = Integer.parseInt(sc.nextLine());
         } catch (NumberFormatException e) {
@@ -198,6 +207,7 @@ public class FeedbackController {
                 break;
             }
         }
+        
         if (selected == null) {
             System.out.println(ColorText.error("  Invalid Booking ID."));
             return;
@@ -268,9 +278,11 @@ public class FeedbackController {
         try {
             int packageId = Integer.parseInt(sc.nextLine());
             feedbackService.viewPackageReviews(packageId);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             System.out.println(ColorText.error("  Invalid Package ID."));
-        } catch (PackageNotFoundException e) {
+        }
+        catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }

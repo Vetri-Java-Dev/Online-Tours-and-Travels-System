@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 
 public class PasswordUtil {
 
+	//Plain password to encrypted password
     public static String hashPassword(String password) {
 
         try {
@@ -25,6 +26,7 @@ public class PasswordUtil {
         }
     }
 
+    //Comparing 
     public static boolean verifyPassword(String inputPassword, String storedPassword) {
 
         String hashedInput = hashPassword(inputPassword);

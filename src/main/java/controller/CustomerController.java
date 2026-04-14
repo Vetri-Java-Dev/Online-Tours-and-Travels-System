@@ -1,3 +1,10 @@
+/*
+ * Author         : Vetrivel B 
+ * Description    : Central controller for customer operations, including tour package exploration and manage their bookings.
+ * Module         : Customer Module
+ * Java version   : 24
+ */
+
 package controller;
 
 import java.util.Scanner;
@@ -102,7 +109,8 @@ public class CustomerController {
             System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Email :") + " %-30s" + ColorText.warning("║") + "%n", u.getEmail());
             System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Phone :") + " %-30s" + ColorText.warning("║") + "%n", u.getPhone());
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }
@@ -112,32 +120,40 @@ public class CustomerController {
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           UPDATE PROFILE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+        
         System.out.print(ColorText.bold("  New Name  : "));
         String name = sc.nextLine();
+        
         System.out.print(ColorText.bold("  New Phone : "));
         String phone = sc.nextLine();
+        
         try {
             userService.updateUser(customerId, name, phone);
             System.out.println(ColorText.success("  Profile updated successfully!"));
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }
 
     public void deleteAccount() {
         sc.nextLine();
+        
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           DELETE ACCOUNT             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+        
         System.out.print(ColorText.bold("  Confirm delete (yes/no): "));
         if (sc.nextLine().equalsIgnoreCase("yes")) {
             try {
                 userService.deleteUser(customerId);
                 System.out.println(ColorText.success("  Account deleted successfully."));
-            } catch (UserNotFoundException e) {
+            }
+            catch (UserNotFoundException e) {
                 System.out.println(ColorText.error("  " + e.getMessage()));
             }
-        } else {
+        }
+        else {
             System.out.println(ColorText.yellow("  Account deletion cancelled."));
         }
     }

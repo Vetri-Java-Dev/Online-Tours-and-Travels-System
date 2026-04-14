@@ -1,10 +1,10 @@
 /*
  * Author         : Subhashree R
- * Created Date   : 2-Apr-2026
  * Description    : Central controller for administrative operations, including system management and report generation.
  * Module         : Admin Module
  * Java version   : 24
  */
+
 package controller;
 
 import java.util.Scanner;

@@ -129,25 +129,30 @@ public class PackageController {
 
     // ================= CUSTOMER: SEARCH PACKAGE =================
     public void customerSearchPackage() {
+    	
     	System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           SEARCH PACKAGE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
         System.out.println(ColorText.warning("║") + "  1.  Search by Destination           " + ColorText.warning("║"));
         System.out.println(ColorText.warning("║") + "  2.  Sort Packages                   " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+        
         System.out.print(ColorText.bold("  Enter choice: "));
-        int opt = Integer.parseInt(sc.nextLine());  // ✅ fixed
+        int opt = Integer.parseInt(sc.nextLine()); 
 
         List<TourPackage> list = service.getAllPackages();
 
         if (opt == 1) {
             System.out.print(ColorText.bold("  Destination: "));
             list = service.searchByDestination(sc.nextLine());
+            
             if (list.isEmpty()) {
                 System.out.println(ColorText.error("  No packages found"));
                 return;
             }
-        } else {   
+        }
+        else {
+        	
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
             System.out.println(ColorText.warning("║") + ColorText.bold("            SORT PACKAGES             ") + ColorText.warning("║"));
             System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));

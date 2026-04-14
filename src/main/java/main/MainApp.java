@@ -7,6 +7,7 @@ import model.Customer;
 import model.User;
 import service.UserService;
 import util.ColorText;
+import util.ConsoleUtil;
 
 public class MainApp {
 
@@ -43,9 +44,7 @@ public class MainApp {
                     System.out.print("  Email    : ");
                     String email = sc.nextLine();
 
-                    System.out.print("  Password : ");
-                    String password = sc.nextLine();
-
+                    String password = ConsoleUtil.readPassword("  Password : ");
                     System.out.print("  Phone    : ");
                     String phone = sc.nextLine();
 

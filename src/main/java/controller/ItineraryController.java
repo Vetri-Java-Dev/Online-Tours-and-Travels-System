@@ -41,7 +41,8 @@ public class ItineraryController {
                     try {
                         itineraryService.deleteItinerary(Integer.parseInt(sc.nextLine()));
                         System.out.println(ColorText.success("  Itinerary deleted successfully!"));
-                    } catch (PackageNotFoundException e) {
+                    }
+                    catch (PackageNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
@@ -53,10 +54,13 @@ public class ItineraryController {
 
     private void addItinerary() {
         try {
+        	
             System.out.print(ColorText.bold("  Package ID     : "));
             int pid = Integer.parseInt(sc.nextLine());
+            
             System.out.print(ColorText.bold("  Number of Days : "));
             int days = Integer.parseInt(sc.nextLine());
+            
             List<ItineraryItem> items = new ArrayList<>();
             for (int i = 1; i <= days; i++) {
                 System.out.print(ColorText.bold("  Day " + i + " Activity : "));
@@ -65,8 +69,10 @@ public class ItineraryController {
                 String location = sc.nextLine();
                 items.add(new ItineraryItem(0, i, activity, location));
             }
+            
             itineraryService.createItinerary(new Itinerary(0, pid, items));
-        } catch (PackageNotFoundException e) {
+        }
+        catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }

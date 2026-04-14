@@ -1,3 +1,10 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Entity class representing a day-wise itinerary linked to a tour package.
+ * Module         : Itinerary Module
+ * Java Version   : 24
+ */
+
 package model;
 import java.util.List;
 

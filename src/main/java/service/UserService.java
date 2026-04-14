@@ -46,6 +46,7 @@ public class UserService {
 
     private boolean verifyAdminOTP(User requester) {
         Scanner sc = new Scanner(System.in);
+        
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
         long generatedTime = System.currentTimeMillis();
 
@@ -62,7 +63,7 @@ public class UserService {
 
         String enteredOtp = sc.nextLine().trim();
 
-        if(System.currentTimeMillis() - generatedTime > 5 * 60 * 1000) {
+        if(System.currentTimeMillis() - generatedTime>5*60*1000) {
             System.out.println(ColorText.error("\n  OTP expired. Please try again."));
             return false;
         }

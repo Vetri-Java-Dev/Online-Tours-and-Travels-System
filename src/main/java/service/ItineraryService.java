@@ -1,3 +1,11 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Business logic for creating, viewing and deleting itinerary for a tour package.
+ * Module         : Itinerary Module
+ * Java Version   : 24
+ */
+
+
 package service;
 
 import dao.ItineraryDAO;

@@ -4,7 +4,7 @@
  *                  including viewing messages, replying to customers, sending messages 
  *                  to admin, and viewing replies.
  * Module         : Message Module
- * Java version   : 25
+ * Java version   : 24
  */
 package controller;
 
@@ -132,20 +132,24 @@ public class MessageController {
                     System.out.println(ColorText.warning("║") + ColorText.bold("       SEND MESSAGE TO ADMIN          ") + ColorText.warning("║"));
                     System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
                     System.out.print(ColorText.bold("  Your Message : "));
+                    
                     try {
                         messageService.sendToAdmin(customerId, sc.nextLine());
                         System.out.println(ColorText.success(" Message sent to Admin!"));
-                    } catch (UserNotFoundException e) {
+                    }
+                    catch (UserNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
 
+                //Used Ai for printing replies on tabular format
                 case 2:
                     try {
                         List<String> replies = messageService.viewReplies(customerId);
                         System.out.println(ColorText.warning("\n╔══════════════════════════════════════════════════╗"));
                         System.out.println(ColorText.warning("║") + ColorText.bold("             REPLIES FROM ADMIN                   ") + ColorText.warning("║"));
                         System.out.println(ColorText.warning("╠══════════════════════════════════════════════════╣"));
+                        
                         if (replies == null || replies.isEmpty()) {
                             System.out.println(ColorText.warning("║") + ColorText.yellow("  No replies from admin yet.                      ") + ColorText.warning("║"));
                         }
