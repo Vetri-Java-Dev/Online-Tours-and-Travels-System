@@ -10,8 +10,8 @@
 package controller;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
 import exception.*;
+import util.InputUtil;
 import model.Booking;
 import model.Payment;
 import model.CreditCardPayment;
@@ -23,7 +23,6 @@ import util.ColorText;
 
 public class BookingController {
 
-    private Scanner sc = new Scanner(System.in);
     private BookingService bookingService = new BookingService();
 
     // ================= ADMIN: BOOKING MENU =================
@@ -38,12 +37,10 @@ public class BookingController {
             System.out.println(ColorText.warning("║") + "  3. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int c = Integer.parseInt(sc.nextLine());
+            int c = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             if(c==1) {
-                System.out.print(ColorText.bold("  Booking ID: "));
-                int bookingId = Integer.parseInt(sc.nextLine());
+                int bookingId = InputUtil.getInt(ColorText.bold("  Booking ID: "));
 
                 try {
                     Booking booking = bookingService.viewBooking(bookingId);
@@ -67,9 +64,9 @@ public class BookingController {
                 }
             }
             else if(c==2) {
-                System.out.print(ColorText.bold("  Booking ID: "));
                 try {
-                    bookingService.cancelBooking(Integer.parseInt(sc.nextLine()));
+                	int bookingId = InputUtil.getInt(ColorText.bold("  Booking ID: "));
+                    bookingService.cancelBooking(bookingId);
                     System.out.println(ColorText.success("  Booking cancelled successfully!"));
                 }
                 catch (BookingNotFoundException | InvalidBookingException e) {
@@ -132,9 +129,7 @@ public class BookingController {
             System.out.println(ColorText.warning("│") + "  6. Back                            " + ColorText.warning("│"));
             System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-            System.out.print(ColorText.bold("Enter choice: "));
-            int choice = sc.nextInt();
-            sc.nextLine(); // clear buffer
+            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
 
             switch (choice) {
                 case 1: createBooking(customerId); break;
@@ -180,13 +175,11 @@ public class BookingController {
         int travelers = sc.nextInt();
 
         sc.nextLine(); //buffer
-
-        LocalDate date = null;
+       LocalDate date = null;
         String bookingDate;
 
         while (true) {
-            System.out.print(ColorText.bold("  Booking Date (YYYY-MM-DD): "));
-            bookingDate = sc.nextLine();
+            bookingDate = InputUtil.getString(ColorText.bold("  Booking Date (YYYY-MM-DD): "));
             try {
                 date = LocalDate.parse(bookingDate);
                 LocalDate today = LocalDate.now();
@@ -256,9 +249,7 @@ public class BookingController {
         System.out.println(ColorText.warning("║") + "  3.  Debit Card                      " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        System.out.print(ColorText.bold("  Enter choice: "));
-        int choice = sc.nextInt();
-        sc.nextLine();
+        int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
         Payment payment = null;
         String today = LocalDate.now().toString();
@@ -266,25 +257,26 @@ public class BookingController {
         switch (choice) {
 
             case 1:
-                System.out.print(ColorText.bold("  UPI ID         : "));
-                payment = new UPIPayment(amount, today, "SUCCESS", bookingId, sc.nextLine());
+                payment = new UPIPayment(amount, today, "SUCCESS", bookingId, InputUtil.getString(ColorText.bold("  UPI ID         : ")));
                 break;
 
             case 2:
-                System.out.print(ColorText.bold("  Credit Card No : "));
-                String cc = sc.nextLine();
+                String cc = InputUtil.getString(ColorText.bold("  Credit Card No : "));
+                String holder = InputUtil.getString(ColorText.bold("  Holder         : "));
+                String ccExpiry = InputUtil.getString(ColorText.bold("  Expiry (MM/YY) : "));
+                String ccCvv = InputUtil.getString(ColorText.bold("  CVV            : "));
 
-                System.out.print(ColorText.bold("  Holder         : "));
-                payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, sc.nextLine());
+                payment = new CreditCardPayment(amount, today, "SUCCESS", bookingId, cc, holder, ccExpiry, ccCvv);
 
                 break;
 
             case 3:
-                System.out.print(ColorText.bold("  Debit Card No  : "));
-                String dc = sc.nextLine();
+                String dc = InputUtil.getString(ColorText.bold("  Debit Card No  : "));
+                String bank = InputUtil.getString(ColorText.bold("  Bank           : "));
+                String dcExpiry = InputUtil.getString(ColorText.bold("  Expiry (MM/YY) : "));
+                String dcCvv = InputUtil.getString(ColorText.bold("  CVV            : "));
 
-                System.out.print(ColorText.bold("  Bank           : "));
-                payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, sc.nextLine());
+                payment = new DebitCardPayment(amount, today, "SUCCESS", bookingId, dc, bank, dcExpiry, dcCvv);
 
                 break;
             default:
@@ -307,9 +299,7 @@ public class BookingController {
                 + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        System.out.print("Enter Booking ID: ");
-        int bookingId = sc.nextInt();
-        sc.nextLine();
+        int bookingId = InputUtil.getInt("Enter Booking ID: ");
 
         try {
         	Booking booking = bookingService.viewBookingByCustomer(bookingId, customerId);
@@ -338,9 +328,7 @@ public class BookingController {
                 + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        System.out.print(ColorText.bold("Enter Booking ID: "));
-        int bookingId = sc.nextInt();
-        sc.nextLine();
+        int bookingId = InputUtil.getInt(ColorText.bold("Enter Booking ID: "));
 
         try {
             Booking booking = bookingService.viewBookingByCustomer(bookingId, customerId);
@@ -367,9 +355,7 @@ public class BookingController {
                 + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        System.out.print(ColorText.bold("Enter Booking ID: "));
-        int bookingId = sc.nextInt();
-        sc.nextLine();
+        int bookingId = InputUtil.getInt(ColorText.bold("Enter Booking ID: "));
 
         Booking booking;
 
@@ -395,8 +381,7 @@ public class BookingController {
         String newDate;
 
         while (true) {
-            System.out.print("\n  Enter New Booking Date (YYYY-MM-DD): ");
-            newDate = sc.nextLine();
+            newDate = InputUtil.getString("\n  Enter New Booking Date (YYYY-MM-DD): ");
 
             try {
                 LocalDate date = LocalDate.parse(newDate);
@@ -410,9 +395,7 @@ public class BookingController {
             }
         }
 
-        System.out.print("Enter New Travelers: ");
-        int newTravelers = sc.nextInt();
-        sc.nextLine();
+        int newTravelers = InputUtil.getInt("Enter New Travelers: ");
 
         booking.setBookingDate(LocalDate.parse(newDate));
         booking.setTravelers(newTravelers);

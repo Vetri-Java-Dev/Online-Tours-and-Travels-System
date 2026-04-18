@@ -1,18 +1,18 @@
 package main;
 
-import java.util.Scanner;
 import controller.LoginController;
+import util.InputUtil;
 import model.Admin;
 import model.Customer;
 import model.User;
 import service.UserService;
 import util.ColorText;
+import util.ConsoleUtil;
 
 public class MainApp {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
         LoginController loginController = new LoginController();
       
@@ -26,9 +26,7 @@ public class MainApp {
             System.out.println(ColorText.warning("║") + "  3.  Exit                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
             
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int choice = sc.nextInt();
-            sc.nextLine();
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch(choice) {
 
@@ -37,25 +35,15 @@ public class MainApp {
                     System.out.println(ColorText.warning("│") + ColorText.bold("           NEW REGISTRATION          ") + ColorText.warning("│"));
                     System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-                    System.out.print("  Name     : ");
-                    String name = sc.nextLine();
-
-                    System.out.print("  Email    : ");
-                    String email = sc.nextLine();
-
-                    System.out.print("  Password : ");
-                    String password = sc.nextLine();
-
-                    System.out.print("  Phone    : ");
-                    String phone = sc.nextLine();
+                    String name = InputUtil.getString("  Name     : ");
+                    String email = InputUtil.getString("  Email    : ");
+                    String password = ConsoleUtil.readPassword("  Password : ");
+                    String phone = InputUtil.getString("  Phone    : ");
 
                     System.out.println(ColorText.warning("\n  Select Role:"));
                     System.out.println("  1. Customer");
                     System.out.println("  2. Admin");
-                    System.out.print(ColorText.bold("  Choice   : "));
-
-                    int roleChoice = sc.nextInt();
-                    sc.nextLine();
+                    int roleChoice = InputUtil.getInt(ColorText.bold("  Choice   : "));
 
                     String role = (roleChoice == 2) ? "ADMIN" : "CUSTOMER";
 
@@ -78,7 +66,7 @@ public class MainApp {
                 	
                     System.out.println(ColorText.success("\n  Thank you for using Tour & Travel System!"));
                     System.out.println(ColorText.success("  Goodbye!\n"));
-                    sc.close();
+                    InputUtil.close();
                     
                     System.exit(0);
 

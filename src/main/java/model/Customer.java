@@ -1,3 +1,10 @@
+/*
+ * Author         : Vetrivel B
+ * Description    : Entity class representing a customer user with preferences, contact details and booking history.
+ * Module         : Customer Module
+ * Java Version   : 24
+ */
+
 package model;
 
 import java.util.List;

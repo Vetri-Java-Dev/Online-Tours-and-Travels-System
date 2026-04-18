@@ -18,9 +18,6 @@ public class User {
 		this.role = role;
 	}
 
-	
-	public User() {}
-
 
 	public int getUserId() {
 		return userId;
@@ -71,7 +68,7 @@ public class User {
 		this.password=password;
 	}
 	
-	
+	public User() {}
 	
 }
 

@@ -164,6 +164,7 @@ public class BookingDAO {
 			ResultSet rs = ps.executeQuery();
 
 			while (rs.next()) {
+				
 				Booking b = new Booking();
 				b.setBookingId(rs.getInt("bookingId"));
 				b.setBookingDate(rs.getObject("bookingDate", LocalDate.class));

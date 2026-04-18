@@ -2,9 +2,9 @@ package controller;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import exception.PackageAlreadyExistsException;
 import exception.PackageNotFoundException;
+import util.InputUtil;
 import model.TourPackage;
 import service.TourPackageService;
 import util.ColorText;
@@ -13,7 +13,6 @@ import comparator.DurationComparator;
 
 public class PackageController {
 
-    private Scanner sc = new Scanner(System.in);
     private TourPackageService service = new TourPackageService();
 
     // ================= ADMIN: PACKAGE MENU =================
@@ -31,26 +30,16 @@ public class PackageController {
             System.out.println(ColorText.warning("║") + "  5. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int choice = Integer.parseInt(sc.nextLine());
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch(choice) {
 
                 case 1:
-                    System.out.print(ColorText.bold("  Package ID   : "));
-                    int id = Integer.parseInt(sc.nextLine());
-                    
-                    System.out.print(ColorText.bold("  Destination  : "));
-                    String dest = sc.nextLine();
-                    
-                    System.out.print(ColorText.bold("  Price (INR)  : "));
-                    int price = Integer.parseInt(sc.nextLine());
-                    
-                    System.out.print(ColorText.bold("  Duration     : "));
-                    int duration = Integer.parseInt(sc.nextLine());
-                    
-                    System.out.print(ColorText.bold("  Seats        : "));
-                    int seats = Integer.parseInt(sc.nextLine());
+                    int id = InputUtil.getInt(ColorText.bold("  Package ID   : "));
+                    String dest = InputUtil.getString(ColorText.bold("  Destination  : "));
+                    int price = InputUtil.getInt(ColorText.bold("  Price (INR)  : "));
+                    int duration = InputUtil.getInt(ColorText.bold("  Duration     : "));
+                    int seats = InputUtil.getInt(ColorText.bold("  Seats        : "));
                     
                     try {
                         service.createPackage(id, dest, price, duration, seats);
@@ -65,33 +54,11 @@ public class PackageController {
 
                 case 3:
 
-                    System.out.print(ColorText.bold("  Package ID      : "));
+                    int uid = InputUtil.getInt(ColorText.bold("  Package ID      : "));
 
-                    int uid;
-
-                    try{
-                        uid=Integer.parseInt(sc.nextLine());
-                    }
-                    catch(Exception e){
-                        while(true){
-                            if(sc.hasNextInt()){
-                                uid=sc.nextInt();
-                                break;
-                            }
-                            else{
-                                System.out.print("Enter Valid Package Id : ");
-                            }
-                        }
-                    }
-
-                    System.out.print(ColorText.bold("  New Destination : "));
-                    String nd = sc.nextLine();
-
-                    System.out.print(ColorText.bold("  New Price       : "));
-                    double np = Double.parseDouble(sc.nextLine());
-
-                    System.out.print(ColorText.bold("  New Duration    : "));
-                    int ndur = Integer.parseInt(sc.nextLine());
+                    String nd = InputUtil.getString(ColorText.bold("  New Destination : "));
+                    double np = InputUtil.getDouble(ColorText.bold("  New Price       : "));
+                    int ndur = InputUtil.getInt(ColorText.bold("  New Duration    : "));
 
                     try {
                         service.updatePackage(uid, nd, np, ndur);
@@ -103,11 +70,9 @@ public class PackageController {
                     break;
 
                 case 4:
-                    System.out.print(ColorText.bold("  Package ID : "));
-                    int deleteId = Integer.parseInt(sc.nextLine());
+                    int deleteId = InputUtil.getInt(ColorText.bold("  Package ID : "));
                     
-                    System.out.print(ColorText.bold("  Confirm delete? (yes/no): "));
-                    if(sc.nextLine().equalsIgnoreCase("yes")) {
+                    if(InputUtil.getString(ColorText.bold("  Confirm delete? (yes/no): ")).equalsIgnoreCase("yes")) {
                         try {
                             service.deletePackage(deleteId);
                             System.out.println(ColorText.success("  Package deleted successfully!"));
@@ -135,19 +100,21 @@ public class PackageController {
         System.out.println(ColorText.warning("║") + "  1.  Search by Destination           " + ColorText.warning("║"));
         System.out.println(ColorText.warning("║") + "  2.  Sort Packages                   " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  Enter choice: "));
-        int opt = Integer.parseInt(sc.nextLine());  // ✅ fixed
+        
+        int opt = InputUtil.getInt(ColorText.bold("  Enter choice: ")); 
 
         List<TourPackage> list = service.getAllPackages();
 
         if (opt == 1) {
-            System.out.print(ColorText.bold("  Destination: "));
-            list = service.searchByDestination(sc.nextLine());
+            list = service.searchByDestination(InputUtil.getString(ColorText.bold("  Destination: ")));
+            
             if (list.isEmpty()) {
                 System.out.println(ColorText.error("  No packages found"));
                 return;
             }
-        } else {   
+        }
+        else {
+        	
             System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
             System.out.println(ColorText.warning("║") + ColorText.bold("            SORT PACKAGES             ") + ColorText.warning("║"));
             System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
@@ -156,9 +123,7 @@ public class PackageController {
             System.out.println(ColorText.warning("║") + "  3. Duration - Low to High           " + ColorText.warning("║"));
             System.out.println(ColorText.warning("║") + "  4. Duration - High to Low           " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-            System.out.print(ColorText.bold("  Enter choice: "));
-
-            int sortChoice = Integer.parseInt(sc.nextLine());
+            int sortChoice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (sortChoice) {
                 case 1: Collections.sort(list, new PriceComparator(true));     break;
