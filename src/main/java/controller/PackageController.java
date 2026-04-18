@@ -128,7 +128,7 @@ public class PackageController {
     }
 
     // ================= CUSTOMER: SEARCH PACKAGE =================
-    public void customerSearchPackage() {
+    public void customerSearchPackage(int customerId) {
     	System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           SEARCH PACKAGE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╠══════════════════════════════════════╣"));
@@ -171,5 +171,14 @@ public class PackageController {
 
         for (TourPackage t : list)
             System.out.println("  ID: " + t.getPackageId() + " - " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
+
+        System.out.print("\nDo you want to book any package? (yes/no): ");
+        String choice = sc.nextLine();
+
+        if (choice.equalsIgnoreCase("yes")) {
+            new BookingController().createBooking(customerId);
+        } else {
+            System.out.println(ColorText.yellow("  Redirecting to Dashboard..."));
+        }
     }
 }
