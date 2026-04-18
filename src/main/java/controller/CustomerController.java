@@ -7,11 +7,16 @@ import model.User;
 import service.TourPackageService;
 import service.UserService;
 import util.ColorText;
+import java.time.LocalDate;
+import model.Booking;
+import service.BookingService;
 
 public class CustomerController {
 
     private Scanner sc = new Scanner(System.in);
     private UserService userService = new UserService();
+    private TourPackageService tourPackageService = new TourPackageService();
+    private BookingService bookingService = new BookingService();
 
     private int customerId;
 
@@ -43,8 +48,8 @@ public class CustomerController {
             int choice = sc.nextInt();
 
             switch (choice) {
-                case 1: new TourPackageService().displayPackages(); break;
-                case 2: new PackageController().customerSearchPackage(); break;
+                case 1: viewAndBookFlow(customerId); break;
+                case 2: new PackageController().customerSearchPackage(customerId); break;
                 case 3: new ItineraryController().customerViewItinerary(); break;
                 case 4: new BookingController().customerManageBookingMenu(customerId); break;
                 case 5: new BookingController().customerViewPaymentHistory(customerId); break;
@@ -141,4 +146,19 @@ public class CustomerController {
             System.out.println(ColorText.yellow("  Account deletion cancelled."));
         }
     }
+    public void viewAndBookFlow(int customerId) {
+
+        tourPackageService.displayPackages();
+
+        sc.nextLine(); // clear buffer from previous nextInt()
+
+        System.out.print("\nDo you want to book any package? (yes/no): ");
+        String choice = sc.nextLine();
+
+        if(choice.equalsIgnoreCase("yes")) {
+            new BookingController().createBooking(customerId);
+        } else {
+            System.out.println(ColorText.yellow("  Redirecting to Dashboard..."));
+        }
+    }  
 }
