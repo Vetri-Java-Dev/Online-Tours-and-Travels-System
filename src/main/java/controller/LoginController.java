@@ -7,11 +7,11 @@
 
 package controller;
 
-import java.util.Scanner;
 import exception.*;
 import model.Admin;
 import model.Customer;
 import model.User;
+import util.InputUtil;
 import service.UserService;
 import util.ColorText;
 import util.ConsoleUtil;
@@ -19,7 +19,6 @@ import util.EmailUtil;
 
 public class LoginController {
 
-    Scanner sc = new Scanner(System.in);
     UserService userService = new UserService();
 
     //Login menu
@@ -31,10 +30,7 @@ public class LoginController {
         System.out.println(ColorText.warning("║") + "  1.  Login                           " + ColorText.warning("║"));
         System.out.println(ColorText.warning("║") + "  2.  Forgot Password                 " + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  Enter choice: "));
-
-        int choice = sc.nextInt();
-        sc.nextLine();
+        int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
         switch(choice) {
             case 1:  normalLogin();    break;
@@ -49,8 +45,7 @@ public class LoginController {
         System.out.println(ColorText.warning("│") + ColorText.bold("              USER LOGIN             ") + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        System.out.print("  Email    : ");
-        String email = sc.next();
+        String email = InputUtil.getString("  Email    : ");
 
         String password = ConsoleUtil.readPassword("  Password : ");
 
@@ -85,8 +80,7 @@ public class LoginController {
         System.out.println(ColorText.warning("│") + ColorText.bold("           FORGOT PASSWORD           ") + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        System.out.print("  Registered Email: ");
-        String email = sc.next();
+        String email = InputUtil.getString("  Registered Email: ");
 
         try {
             User user = userService.getUserByEmail(email);
@@ -105,8 +99,7 @@ public class LoginController {
             System.out.println(ColorText.success("  OTP sent successfully!"));
             System.out.println(ColorText.warning("  Note: OTP is valid for 5 minutes only."));
 
-            System.out.print(ColorText.bold("\n  Enter OTP: "));
-            String enteredOtp = sc.next();
+            String enteredOtp = InputUtil.getString(ColorText.bold("\n  Enter OTP: "));
 
             if(System.currentTimeMillis() - otpGeneratedTime > 5 * 60 * 1000) {
                 System.out.println(ColorText.error("\n  OTP expired. Please try again."));

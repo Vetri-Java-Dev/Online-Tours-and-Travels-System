@@ -7,17 +7,15 @@
 
 package controller;
 
-import java.util.Scanner;
-
 import exception.UserNotFoundException;
 import model.User;
 import service.TourPackageService;
+import util.InputUtil;
 import service.UserService;
 import util.ColorText;
 
 public class CustomerController {
 
-    private Scanner sc = new Scanner(System.in);
     private UserService userService = new UserService();
 
     private int customerId;
@@ -46,8 +44,7 @@ public class CustomerController {
             System.out.println(ColorText.warning("║") + " 10.  Exit                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("Enter choice: "));
-            int choice = sc.nextInt();
+            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
 
             switch (choice) {
                 case 1: new TourPackageService().displayPackages(); break;
@@ -83,8 +80,7 @@ public class CustomerController {
 
             System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-            System.out.print(ColorText.bold("Enter choice: "));
-            int choice = sc.nextInt();
+            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
 
             switch (choice) {
 
@@ -116,16 +112,12 @@ public class CustomerController {
     }
 
     public void updateProfile() {
-        sc.nextLine();
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           UPDATE PROFILE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
         
-        System.out.print(ColorText.bold("  New Name  : "));
-        String name = sc.nextLine();
-        
-        System.out.print(ColorText.bold("  New Phone : "));
-        String phone = sc.nextLine();
+        String name = InputUtil.getString(ColorText.bold("  New Name  : "));
+        String phone = InputUtil.getString(ColorText.bold("  New Phone : "));
         
         try {
             userService.updateUser(customerId, name, phone);
@@ -137,14 +129,11 @@ public class CustomerController {
     }
 
     public void deleteAccount() {
-        sc.nextLine();
-        
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           DELETE ACCOUNT             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
         
-        System.out.print(ColorText.bold("  Confirm delete (yes/no): "));
-        if (sc.nextLine().equalsIgnoreCase("yes")) {
+        if (InputUtil.getString(ColorText.bold("  Confirm delete (yes/no): ")).equalsIgnoreCase("yes")) {
             try {
                 userService.deleteUser(customerId);
                 System.out.println(ColorText.success("  Account deleted successfully."));

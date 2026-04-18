@@ -7,7 +7,7 @@ import util.EmailUtil;
 import util.InputValidationUtil;
 
 import java.util.List;
-import java.util.Scanner;
+import util.InputUtil;
 
 public class UserService {
 
@@ -45,8 +45,6 @@ public class UserService {
     }
 
     private boolean verifyAdminOTP(User requester) {
-        Scanner sc = new Scanner(System.in);
-        
         String otp = String.valueOf((int)(Math.random() * 900000) + 100000);
         long generatedTime = System.currentTimeMillis();
 
@@ -59,9 +57,7 @@ public class UserService {
 
         //System.out.println("  OTP sent to : " + ColorText.cyan(ADMIN_EMAIL));
         System.out.println(ColorText.warning("  Note        : OTP is valid for 5 minutes only."));
-        System.out.print(ColorText.bold("\n  Enter OTP   : "));
-
-        String enteredOtp = sc.nextLine().trim();
+        String enteredOtp = InputUtil.getString(ColorText.bold("\n  Enter OTP   : ")).trim();
 
         if(System.currentTimeMillis() - generatedTime>5*60*1000) {
             System.out.println(ColorText.error("\n  OTP expired. Please try again."));

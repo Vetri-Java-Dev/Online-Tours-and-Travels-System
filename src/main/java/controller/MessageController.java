@@ -9,9 +9,9 @@
 package controller;
 
 import java.util.List;
-import java.util.Scanner;
 
 import exception.*;
+import util.InputUtil;
 import model.User;
 import service.MessageService;
 import service.UserService;
@@ -19,7 +19,6 @@ import util.ColorText;
 
 public class MessageController {
 
-    private Scanner sc = new Scanner(System.in);
     private MessageService messageService = new MessageService();
     private UserService userService = new UserService();
 
@@ -35,8 +34,7 @@ public class MessageController {
             System.out.println(ColorText.warning("║") + "  3. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int choice = Integer.parseInt(sc.nextLine());
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch(choice) {
                 case 1:
@@ -87,11 +85,8 @@ public class MessageController {
                         }
                         System.out.println(ColorText.warning("  ╚════════╩════════════════════════════════════════════╝"));
 
-                        System.out.print(ColorText.bold("\n  Enter Customer ID : "));
-                        int cid = Integer.parseInt(sc.nextLine());
-                        
-                        System.out.print(ColorText.bold("  Message           : "));
-                        messageService.replyToCustomer(cid, sc.nextLine());
+                        int cid = InputUtil.getInt(ColorText.bold("\n  Enter Customer ID : "));
+                        messageService.replyToCustomer(cid, InputUtil.getString(ColorText.bold("  Message           : ")));
                         
                         System.out.println(ColorText.warning("\n  ╔══════════════════════════════════════╗"));
                         System.out.println(ColorText.warning("  ║") + ColorText.success("  ✔  Reply sent successfully!          ") + ColorText.warning("║"));
@@ -123,18 +118,15 @@ public class MessageController {
             System.out.println(ColorText.warning("║") + "  2.  View Replies                    " + ColorText.warning("║"));
             System.out.println(ColorText.warning("║") + "  3.  Back                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int ch = Integer.parseInt(sc.nextLine());
+            int ch = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (ch) {
                 case 1:
                     System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("║") + ColorText.bold("       SEND MESSAGE TO ADMIN          ") + ColorText.warning("║"));
                     System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-                    System.out.print(ColorText.bold("  Your Message : "));
-                    
                     try {
-                        messageService.sendToAdmin(customerId, sc.nextLine());
+                        messageService.sendToAdmin(customerId, InputUtil.getString(ColorText.bold("  Your Message : ")));
                         System.out.println(ColorText.success(" Message sent to Admin!"));
                     }
                     catch (UserNotFoundException e) {
