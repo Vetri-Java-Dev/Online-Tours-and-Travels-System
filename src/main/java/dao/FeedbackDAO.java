@@ -1,5 +1,10 @@
-// Author: Subhashree R
-// FeedbackDAO.java - Database operations for customer feedback and reviews
+/*
+ * Author         : Subhashree R
+ * Created Date   : 26-March-2026
+ * Description    : Data Access Object for persisting customer reviews and retrieving feedback rating statistics from the database.
+ * Module         : Feedback Module
+ * Java version   : 24
+ */
 package dao;
 
 import model.Feedback;

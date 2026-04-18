@@ -1,3 +1,9 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Database operations for tour package CRUD, search by destination and seat management.
+ * Module         : TourPackage Module
+ * Java Version   : 24
+ */
 package dao;
 
 import model.TourPackage;

@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 26-March-2026
+ * Description    : Data model consolidating related reporting entities (bookings, payments, availability) for analytical display.
+ * Module         : Admin Report Module
+ * Java version   : 24
+ */
 package model;
 
 /**

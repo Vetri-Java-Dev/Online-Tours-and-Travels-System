@@ -1,8 +1,13 @@
-// Author: Subhashree R
-// PaymentDAO.java - Handles database logic for user and admin payments
+/*
+ * Author         : Subhashree R
+ * Created Date   : 20-March-2026
+ * Description    : Data Access Object for persisting and retrieving user/admin payment records from the database.
+ * Module         : Payment Module
+ * Java version   : 24
+ */
 package dao;
 
-import model.Payment;
+import model.*;
 import util.ColorText;
 import util.DBConnection;
 
@@ -52,7 +57,7 @@ public class PaymentDAO {
                     int paymentId = rs.getInt(1);
                     payment.setPaymentId(paymentId);
 
-                    System.out.println("Payment successful! Payment ID: " + paymentId);
+
                 }
             }
 
@@ -80,14 +85,22 @@ public class PaymentDAO {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()) {
-                payment = new Payment(
-                        rs.getInt("paymentId"),
-                        rs.getDouble("amount"),
-                        rs.getString("paymentDate"),
-                        rs.getString("status"),
-                        rs.getInt("bookingId"),
-                        rs.getString("paymentMethod")
-                );
+                String method = rs.getString("paymentMethod");
+                int pId = rs.getInt("paymentId");
+                double amt = rs.getDouble("amount");
+                String date = rs.getString("paymentDate");
+                String stat = rs.getString("status");
+                int bId = rs.getInt("bookingId");
+
+                if ("UPI".equalsIgnoreCase(method)) {
+                    payment = new UPIPayment(pId, amt, date, stat, bId, "N/A");
+                } else if ("CREDIT_CARD".equalsIgnoreCase(method)) {
+                    payment = new CreditCardPayment(pId, amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                } else if ("DEBIT_CARD".equalsIgnoreCase(method)) {
+                    payment = new DebitCardPayment(pId, amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                } else {
+                    payment = new UPIPayment(pId, amt, date, stat, bId, "N/A");
+                }
             }
 
         }

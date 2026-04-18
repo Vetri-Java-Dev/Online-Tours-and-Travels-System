@@ -1,3 +1,10 @@
+/*
+ * Author         : Akksheetha M
+ * Description    : Entity class representing a single day activity and location in an itinerary.
+ * Module         : Itinerary Module
+ * Java Version   : 24
+ */
+
 package model;
 
 public class ItineraryItem {

@@ -21,8 +21,6 @@ public class Booking {
 	private int customerId;
 	private int packageId;
 
-	public Booking() {
-	}
 	public Booking(int bookingId, LocalDate bookingDate, int travelers, double totalAmount,
 			String status, String packageName, int customerId, int packageId) {
 		this.bookingId = bookingId;
@@ -79,7 +77,6 @@ public class Booking {
 	public String getPackageName() {
 	    return packageName;
 	}
-
 	public void setPackageName(String packageName) {
 	    this.packageName = packageName;
 	}
@@ -97,5 +94,8 @@ public class Booking {
 
 	public void setPackageId(int packageId) {
 	    this.packageId = packageId;
+	}
+	
+	public Booking() {
 	}
 }

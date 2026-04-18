@@ -3,22 +3,18 @@ package test;
 import model.User;
 import service.UserService;
 
-import java.util.Scanner;
+import util.InputUtil;
 
 public class LoginTest {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
         UserService userService = new UserService();
 
         System.out.println("===== LOGIN TEST =====");
 
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
-
-        System.out.print("Enter Password: ");
-        String password = sc.nextLine();
+        String email = InputUtil.getString("Enter Email: ");
+        String password = InputUtil.getString("Enter Password: ");
 
         User user = userService.login(email, password);
 
@@ -43,6 +39,6 @@ public class LoginTest {
 
         }
 
-        sc.close();
+        InputUtil.close();
     }
 }

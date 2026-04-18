@@ -1,10 +1,16 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 25-March-2026
+ * Description    : Controller for handling feedback-related user requests and administrative review management.
+ * Module         : Feedback Module
+ * Java version   : 24
+ */
 package controller;
 
 import java.util.List;
-import java.util.Scanner;
-
 import exception.*;
 import model.Booking;
+import util.InputUtil;
 import service.BookingService;
 import service.FeedbackService;
 import service.TourPackageService;
@@ -12,7 +18,6 @@ import util.ColorText;
 
 public class FeedbackController {
 
-    private Scanner sc = new Scanner(System.in);
     private FeedbackService feedbackService = new FeedbackService();
     private BookingService bookingService = new BookingService();
     private TourPackageService tourService = new TourPackageService();
@@ -41,8 +46,7 @@ public class FeedbackController {
                     ColorText.warning("║") + "  7. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int ch = Integer.parseInt(sc.nextLine());
+            int ch = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (ch) {
                 case 1:
@@ -50,18 +54,16 @@ public class FeedbackController {
                     break;
 
                 case 2:
-                    System.out.print(ColorText.bold("  Feedback ID : "));
                     try {
-                        feedbackService.approveFeedback(Integer.parseInt(sc.nextLine()));
+                        feedbackService.approveFeedback(InputUtil.getInt(ColorText.bold("  Feedback ID : ")));
                     } catch (BookingNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
 
                 case 3:
-                    System.out.print(ColorText.bold("  Feedback ID : "));
                     try {
-                        feedbackService.rejectFeedback(Integer.parseInt(sc.nextLine()));
+                        feedbackService.rejectFeedback(InputUtil.getInt(ColorText.bold("  Feedback ID : ")));
                     } catch (BookingNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
@@ -73,20 +75,19 @@ public class FeedbackController {
 
                 case 5:
                     tourService.displayPackages();
-                    System.out.print(ColorText.bold("\n  Enter Package ID to view feedback: "));
                     try {
-                        feedbackService.viewPackageReviews(Integer.parseInt(sc.nextLine()));
-                    } catch (PackageNotFoundException e) {
+                        feedbackService.viewPackageReviews(InputUtil.getInt(ColorText.bold("\n  Enter Package ID to view feedback: ")));
+                    }
+                    catch (PackageNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
                 case 6:
                     feedbackService.viewAllFeedback();
-                    System.out.print(ColorText.bold("\n  Enter Feedback ID to delete: "));
-
                     try {
-                        feedbackService.deleteFeedback(Integer.parseInt(sc.nextLine()));
-                    } catch (BookingNotFoundException e) {
+                        feedbackService.deleteFeedback(InputUtil.getInt(ColorText.bold("\n  Enter Feedback ID to delete: ")));
+                    }
+                    catch (BookingNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
@@ -117,25 +118,27 @@ public class FeedbackController {
             System.out.println(
                     ColorText.warning("║") + "  4.  Back                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-            System.out.print(ColorText.bold("  Enter choice: "));
-
-            int ch = Integer.parseInt(sc.nextLine());
+            int ch = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (ch) {
                 case 1:
                     submitFeedback(customerId);
                     break;
+                    
                 case 2:
                     System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
                     System.out.println(ColorText.warning("║") + ColorText.bold("           MY FEEDBACK HISTORY        ")
                             + ColorText.warning("║"));
                     System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
+                    
                     try {
                         feedbackService.viewMyFeedback(customerId);
-                    } catch (UserNotFoundException e) {
+                    }
+                    catch (UserNotFoundException e) {
                         System.out.println(ColorText.error("  " + e.getMessage()));
                     }
                     break;
+                    
                 case 3:
                     viewPackageReviews();
                     break;
@@ -165,6 +168,7 @@ public class FeedbackController {
                 + ColorText.cyan("  Date            ") + ColorText.warning("║") + ColorText.cyan("  Package ID  ")
                 + ColorText.warning("║"));
         System.out.println(ColorText.warning("  ╠══════════════╬══════════════════╬══════════════╣"));
+        
         for (Booking b : myBookings) {
             System.out.printf(
                     ColorText.warning("  ║") + "  %-12d" + ColorText.warning("║") + "  %-16s" + ColorText.warning("║")
@@ -173,15 +177,7 @@ public class FeedbackController {
         }
         System.out.println(ColorText.warning("  ╚══════════════╩══════════════════╩══════════════╝"));
 
-        // Ask user to select a booking
-        System.out.print(ColorText.bold("\n  Enter Booking ID: "));
-        int bookingId;
-        try {
-            bookingId = Integer.parseInt(sc.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println(ColorText.error("  Invalid input."));
-            return;
-        }
+        int bookingId = InputUtil.getInt(ColorText.bold("\n  Enter Booking ID: "));
 
         // Validate selected booking belongs to this logged-in user
         Booking selected = null;
@@ -191,6 +187,7 @@ public class FeedbackController {
                 break;
             }
         }
+        
         if (selected == null) {
             System.out.println(ColorText.error("  Invalid Booking ID."));
             return;
@@ -208,21 +205,16 @@ public class FeedbackController {
             System.out.println(ColorText.warning("\n  Rate your experience:"));
             System.out
                     .println(ColorText.yellow("1 ★ Poor\n2 ★★ Fair\n3 ★★★ Good\n4 ★★★★ Very Good\n5 ★★★★★ Excellent"));
-            System.out.print(ColorText.bold("  Your rating (1-5): "));
-            try {
-                rating = Integer.parseInt(sc.nextLine());
-                if (rating < 1 || rating > 5)
-                    System.out.println(ColorText.error("  Please enter a number between 1 and 5."));
-            } catch (NumberFormatException e) {
-                System.out.println(ColorText.error("  Invalid input."));
+            rating = InputUtil.getInt(ColorText.bold("  Your rating (1-5): "));
+            if (rating < 1 || rating > 5) {
+                System.out.println(ColorText.error("  Please enter a number between 1 and 5."));
             }
         }
 
         // ── Title ──
         String title = "";
         while (title.isEmpty()) {
-            System.out.print(ColorText.bold("\n  Review title (max 150 chars): "));
-            title = sc.nextLine().trim();
+            title = InputUtil.getString(ColorText.bold("\n  Review title (max 150 chars): ")).trim();
 
             if (title.isEmpty())
                 System.out.println(ColorText.error("  Title cannot be empty."));
@@ -235,8 +227,7 @@ public class FeedbackController {
         // ── Description ──
         String description = "";
         while (description.length() < 10) {
-            System.out.print(ColorText.bold("\n  Write your review (min 10 chars): "));
-            description = sc.nextLine().trim();
+            description = InputUtil.getString(ColorText.bold("\n  Write your review (min 10 chars): ")).trim();
 
             if (description.length() < 10)
                 System.out.println(ColorText.error("  Review must be at least 10 characters."));
@@ -256,14 +247,11 @@ public class FeedbackController {
         System.out.println(ColorText.warning("║") + ColorText.bold("       VIEW PACKAGE REVIEWS           ")
                 + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  Enter Package ID : "));
-
         try {
-            int packageId = Integer.parseInt(sc.nextLine());
+            int packageId = InputUtil.getInt(ColorText.bold("  Enter Package ID : "));
             feedbackService.viewPackageReviews(packageId);
-        } catch (NumberFormatException e) {
-            System.out.println(ColorText.error("  Invalid Package ID."));
-        } catch (PackageNotFoundException e) {
+        }
+        catch (PackageNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }

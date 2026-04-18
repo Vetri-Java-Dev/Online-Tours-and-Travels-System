@@ -1,10 +1,16 @@
-package controller;
+/*
+ * Author         : Vetrivel B 
+ * Description    : Central controller for customer operations, including tour package exploration and manage their bookings.
+ * Module         : Customer Module
+ * Java version   : 24
+ */
 
-import java.util.Scanner;
+package controller;
 
 import exception.UserNotFoundException;
 import model.User;
 import service.TourPackageService;
+import util.InputUtil;
 import service.UserService;
 import util.ColorText;
 import java.time.LocalDate;
@@ -13,7 +19,6 @@ import service.BookingService;
 
 public class CustomerController {
 
-    private Scanner sc = new Scanner(System.in);
     private UserService userService = new UserService();
     private TourPackageService tourPackageService = new TourPackageService();
     private BookingService bookingService = new BookingService();
@@ -44,8 +49,7 @@ public class CustomerController {
             System.out.println(ColorText.warning("║") + " 10.  Exit                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("Enter choice: "));
-            int choice = sc.nextInt();
+            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
 
             switch (choice) {
                 case 1: viewAndBookFlow(customerId); break;
@@ -81,8 +85,7 @@ public class CustomerController {
 
             System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-            System.out.print(ColorText.bold("Enter choice: "));
-            int choice = sc.nextInt();
+            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
 
             switch (choice) {
 
@@ -107,42 +110,44 @@ public class CustomerController {
             System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Email :") + " %-30s" + ColorText.warning("║") + "%n", u.getEmail());
             System.out.printf(ColorText.warning("║") + "  " + ColorText.cyan("Phone :") + " %-30s" + ColorText.warning("║") + "%n", u.getPhone());
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }
 
     public void updateProfile() {
-        sc.nextLine();
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           UPDATE PROFILE             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  New Name  : "));
-        String name = sc.nextLine();
-        System.out.print(ColorText.bold("  New Phone : "));
-        String phone = sc.nextLine();
+        
+        String name = InputUtil.getString(ColorText.bold("  New Name  : "));
+        String phone = InputUtil.getString(ColorText.bold("  New Phone : "));
+        
         try {
             userService.updateUser(customerId, name, phone);
             System.out.println(ColorText.success("  Profile updated successfully!"));
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }
     }
 
     public void deleteAccount() {
-        sc.nextLine();
         System.out.println(ColorText.warning("\n╔══════════════════════════════════════╗"));
         System.out.println(ColorText.warning("║") + ColorText.bold("           DELETE ACCOUNT             ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
-        System.out.print(ColorText.bold("  Confirm delete (yes/no): "));
-        if (sc.nextLine().equalsIgnoreCase("yes")) {
+        
+        if (InputUtil.getString(ColorText.bold("  Confirm delete (yes/no): ")).equalsIgnoreCase("yes")) {
             try {
                 userService.deleteUser(customerId);
                 System.out.println(ColorText.success("  Account deleted successfully."));
-            } catch (UserNotFoundException e) {
+            }
+            catch (UserNotFoundException e) {
                 System.out.println(ColorText.error("  " + e.getMessage()));
             }
-        } else {
+        }
+        else {
             System.out.println(ColorText.yellow("  Account deletion cancelled."));
         }
     }

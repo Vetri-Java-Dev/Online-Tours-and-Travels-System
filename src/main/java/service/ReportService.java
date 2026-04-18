@@ -1,3 +1,10 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 1-Apr-2026
+ * Description    : Service layer dedicated to generating comprehensive administrator reports, including booking, payment, and package occupancy analytics.
+ * Module         : Admin Report Module
+ * Java version   : 24
+ */
 package service;
 
 import dao.ReportDAO;

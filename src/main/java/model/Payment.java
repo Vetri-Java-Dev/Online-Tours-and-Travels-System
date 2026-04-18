@@ -1,6 +1,15 @@
+/*
+ * Author         : Subhashree R
+ * Created Date   : 11-March-2026
+ * Description    : Abstract base class for all payment types in the system.
+ * Module         : Payment Module
+ * Java version   : 24
+ */
 package model;
 
-public class Payment {
+import util.ColorText;
+
+public abstract class Payment {
 
     private int paymentId;
     private double amount;
@@ -10,7 +19,8 @@ public class Payment {
     private String paymentMethod; 
 
     public Payment() {}
-    
+
+    // Constructor used when retrieving from database
     public Payment(int paymentId, double amount, String paymentDate, String status, int bookingId, String paymentMethod) {
         this.paymentId = paymentId;
         this.amount = amount;
@@ -20,6 +30,7 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
+    // Constructor used when creating new payment
     public Payment(double amount, String paymentDate, String status, int bookingId, String paymentMethod) {
         this.amount = amount;
         this.paymentDate = paymentDate;
@@ -27,6 +38,10 @@ public class Payment {
         this.bookingId = bookingId;
         this.paymentMethod = paymentMethod;
     }
+
+    // Abstract methods to be implemented by subclasses
+    public abstract String validate();
+    public abstract void displayDetails();
 
 	public int getPaymentId() {
 		return paymentId;

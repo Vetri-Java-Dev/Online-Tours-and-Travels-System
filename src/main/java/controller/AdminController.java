@@ -1,13 +1,18 @@
+/*
+ * Author         : Subhashree R
+ * Description    : Central controller for administrative operations, including system management and report generation.
+ * Module         : Admin Module
+ * Java version   : 24
+ */
+
 package controller;
 
-import java.util.Scanner;
 import service.PaymentService;
 import service.ReportService;
 import util.ColorText;
+import util.InputUtil;
 
 public class AdminController {
-
-    Scanner sc = new Scanner(System.in);
 
     PaymentService paymentService = new PaymentService();
     ReportService reportService   = new ReportService();
@@ -31,8 +36,7 @@ public class AdminController {
             System.out.println(ColorText.warning("║") + "  9. Exit                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print(ColorText.bold("  Enter choice: "));
-            int choice = Integer.parseInt(sc.nextLine());
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch(choice) {
                 case 1: new PackageController().adminPackageMenu(); break;
@@ -70,8 +74,7 @@ public class AdminController {
             System.out.println(ColorText.warning("║") + "  6. Back                             " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            System.out.print("Enter your choice : ");
-            int c = Integer.parseInt(sc.nextLine());
+            int c = InputUtil.getInt("Enter your choice : ");
 
             switch(c) {
                 case 1: reportService.showAllBookingsReport(); break;
