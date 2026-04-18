@@ -144,12 +144,38 @@ public class BookingController {
         }
     }
 
-    private void createBooking(int customerId) {
+    public void createBooking(int customerId) {
 
-        int packageId = InputUtil.getInt(ColorText.bold("  Package ID : "));
-        int travelers = InputUtil.getInt(ColorText.bold("  Travelers  : "));
+        System.out.print(ColorText.bold("  Search Destination to find Package (leave blank to view all): "));
+        String dest = sc.nextLine();
+        service.TourPackageService packageService = new service.TourPackageService();
+        java.util.List<model.TourPackage> list;
+        
+        if (dest.trim().isEmpty()) {
+            list = packageService.getAllPackages();
+        } else {
+            list = packageService.searchByDestination(dest);
+        }
+        
+        if (list.isEmpty()) {
+            System.out.println(ColorText.error("  No packages found. Returning..."));
+            return;
+        }
+        
+        System.out.println("\n  Available Packages:");
+        for (model.TourPackage t : list) {
+            System.out.println("  ID: " + t.getPackageId() + " - " + ColorText.cyan(t.getDestination()) + " - Rs." + t.getPrice());
+        }
+        System.out.println();
 
-        LocalDate date = null;
+        System.out.print(ColorText.bold("  Select Package ID : "));
+        int packageId = sc.nextInt();
+
+        System.out.print(ColorText.bold("  Travelers  : "));
+        int travelers = sc.nextInt();
+
+        sc.nextLine(); //buffer
+       LocalDate date = null;
         String bookingDate;
 
         while (true) {
@@ -205,7 +231,6 @@ public class BookingController {
         System.out.println("  Package ID   : " + booking.getPackageId());
         System.out.println("  Travelers    : " + booking.getTravelers());
         System.out.printf ("  Total Amount : Rs. %.2f%n", booking.getTotalAmount());
-        System.out.println("  Status       : " + booking.getStatus());
         System.out.println("  ─────────────────────────────────────");
 
         int    bookingId = booking.getBookingId();
@@ -421,4 +446,3 @@ public class BookingController {
         new PaymentService().viewPaymentHistoryByCustomerId(customerId);
     }
 }
-
