@@ -24,7 +24,6 @@ public class CustomerController {
         this.customerId = customerId;
     }
 
-    // ── Main menu ─────────────────────────────────────────────────────────────
     public void customerMenu() {
 
         while (true) {

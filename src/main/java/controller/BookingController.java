@@ -115,7 +115,7 @@ public class BookingController {
         return s.length() > len ? s.substring(0, len - 1) + "…" : s;
     }
 
-    // ================= CUSTOMER: MANAGE BOOKING =================
+    // ================= CUSTOMER: MANAGE BOOKING ================
     public void customerManageBookingMenu(int customerId) {
 
         while (true) {
@@ -455,6 +455,7 @@ public class BookingController {
                   b.getStatus()
             );
         }
+        
 
         System.out.println(ColorText.warning("╚════════════╩════════════════╩════════════════╝"));
         }
