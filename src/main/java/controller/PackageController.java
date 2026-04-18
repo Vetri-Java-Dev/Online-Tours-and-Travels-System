@@ -5,6 +5,7 @@ import java.util.List;
 import exception.PackageAlreadyExistsException;
 import exception.PackageNotFoundException;
 import util.InputUtil;
+import java.util.Scanner;
 import model.TourPackage;
 import service.TourPackageService;
 import util.ColorText;
@@ -14,7 +15,7 @@ import comparator.DurationComparator;
 public class PackageController {
 
     private TourPackageService service = new TourPackageService();
-
+    private Scanner sc = new Scanner(System.in); 
     // ================= ADMIN: PACKAGE MENU =================
     public void adminPackageMenu() {
 

@@ -11,6 +11,7 @@ package controller;
 import java.time.LocalDate;
 import java.util.List;
 import exception.*;
+import java.util.Scanner;
 import util.InputUtil;
 import model.Booking;
 import model.Payment;
@@ -24,6 +25,8 @@ import util.ColorText;
 public class BookingController {
 
     private BookingService bookingService = new BookingService();
+    private Scanner sc = new Scanner(System.in); 
+
 
     // ================= ADMIN: BOOKING MENU =================
     public void adminBookingMenu() {

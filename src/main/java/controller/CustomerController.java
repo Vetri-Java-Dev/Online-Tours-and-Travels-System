@@ -13,15 +13,14 @@ import service.TourPackageService;
 import util.InputUtil;
 import service.UserService;
 import util.ColorText;
-import java.time.LocalDate;
-import model.Booking;
-import service.BookingService;
+import java.util.Scanner;
 
 public class CustomerController {
 
     private UserService userService = new UserService();
     private TourPackageService tourPackageService = new TourPackageService();
-    private BookingService bookingService = new BookingService();
+    private Scanner sc = new Scanner(System.in); 
+
 
     private int customerId;
 
