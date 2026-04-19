@@ -18,7 +18,7 @@ public class DebitCardPayment extends Payment {
     private String cvv;
 
 
-    // Constructor used when creating new payment
+   
     public DebitCardPayment(double amount, String paymentDate, String status, int bookingId,
                             String cardNumber, String bankName, String expiryDate, String cvv) {
         super(amount, paymentDate, status, bookingId, "DEBIT_CARD");

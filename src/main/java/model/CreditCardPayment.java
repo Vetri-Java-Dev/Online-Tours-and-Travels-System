@@ -18,7 +18,6 @@ public class CreditCardPayment extends Payment {
     private String cvv;
 
 
-    // Constructor used when creating new payment
     public CreditCardPayment(double amount, String paymentDate, String status, int bookingId,
                              String cardNumber, String cardHolderName, String expiryDate, String cvv) {
         super(amount, paymentDate, status, bookingId, "CREDIT_CARD");
