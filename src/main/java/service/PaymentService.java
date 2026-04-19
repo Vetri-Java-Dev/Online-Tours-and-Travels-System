@@ -4,8 +4,7 @@
  * Modified Date  : 19-April-2026
  * Description    : Service layer handling payment processing, validation workflows,
  *                  and transaction history retrieval.
- *                  All validation logic is included directly in this class 
- *                 
+ *                
  * Module         : Payment Module
  * Java version   : 24
  */
@@ -22,7 +21,7 @@ public class PaymentService {
     private PaymentDAO paymentDAO = new PaymentDAO();
 
     // =========================================================================
-    // REGEX PATTERNS 
+    // REGEX PATTERNS (moved from PaymentValidationUtil)
     // =========================================================================
 
     private static final Pattern UPI_PATTERN =
@@ -191,10 +190,10 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // AMOUNT VALIDATION 
+    // AMOUNT VALIDATION (moved from PaymentValidationUtil)
     // =========================================================================
 
-    private String validateAmount(double amount) {
+    public String validateAmount(double amount) {
         if (amount <= 0)
             return "Payment amount must be greater than 0.";
 
@@ -205,7 +204,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // UPI VALIDATION 
+    // UPI VALIDATION (moved from PaymentValidationUtil)
     // =========================================================================
 
     public String validateUpiId(String upiId) {
@@ -249,7 +248,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // CREDIT CARD VALIDATION 
+    // CREDIT CARD VALIDATION (moved from PaymentValidationUtil)
     // =========================================================================
 
     public String validateCreditCard(String cardNumber, String holderName,
@@ -283,7 +282,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // DEBIT CARD VALIDATION 
+    // DEBIT CARD VALIDATION (moved from PaymentValidationUtil)
     // =========================================================================
 
     public String validateDebitCard(String cardNumber, String bankName,
@@ -317,7 +316,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // HELPER VALIDATION METHODS
+    // HELPER VALIDATION METHODS (moved from PaymentValidationUtil)
     // =========================================================================
 
     private String validateCardNumber(String cardNumber) {
@@ -376,7 +375,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // LUHN ALGORITHM
+    // LUHN ALGORITHM (moved from PaymentValidationUtil)
     // =========================================================================
 
     private boolean luhnCheck(String number) {
@@ -398,7 +397,7 @@ public class PaymentService {
     }
 
     // =========================================================================
-    // MASKING UTILITIES 
+    // MASKING UTILITIES (moved from PaymentValidationUtil)
     // =========================================================================
 
     public String maskCardNumber(String cardNumber) {
