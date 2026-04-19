@@ -1,7 +1,9 @@
 /*
  * Author         : Subhashree R
  * Created Date   : 18-March-2026
- * Description    : Controller handling incoming payment requests and coordinating with the service layer for processing.
+ * Modified Date  : 19-April-2026
+ * Description    : Controller handling incoming payment requests and coordinating with the service layer.
+ *                  
  * Module         : Payment Module
  * Java version   : 24
  */
@@ -11,8 +13,6 @@ import exception.*;
 import model.*;
 import service.PaymentService;
 import util.ColorText;
-import util.PaymentValidationUtil;
-
 
 public class PaymentController {
 
@@ -47,14 +47,14 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("        PROCESS UPI PAYMENT           ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String upiError = PaymentValidationUtil.validateUpiId(upiId);
+        String upiError = paymentService.validateUpiId(upiId);
         if (upiError != null) {
             System.out.println(ColorText.error("  ✘  UPI Validation Failed: " + upiError));
             return;
         }
         System.out.println(ColorText.success("  ✔  UPI ID format is valid."));
 
-        String amountError = PaymentValidationUtil.validateAmount(amount);
+        String amountError = paymentService.validateAmount(amount);
         if (amountError != null) {
             System.out.println(ColorText.error("  ✘  Amount Validation Failed: " + amountError));
             return;
@@ -78,10 +78,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("     PROCESS CREDIT CARD PAYMENT      ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String cardError = PaymentValidationUtil.validateCreditCard(
-                cardNumber, holderName, expiry, cvv
-        );
-        
+        String cardError = paymentService.validateCreditCard(cardNumber, holderName, expiry, cvv);
         if (cardError != null) {
             System.out.println(ColorText.error("  ✘  Credit Card Validation Failed: " + cardError));
             return;
@@ -89,11 +86,11 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Credit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", paymentService.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Holder") + " : %-30s" + ColorText.warning("║") + "%n", holderName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
 
-        String amountError = PaymentValidationUtil.validateAmount(amount);
+        String amountError = paymentService.validateAmount(amount);
         if (amountError != null) {
             System.out.println(ColorText.error("  ✘  Amount Validation Failed: " + amountError));
             return;
@@ -103,7 +100,6 @@ public class PaymentController {
         CreditCardPayment ccPayment = new CreditCardPayment(
                 amount, date, "PENDING", bookingId, cardNumber, holderName, expiry, cvv
         );
-        
         try {
             paymentService.processPayment(ccPayment);
         }
@@ -120,9 +116,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("      PROCESS DEBIT CARD PAYMENT      ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String cardError = PaymentValidationUtil.validateDebitCard(
-                cardNumber, bankName, expiry, cvv
-        );
+        String cardError = paymentService.validateDebitCard(cardNumber, bankName, expiry, cvv);
         if (cardError != null) {
             System.out.println(ColorText.error("  ✘  Debit Card Validation Failed: " + cardError));
             return;
@@ -130,11 +124,11 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Debit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", paymentService.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Bank") + " : %-32s" + ColorText.warning("║") + "%n", bankName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
 
-        String amountError = PaymentValidationUtil.validateAmount(amount);
+        String amountError = paymentService.validateAmount(amount);
         if (amountError != null) {
             System.out.println(ColorText.error("  ✘  Amount Validation Failed: " + amountError));
             return;
@@ -158,13 +152,13 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("           VERIFY UPI ID              ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String error = PaymentValidationUtil.validateUpiId(upiId);
+        String error = paymentService.validateUpiId(upiId);
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
             return false;
         }
 
-        System.out.println(ColorText.success("  ✔  UPI ID is valid: ") + ColorText.cyan(PaymentValidationUtil.maskUPIId(upiId)));
+        System.out.println(ColorText.success("  ✔  UPI ID is valid: ") + ColorText.cyan(paymentService.maskUPIId(upiId)));
         return true;
     }
 
@@ -175,9 +169,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("         VERIFY CREDIT CARD           ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String error = PaymentValidationUtil.validateCreditCard(
-                cardNumber, holderName, expiry, cvv
-        );
+        String error = paymentService.validateCreditCard(cardNumber, holderName, expiry, cvv);
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
             return false;
@@ -185,7 +177,7 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Credit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card  ") + " : %-30s" + ColorText.warning("║") + "%n", paymentService.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Holder") + " : %-30s" + ColorText.warning("║") + "%n", holderName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
         return true;
@@ -198,9 +190,7 @@ public class PaymentController {
         System.out.println(ColorText.warning("║") + ColorText.bold("          VERIFY DEBIT CARD           ") + ColorText.warning("║"));
         System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-        String error = PaymentValidationUtil.validateDebitCard(
-                cardNumber, bankName, expiry, cvv
-        );
+        String error = paymentService.validateDebitCard(cardNumber, bankName, expiry, cvv);
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
             return false;
@@ -208,16 +198,15 @@ public class PaymentController {
 
         System.out.println(ColorText.success("  ✔  Debit card details are valid."));
         System.out.println(ColorText.warning("  ╔══════════════════════════════════════╗"));
-        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", PaymentValidationUtil.maskCardNumber(cardNumber));
+        System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Card") + " : %-32s" + ColorText.warning("║") + "%n", paymentService.maskCardNumber(cardNumber));
         System.out.printf (ColorText.warning("  ║") + "  " + ColorText.cyan("Bank") + " : %-32s" + ColorText.warning("║") + "%n", bankName);
         System.out.println(ColorText.warning("  ╚══════════════════════════════════════╝"));
         return true;
     }
 
     public boolean verifyAmount(double amount) {
-    	
-        String error = PaymentValidationUtil.validateAmount(amount);
-        
+
+        String error = paymentService.validateAmount(amount);
         if (error != null) {
             System.out.println(ColorText.error("  ✘  " + error));
             return false;
@@ -258,6 +247,4 @@ public class PaymentController {
             System.out.println(ColorText.error("  ✘  " + e.getMessage()));
         }
     }
-
-
 }
