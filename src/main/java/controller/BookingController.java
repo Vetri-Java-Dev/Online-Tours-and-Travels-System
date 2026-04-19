@@ -59,7 +59,7 @@ public class BookingController {
                         System.out.println("  ─────────────────────────────────────");
                     }
                     else {
-                        System.out.println("Booking not found!");
+                        System.out.println("  Booking not found!");
                     }
                 }
                 catch (BookingNotFoundException e) {
@@ -88,7 +88,7 @@ public class BookingController {
         List<Booking> list = bookingService.getAllBookings();
 
         if (list.isEmpty()) {
-            System.out.println(ColorText.error("No bookings found.\n"));
+            System.out.println(ColorText.error("  No bookings found.\n"));
             return;
         }
 
@@ -132,7 +132,7 @@ public class BookingController {
             System.out.println(ColorText.warning("│") + "  6. Back                            " + ColorText.warning("│"));
             System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (choice) {
                 case 1: createBooking(customerId); break;
@@ -142,23 +142,23 @@ public class BookingController {
                 case 5: viewBookingHistory(customerId); break;
                 case 6: return;
                 default:
-                    System.out.println(ColorText.error("Invalid choice!"));
+                    System.out.println(ColorText.error("  Invalid choice!"));
             }
         }
     }
 
     public void createBooking(int customerId) {
 
-        System.out.print(ColorText.bold("  Search Destination to find Package (leave blank to view all): "));
-        String dest = sc.nextLine();
-        service.TourPackageService packageService = new service.TourPackageService();
-        java.util.List<model.TourPackage> list;
-        
-        if (dest.trim().isEmpty()) {
-            list = packageService.getAllPackages();
-        } else {
-            list = packageService.searchByDestination(dest);
-        }
+    	System.out.print(ColorText.bold("  Search Destination to find Package: "));
+    	String dest = sc.nextLine();
+
+    	if (dest.trim().isEmpty()) {
+    	    System.out.println(ColorText.error("  Destination cannot be empty. Please enter again."));
+    	    return; // or loop again if you want
+    	}
+
+    	service.TourPackageService packageService = new service.TourPackageService();
+    	List<model.TourPackage> list = packageService.searchByDestination(dest);
         
         if (list.isEmpty()) {
             System.out.println(ColorText.error("  No packages found. Returning..."));
@@ -188,7 +188,7 @@ public class BookingController {
                 LocalDate today = LocalDate.now();
 
                 if (date.isBefore(today)) {
-                    System.out.println("Date is in the past. Enter again.");
+                    System.out.println("  Date is in the past. Enter again.");
                     continue;
                 }
                 break;
@@ -207,7 +207,7 @@ public class BookingController {
         	boolean result = bookingService.createBooking(booking);
 
         	if (!result) {
-        	    System.out.println(ColorText.error("Booking failed. Returning to menu..."));
+        	    System.out.println(ColorText.error("  Booking failed. Returning to menu..."));
         	    return;
         	}
         }
@@ -240,7 +240,7 @@ public class BookingController {
         double amount    = booking.getTotalAmount();
 
         if (bookingId <= 0) {
-            System.out.println(ColorText.error("  ✘  Booking could not be created. Payment cancelled."));
+            System.out.println(ColorText.error("  Booking could not be created. Payment cancelled."));
             return;
         }
 
@@ -283,7 +283,7 @@ public class BookingController {
 
                 break;
             default:
-                System.out.println(ColorText.error("  ✘  Invalid payment choice."));
+                System.out.println(ColorText.error("  Invalid payment choice."));
                 return;
         }
 
@@ -291,7 +291,7 @@ public class BookingController {
             new PaymentService().processPayment(payment);
         }
         catch (PaymentFailedException e) {
-            System.out.println(ColorText.error("  ✘  " + e.getMessage()));
+            System.out.println(ColorText.error( e.getMessage()));
         }
     }
 
@@ -316,7 +316,7 @@ public class BookingController {
                 System.out.println("  Status       : " + booking.getStatus());
                 System.out.println("  ─────────────────────────────────────");
             } else {
-                System.out.println(ColorText.error("Booking not found!"));
+                System.out.println(ColorText.error("  Booking not found!"));
             }
         } catch (BookingNotFoundException e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
@@ -331,7 +331,7 @@ public class BookingController {
                 + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        int bookingId = InputUtil.getInt(ColorText.bold("Enter Booking ID: "));
+        int bookingId = InputUtil.getInt(ColorText.bold("  Enter Booking ID: "));
 
         try {
             Booking booking = bookingService.viewBookingByCustomer(bookingId, customerId);
@@ -341,9 +341,9 @@ public class BookingController {
             boolean result = bookingService.cancelBooking(bookingId);
 
             if (result) {
-                System.out.println(ColorText.success("Booking cancelled successfully!"));
+                System.out.println(ColorText.success("  Booking cancelled successfully!"));
             } else {
-                System.out.println(ColorText.error("Invalid Booking ID!"));
+                System.out.println(ColorText.error("  Invalid Booking ID!"));
             }
 
         } catch (Exception e) {
@@ -358,7 +358,7 @@ public class BookingController {
                 + ColorText.warning("│"));
         System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-        int bookingId = InputUtil.getInt(ColorText.bold("Enter Booking ID: "));
+        int bookingId = InputUtil.getInt(ColorText.bold("  Enter Booking ID: "));
 
         Booking booking;
 
@@ -389,23 +389,23 @@ public class BookingController {
             try {
                 LocalDate date = LocalDate.parse(newDate);
                 if (date.isBefore(LocalDate.now())) {
-                    System.out.println("Date is in the past. Enter again.");
+                    System.out.println("  Date is in the past. Enter again.");
                     continue;
                 }
                 break;
             } catch (Exception e) {
-                System.out.println("Invalid format. Enter again.");
+                System.out.println("  Invalid format. Enter again.");
             }
         }
 
-        int newTravelers = InputUtil.getInt("Enter New Travelers: ");
+        int newTravelers = InputUtil.getInt("  Enter New Travelers: ");
 
         booking.setBookingDate(LocalDate.parse(newDate));
         booking.setTravelers(newTravelers);
 
         try {
             bookingService.modifyBooking(booking);
-            System.out.println(ColorText.success("Booking modified successfully!"));
+            System.out.println(ColorText.success("  Booking modified successfully!"));
         } catch (Exception e) {
             System.out.println(ColorText.error("  " + e.getMessage()));
         }

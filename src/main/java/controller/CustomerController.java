@@ -47,7 +47,7 @@ public class CustomerController {
             System.out.println(ColorText.warning("║") + " 10.  Exit                            " + ColorText.warning("║"));
             System.out.println(ColorText.warning("╚══════════════════════════════════════╝"));
 
-            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (choice) {
                 case 1: viewAndBookFlow(customerId); break;
@@ -83,7 +83,7 @@ public class CustomerController {
 
             System.out.println(ColorText.warning("└─────────────────────────────────────┘"));
 
-            int choice = InputUtil.getInt(ColorText.bold("Enter choice: "));
+            int choice = InputUtil.getInt(ColorText.bold("  Enter choice: "));
 
             switch (choice) {
 
@@ -92,7 +92,7 @@ public class CustomerController {
                 case 3: return;
 
                 default:
-                    System.out.println(ColorText.error("Invalid choice!"));
+                    System.out.println(ColorText.error("  Invalid choice!"));
             }
         }
     }
@@ -153,8 +153,9 @@ public class CustomerController {
 
         tourPackageService.displayPackages();
 
-        System.out.print("\nDo you want to book any package? (yes/no): ");
-        String choice = sc.nextLine();
+        String choice = InputUtil.getString(
+                ColorText.bold("  Do you want to book any package? (yes/no): ")
+        );
 
         if(choice.equalsIgnoreCase("yes")) {
             new BookingController().createBooking(customerId);
