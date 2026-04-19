@@ -17,18 +17,8 @@ public class DebitCardPayment extends Payment {
     private String expiryDate;
     private String cvv;
 
-    // Constructor used when retrieving from database
-    public DebitCardPayment(int paymentId, double amount, String paymentDate, String status, int bookingId,
-                            String cardNumber, String bankName, String expiryDate, String cvv) {
-        super(paymentId, amount, paymentDate, status, bookingId, "DEBIT_CARD");
-        this.cardNumber = cardNumber;
-        this.bankName = bankName;
-        this.expiryDate = expiryDate;
-        this.cvv = cvv;
-    }
 
-
-    // Constructor used when creating new payment
+   
     public DebitCardPayment(double amount, String paymentDate, String status, int bookingId,
                             String cardNumber, String bankName, String expiryDate, String cvv) {
         super(amount, paymentDate, status, bookingId, "DEBIT_CARD");

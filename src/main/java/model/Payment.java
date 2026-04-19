@@ -18,19 +18,7 @@ public abstract class Payment {
     private int bookingId;
     private String paymentMethod; 
 
-    public Payment() {}
-
-    // Constructor used when retrieving from database
-    public Payment(int paymentId, double amount, String paymentDate, String status, int bookingId, String paymentMethod) {
-        this.paymentId = paymentId;
-        this.amount = amount;
-        this.paymentDate = paymentDate;
-        this.status = status;
-        this.bookingId = bookingId;
-        this.paymentMethod = paymentMethod;
-    }
-
-    // Constructor used when creating new payment
+   
     public Payment(double amount, String paymentDate, String status, int bookingId, String paymentMethod) {
         this.amount = amount;
         this.paymentDate = paymentDate;
@@ -39,7 +27,7 @@ public abstract class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    // Abstract methods to be implemented by subclasses
+   
     public abstract String validate();
     public abstract void displayDetails();
 
