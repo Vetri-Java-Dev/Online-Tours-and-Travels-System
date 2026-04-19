@@ -11,6 +11,7 @@ package controller;
 import java.time.LocalDate;
 import java.util.List;
 import exception.*;
+import java.util.Scanner;
 import util.InputUtil;
 import model.Booking;
 import model.Payment;
@@ -24,6 +25,8 @@ import util.ColorText;
 public class BookingController {
 
     private BookingService bookingService = new BookingService();
+    private Scanner sc = new Scanner(System.in); 
+
 
     // ================= ADMIN: BOOKING MENU =================
     public void adminBookingMenu() {
@@ -112,7 +115,7 @@ public class BookingController {
         return s.length() > len ? s.substring(0, len - 1) + "…" : s;
     }
 
-    // ================= CUSTOMER: MANAGE BOOKING =================
+    // ================= CUSTOMER: MANAGE BOOKING ================
     public void customerManageBookingMenu(int customerId) {
 
         while (true) {
@@ -438,6 +441,7 @@ public class BookingController {
                   b.getStatus()
             );
         }
+        
 
         System.out.println(ColorText.warning("╚════════════╩════════════════╩════════════════╝"));
         }
