@@ -177,4 +177,32 @@ public class PaymentService {
         if ("DEBIT_CARD".equalsIgnoreCase(method))   return "Debit Card";
         return method;
     }
+
+    // =========================================================================
+    // LUHN ALGORITHM (Industry-standard check digit validation)
+    // =========================================================================
+
+    /**
+     * Performs Luhn algorithm check for card number validation.
+     * @param number The card number string (should contain only digits)
+     * @return true if valid, false otherwise
+     */
+    public static boolean luhnCheck(String number) {
+        int sum = 0;
+        boolean alt = false;
+
+        for (int i = number.length() - 1; i >= 0; i--) {
+            int n = number.charAt(i) - '0';
+
+            if (alt) {
+                n *= 2;
+                if (n > 9)
+                    n -= 9;
+            }
+            sum += n;
+            alt = !alt;
+        }
+
+        return (sum % 10 == 0);
+    }
 }

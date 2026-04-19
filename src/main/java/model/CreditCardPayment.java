@@ -17,16 +17,6 @@ public class CreditCardPayment extends Payment {
     private String expiryDate;
     private String cvv;
 
-    // Constructor used when retrieving from database
-    public CreditCardPayment(int paymentId, double amount, String paymentDate, String status, int bookingId,
-                             String cardNumber, String cardHolderName, String expiryDate, String cvv) {
-        super(paymentId, amount, paymentDate, status, bookingId, "CREDIT_CARD");
-        this.cardNumber = cardNumber;
-        this.cardHolderName = cardHolderName;
-        this.expiryDate = expiryDate;
-        this.cvv = cvv;
-    }
-
 
     // Constructor used when creating new payment
     public CreditCardPayment(double amount, String paymentDate, String status, int bookingId,

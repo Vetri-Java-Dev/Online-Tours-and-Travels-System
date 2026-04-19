@@ -93,13 +93,17 @@ public class PaymentDAO {
                 int bId = rs.getInt("bookingId");
 
                 if ("UPI".equalsIgnoreCase(method)) {
-                    payment = new UPIPayment(pId, amt, date, stat, bId, "N/A");
+                    payment = new UPIPayment(amt, date, stat, bId, "N/A");
+                    payment.setPaymentId(pId);
                 } else if ("CREDIT_CARD".equalsIgnoreCase(method)) {
-                    payment = new CreditCardPayment(pId, amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                    payment = new CreditCardPayment(amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                    payment.setPaymentId(pId);
                 } else if ("DEBIT_CARD".equalsIgnoreCase(method)) {
-                    payment = new DebitCardPayment(pId, amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                    payment = new DebitCardPayment(amt, date, stat, bId, "N/A", "N/A", "N/A", "N/A");
+                    payment.setPaymentId(pId);
                 } else {
-                    payment = new UPIPayment(pId, amt, date, stat, bId, "N/A");
+                    payment = new UPIPayment(amt, date, stat, bId, "N/A");
+                    payment.setPaymentId(pId);
                 }
             }
 

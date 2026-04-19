@@ -8,6 +8,7 @@
 package util;
 
 import java.util.regex.Pattern;
+import service.PaymentService;
 
 /**
  * Payment Validation Utility
@@ -98,7 +99,7 @@ public class PaymentValidationUtil {
         if (cardErr != null) return cardErr;
 
         // 2. Luhn check (industry standard for card validation)
-        if (!luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
+        if (!PaymentService.luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
             return "Please verify and re-enter your card number";
 
         // 3. Validate cardholder name
@@ -138,7 +139,7 @@ public class PaymentValidationUtil {
         if (cardErr != null) return cardErr;
 
         // 2. Luhn check (industry standard for card validation)
-        if (!luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
+        if (!PaymentService.luhnCheck(cardNumber.replaceAll("[\\s-]", "")))
             return "Please verify and re-enter your card number";
 
         // 3. Validate bank name
@@ -229,29 +230,6 @@ public class PaymentValidationUtil {
             return "This card has expired (expiry: " + expiry + "). Please use a valid card.";
 
         return null;
-    }
-
-    // =========================================================================
-    // LUHN ALGORITHM (Industry-standard check digit validation)
-    // =========================================================================
-
-    private static boolean luhnCheck(String number) {
-        int sum = 0;
-        boolean alt = false;
-
-        for (int i = number.length() - 1; i >= 0; i--) {
-            int n = number.charAt(i) - '0';
-
-            if (alt) {
-                n *= 2;
-                if (n > 9)
-                    n -= 9;
-            }
-            sum += n;
-            alt = !alt;
-        }
-
-        return (sum % 10 == 0);
     }
 
     // =========================================================================
