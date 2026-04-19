@@ -96,11 +96,11 @@ public class BookingService {
 		 
 	        Booking booking = bookingDAO.viewBooking(bookingId);
 	        if (booking == null) {
-	            System.out.println("Booking not found!");
+	            System.out.println("  Booking not found!");
 	            return null;
 	        }
 	        if (booking.getCustomerId() != customerId) {
-	            System.out.println("Access Denied! This booking does not belong to you.");
+	            System.out.println("  Access Denied! This booking does not belong to you.");
 	            return null;
 	        }
 
