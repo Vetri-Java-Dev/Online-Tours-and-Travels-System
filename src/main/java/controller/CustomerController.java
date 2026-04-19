@@ -153,8 +153,6 @@ public class CustomerController {
 
         tourPackageService.displayPackages();
 
-        sc.nextLine(); // clear buffer from previous nextInt()
-
         System.out.print("\nDo you want to book any package? (yes/no): ");
         String choice = sc.nextLine();
 
